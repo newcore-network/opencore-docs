@@ -1,43 +1,43 @@
 # OpenCore Docs
 
-Documentación oficial para el ecosistema OpenCore, construida con [Docusaurus](https://docusaurus.io/).
+Official documentation for the OpenCore ecosystem, built with [Docusaurus](https://docusaurus.io/).
 
-## Requisitos previos
+## Prerequisites
 
-- **Node.js**: v20.0 o superior.
-- **pnpm**: Recomendado para la gestión de dependencias.
+- **Node.js**: v20.0 or higher.
+- **pnpm**: Recommended for dependency management.
 
-## Instalación
+## Installation
 
 ```bash
 pnpm install
 ```
 
-## Desarrollo Local
+## Local Development
 
 ```bash
 pnpm start
 ```
 
-Este comando inicia un servidor de desarrollo local y abre una ventana en el navegador. La mayoría de los cambios se reflejan en tiempo real sin necesidad de reiniciar el servidor.
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-## Construcción (Build)
+## Build
 
 ```bash
 pnpm build
 ```
 
-Genera contenido estático en el directorio `build/` que puede ser servido por cualquier servicio de hosting estático.
+Generates static content into the `build/` directory which can be served by any static hosting service.
 
-## Otros comandos
+## Other Commands
 
-- `pnpm serve`: Sirve localmente la versión de producción generada en `build/`.
-- `pnpm typecheck`: Ejecuta la comprobación de tipos de TypeScript.
-- `pnpm clear`: Limpia la caché de Docusaurus.
+- `pnpm serve`: Locally serve the production build generated in `build/`.
+- `pnpm typecheck`: Run TypeScript type checking.
+- `pnpm clear`: Clear the Docusaurus cache.
 
-## Despliegue
+## Deployment
 
-El despliegue se puede realizar configurando el script `deploy` en el entorno correspondiente.
+Deployment can be performed by configuring the `deploy` script in the corresponding environment.
 
 ```bash
 pnpm deploy
