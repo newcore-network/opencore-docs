@@ -120,4 +120,4 @@ opencore build
 
 ![alt text](../assets/image-4.png)
 
-if you want use your own compiler, feel free to create script and build.js compiler, or you can also set a ``compilerCustom`` for a single resource with the CLI. [Read more](CustomCompiler)
+if you want use your own compiler, feel free to create script and build.js compiler, or you can also set a ``compilerCustom`` for a single resource with the CLI. [Read more](../cli/commands.md)

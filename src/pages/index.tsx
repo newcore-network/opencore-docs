@@ -132,21 +132,21 @@ export default function Home(): JSX.Element {
                             title="Architecture-first"
                             description="OpenCore is built around Hexagonal Architecture. The game runtime is just an adapter—your domain stays pure."
                             className={styles.cardLarge}
-                            docLink='docs/intro.md'
+                            docLink='docs/intro'
                             docString='Read more'
                         />
 
                         <FeatureCard
                             title="Declarative Gameplay"
                             description="Commands, events, guards and throttles are declared through decorators. No imperative glue code."
-                            docLink='docs/intro.md'
+                            docLink='docs/intro'
                             docString='Read more'
                         />
 
                         <FeatureCard
                             title="Utility Ports & Services"
                             description="Use our ports and services API to enrich your experience without having to build everything from scratch."
-                            docLink='docs/intro.md'
+                            docLink='docs/intro'
                             docString='Read more'
                         />
                     </div>
