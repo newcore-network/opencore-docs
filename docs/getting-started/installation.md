@@ -10,7 +10,7 @@ title: Installation
 
 OpenCore is distributed as an NPM package. You can add it to an existing resource or start a new project with our CLI!
 
-### With our CLI *(Recommended)* [CLI installation](../cli/about.md)
+### With our CLI *(Recommended)* [CLI installation](../cli/introduction.md)
 ```bash
 opencore init
 ```
