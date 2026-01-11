@@ -70,10 +70,6 @@ Checks for and installs the latest version of the OpenCore CLI.
 
 #### Flags:
 - `-f, --force`: Forces an update check by ignoring the local version cache. Use this if you know a new version is out but the CLI says it's up to date.
-
-### `opencore version`
-Displays the current version of the installed CLI.
-
 ---
 
 ## Global Flags
