@@ -16,6 +16,18 @@ Initializes a new OpenCore project with a guided wizard.
 - Generates `package.json` and `opencore.config.ts`.
 - Prepares the workspace for your favorite package manager.
 
+#### Flags 
+- `--dir, -d <path>`: Directory where the project folder will be created.
+  - Example: `opencore init my-server -d "D:/dev/servers"` creates `D:/dev/servers/my-server`
+- `--architecture <domain-driven|layer-based|feature-based|hybrid>`: Preselects the project architecture (also usable in non-interactive mode).
+- `--minify`: Enables minification in the generated config.
+- `--module <name>` (repeatable): Installs/declares official modules during init.
+  - Example: `--module @open-core/identity`
+- `--destination <path>`: Sets the build output directory (usually your FiveM `resources` folder).
+  - **Note:** This is the **final build output** (what gets produced by `opencore build`).
+- `--skip-destination`: Do not set `destination` during init (you can edit ``opencore.config.ts`` later).
+- `--non-interactive`: Do not run the wizard; use flags/defaults. Requires `project-name`.
+
 ### `opencore dev`
 Starts the development mode with high-productivity features:
 - **Hot Reload**: Automatically reloads modified modules in the FiveM server without restarting the entire resource.
