@@ -15,7 +15,7 @@ The handler is wrapped with error handling and structured logging to prevent run
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework'
+import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class UiController {

@@ -114,7 +114,7 @@ If you remember only one rule:
 | [@Server.OnNet()](./server/on-net.md) | Subscribes the method to a network event (onNet). Used for client → server or server → client communication via FiveM networking. |
 | [@Server.OnTick()](./server/on-tick.md) | Executes the method on every server tick. Intended for lightweight, high-frequency logic. Heavy operations should be avoided to prevent performance issues. |
 | [@Server.OnFrameworkEvent()](./server/on-framework-event.md) | Listens to internal framework events. Useful for reacting to lifecycle hooks, module events, or cross-system communication inside the framework. |
-| [@Server.OnFivemEvent()](./server/on-fivem-event.md) | Subscribes the method to a native FiveM event (e.g. playerJoining, playerDropped). Acts as a clean abstraction over on() for FiveM events. |
+| [@Server.OnRuntimeEvent()](./server/on-runtime-event.md) | Subscribes the method to a native FiveM event (e.g. playerJoining, playerDropped). Acts as a clean abstraction over on() for FiveM events. |
 | [@Server.RequiresState()](./server/requires-state.md) | Ensures the player is in a specific state before executing the method. If the requirement is not met, the method is skipped or rejected. Commonly used for gameplay state validation (logged in, spawned, etc.). |
 | [@Server.Throttle()](./server/throttle.md) | Applies rate limiting to the method. Prevents spam or abuse by limiting how frequently the method can be executed per player or context. |
 | [@Server.Export()](./server/export.md) | Exposes the method as a FiveM export, making it callable from other resources. Useful for inter-resource APIs and modular architectures. |
@@ -126,7 +126,7 @@ If you remember only one rule:
 | [@Client.OnTick()](./client/on-tick.md) | Executes the method on every client tick. Intended for lightweight, frame-based logic. Heavy computations should be avoided to prevent FPS drops. |
 | [@Client.Interval()](./client/interval.md) | Executes the method at a fixed time interval (in milliseconds). Useful for periodic logic that does not need to run every tick (polling, checks, UI sync). |
 | [@Client.Key()](./client/key.md) | Binds the method to a keyboard key press. Executes when the specified key is pressed by the player. Ideal for gameplay shortcuts or UI interactions. |
-| [@Client.Nui()](./client/nui.md) | Registers the method as a NUI callback handler. Executed when the UI (HTML/JS) sends a message to the client script. Acts as the bridge between UI and gameplay logic. |
+| [@Client.OnView()](./client/on-view.md) | Registers the method as a NUI callback handler. Executed when the UI (HTML/JS) sends a message to the client script. Acts as the bridge between UI and gameplay logic. |
 | [@Client.Export()](./client/export.md) | Exposes the method as a FiveM client export, allowing other resources to call it directly. Useful for inter-resource client APIs. |
 | [@Client.ResourceLifecycle()](./client/on-resource-start.md) | Subscribes the method to resource lifecycle events (start, stop, restart). Useful for initialization and cleanup logic on the client side. |
 

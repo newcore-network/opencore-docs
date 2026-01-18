@@ -13,6 +13,6 @@ OpenCore is an open-source project and we welcome contributions from the communi
 3.  **Submit a Pull Request**: Provide a detailed description of your changes.
 
 ## Guidelines
-- Follow the existing coding style (TypeScript + Prettier).
+- Follow the existing coding style (TypeScript + Biome (linter and format)).
 - Ensure all tests pass.
 - Update documentation if you are adding new features.

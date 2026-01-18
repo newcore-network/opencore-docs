@@ -23,7 +23,7 @@ If omitted, a default message is generated based on the failing state.
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
 
 @Server.Controller()
 export class InventoryController {

@@ -21,7 +21,7 @@ The method signature should accept the payload type associated with the selected
 
 ## Example
 ```ts
-import { Server } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
 
 @Server.Controller()
 export class SystemController {

@@ -4,50 +4,122 @@ title: Introduction to Contracts
 
 ## What is a Contract?
 
-In OpenCore, a **Contract** is an abstract definition that specifies a set of rules and methods that a class must implement. Think of them as "Instructions for the Framework".
+In OpenCore, a **Contract** is an abstract definition that specifies a stable set of methods the framework can rely on.  
+Think of contracts as **formal boundaries between the framework and your application logic**.
+
+Contracts allow OpenCore to remain decoupled from:
+- Databases
+- Authentication systems
+- Permission models
+- Persistence layers
+- Security policies
+
+While still enabling powerful extensibility.
 
 The framework uses contracts to:
-1.  **Define Boundaries**: Ensure that different parts of the system (like databases or auth providers) communicate using a stable, predictable API.
-2.  **Ensure Reliability**: By implementing a contract, you guarantee that the framework can rely on certain methods (like `onSessionSave`) being present.
-3.  **Allow Flexibility**: You can swap implementations (e.g., changing from a MySQL to a MongoDB database) without changing the core framework code, as long as both implement the same contract.
-
-## 1. How Contracts Work
-
-Contracts are typically `abstract class` definitions. When you want to provide a specific functionality to the framework, you **extend** the contract and **register** your class in the dependency container.
-
-### The Registration Pattern
-The framework "asks" for a contract, and you "provide" the implementation.
-
-```ts
-// 1. You implement the contract
-export class MySqlPersistence extends PlayerPersistenceContract {
-  // ... implementation ...
-}
-
-// 2. You register it (usually in your main resource entry point)
-@Server.Bind(PlayerPersistenceContract)
-export class MySqlPersistence extends PlayerPersistenceContract { ... }
-```
-
-## 2. Mandatory vs. Optional Contracts
-
-| Contract | Type | Purpose |
-| -------- | ---- | ------- |
-| **PlayerPersistenceContract** | Optional | Defines how to save/load player data. If not provided, data is transient. |
-| **AuthProviderContract** | Optional | Handles login/register logic. Defaults to basic identifier auth if missing. |
-| **PrincipalProviderContract** | **Mandatory*** | Required if you use `@Server.Guard()` or permission checks. |
-| **Repository** | Optional | A base class for creating type-safe data access layers. |
-
-*\*Note: Some features of the framework will throw errors or disable themselves if their required contracts are not implemented.*
-
-## 3. Why use Contracts?
-
-- **Zero Coupling**: The framework doesn't care *where* your data comes from (SQL, API, JSON files).
-- **Validation**: Contracts act as a shield, ensuring that data passed between your resource and the core is correctly structured.
-- **Inversion of Control**: You don't call the framework; the framework calls your contract implementation when it needs information.
+1. **Define boundaries** – Different subsystems communicate through stable, predictable APIs.
+2. **Ensure reliability** – Required lifecycle methods (such as `onSessionSave`) are always present.
+3. **Enable flexibility** – Implementations can be swapped without modifying the framework itself.
 
 ---
 
-:::info
-To see how to implement specific functionality, browse the detailed contract documentation in this section.
-:::
+## 1. How Contracts Work
+
+Contracts are defined as `abstract class` definitions.
+
+To customize framework behavior, you:
+1. **Extend** a contract
+2. **Register** the implementation before the framework boots
+
+From **v0.3.x onward**, contracts are **not registered implicitly**.  
+Registration happens through the **Setup API**, not decorators.
+
+---
+
+### Registration model (v0.3+)
+
+The framework *requests* a contract.  
+You *provide* an implementation explicitly.
+
+```ts
+import { Server } from '@open-core/framework/server'
+
+Server.setPersistenceProvider(MySqlPersistence)
+````
+
+This registration must happen **before** calling `Server.init()`.
+
+---
+
+### About `@Server.Bind`
+
+The `@Server.Bind()` decorator **does not configure contracts**.
+
+Its purpose is:
+
+* Marking a class as injectable
+* Enabling constructor-based dependency injection
+* Ensuring proper resolution inside controllers and services
+
+Example:
+
+```ts
+@Server.Bind()
+export class MySqlPersistence extends PlayerPersistenceContract {
+  // injectable class
+}
+```
+
+Use `@Server.Bind` for **dependency injection**,
+use `Server.setX(...)` for **framework configuration**.
+
+---
+
+## 2. Required vs Optional Contracts
+
+Not all contracts must be implemented.
+OpenCore provides **safe defaults** for most of them.
+
+| Contract                             | Required                         | Default behavior if not provided                 |
+| ------------------------------------ | -------------------------------- | ------------------------------------------------ |
+| **PrincipalProviderContract**        | ⚠️ Required in CORE / STANDALONE | Default provider (deny-by-default)               |
+| **PlayerPersistenceContract**        | Optional                         | In-memory persistence (no data survives restart) |
+| **SecurityHandlerContract**          | Optional                         | Internal handler (block + log)                   |
+| **NetEventSecurityObserverContract** | Optional                         | Internal observer                                |
+| **Repository**                       | Optional                         | Not used unless extended                         |
+
+Notes:
+
+* RESOURCE mode delegates required contracts to CORE.
+* Missing required contracts cause a **fail-fast bootstrap error**.
+* Optional contracts always have internal defaults.
+
+---
+
+## 3. Why use Contracts?
+
+* **Zero coupling** – The framework never depends on concrete implementations.
+* **Predictable execution** – The framework controls when and how your logic runs.
+* **Inversion of control** – You provide behavior; the framework orchestrates it.
+* **Security by default** – Missing implementations never result in permissive behavior.
+
+Contracts ensure OpenCore remains:
+
+* Modular
+* Testable
+* Safe by default
+* Extensible without hacks
+
+---
+
+## Requirement rules
+
+* Some contracts are required **depending on runtime mode**.
+* Required contracts must be registered **before `Server.init()`**.
+* If a required contract is missing, the framework will:
+
+  * Log a fatal error
+  * Abort initialization
+* Defaults are applied only when explicitly allowed.
+
+This design prevents silent misconfiguration in production environments.

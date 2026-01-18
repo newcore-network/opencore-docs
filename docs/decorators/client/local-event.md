@@ -15,7 +15,7 @@ In OpenCore, the decorator stores metadata first, and during bootstrap the Local
 ## Example
 
 ```ts
-import { Client } from '@open-core/framework'
+import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class UiController {

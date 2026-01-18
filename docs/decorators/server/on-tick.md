@@ -13,7 +13,7 @@ This decorator does not accept any arguments.
 
 ## Example
 ```ts
-import { Server } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
 
 @Server.Controller()
 export class SyncController {

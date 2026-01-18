@@ -25,7 +25,7 @@ This decorator supports two overloads.
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
 
 @Server.Controller()
 export class MarketController {

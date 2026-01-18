@@ -20,7 +20,7 @@ Defaults to false, in which case the handler receives the raw argument array.
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework'
+import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class CombatController {

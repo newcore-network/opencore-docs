@@ -18,7 +18,7 @@ If not provided, the method name is used as the export name.
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
 
 @Server.Controller()
 export class AccountController {

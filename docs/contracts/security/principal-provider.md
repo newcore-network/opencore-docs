@@ -3,7 +3,8 @@ title: Principal Provider
 ---
 
 ## Description
-The `PrincipalProvider` is the **authoritative source for authorization**. It tells the framework what permissions and ranks a player has. Without an implementation of this contract, `@Server.Guard()` will always fail as it won't know how to verify the player.
+The `PrincipalProvider` is the **authoritative source for authorization**. It tells the framework what permissions and ranks a player has. If no PrincipalProvider is registered, OpenCore installs a default provider with deny-by-default behavior. This ensures the framework is secure by default.
+
 
 ## API Methods
 

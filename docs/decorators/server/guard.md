@@ -20,7 +20,9 @@ A specific permission the player must have to execute the method.
 ## Example
 
 ```ts
-import { Server, Infer } from '@open-core/framework'
+import { Infer } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
+
 
 @Server.Controller()
 export class AdminController {

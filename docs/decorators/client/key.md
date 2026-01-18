@@ -16,7 +16,7 @@ This approach keeps input configuration declarative and close to the logic it tr
 ## Example
 
 ```ts
-import { Client } from '@open-core/framework'
+import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class InteractionController {

@@ -15,7 +15,7 @@ Exports are scoped to the resource where they are defined.
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework'
+import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class UiExports {

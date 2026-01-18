@@ -18,7 +18,7 @@ This decorator does not accept any arguments.
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
 import { PlayerDirectoryPort } from '../services/player.service'
 
 @Server.Controller()
@@ -36,7 +36,7 @@ export class PlayerController {
 
 Now you import it into the entry point (index server)
 ```ts
-import { Server } from '@open-core/framework'
+import { Server } from '@open-core/framework/server'
 
 // Controllers
 import './controllers/player.controller'

@@ -4,12 +4,15 @@ const sidebars: SidebarsConfig = {
   docs: [
     'intro',
     'why-opencore',
+    'roadmap',
+    'releases',
     {
       type: 'category',
       label: 'Getting Started',
       items: [
         'getting-started/installation',
         'getting-started/first-server',
+        'getting-started/setup',
       ],
     },
     {
@@ -29,7 +32,7 @@ const sidebars: SidebarsConfig = {
             'decorators/server/on-net',
             'decorators/server/on-tick',
             'decorators/server/on-framework-event',
-            'decorators/server/on-fivem-event',
+            'decorators/server/on-runtime-event',
             'decorators/server/requires-state',
             'decorators/server/throttle',
             'decorators/server/export',
@@ -48,7 +51,7 @@ const sidebars: SidebarsConfig = {
             'decorators/client/on-tick',
             'decorators/client/interval',
             'decorators/client/key',
-            'decorators/client/nui',
+            'decorators/client/on-view',
             'decorators/client/export',
             'decorators/client/on-resource-start',
           ],
@@ -103,10 +106,10 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Security',
           items: [
-            'contracts/security/auth-provider',
             'contracts/security/principal-provider',
             'contracts/security/security-handler',
             'contracts/security/net-event-security-observer',
+            'contracts/security/command-security-observer',
           ],
         },
       ],

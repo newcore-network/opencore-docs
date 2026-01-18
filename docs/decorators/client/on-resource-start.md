@@ -14,7 +14,7 @@ This decorator does not accept any arguments.
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework'
+import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class LifecycleController {

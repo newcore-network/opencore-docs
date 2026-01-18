@@ -15,7 +15,7 @@ The decorator stores scheduling metadata, which the framework processes during c
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework'
+import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class SyncController {
