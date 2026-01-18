@@ -4,54 +4,222 @@ title: Overview
 
 ## What is OpenCore CLI?
 
-The **OpenCore CLI** is the official command-line tool designed to orchestrate the development, building, and management of FiveM projects using the OpenCore Framework. It provides a modern developer experience similar to tools like NestJS CLI or Vite, but specifically tailored for the FiveM environment.
+The **OpenCore CLI** is the official command-line tool used to **build, validate, and orchestrate OpenCore-based projects**.
 
-## Key Concepts
+It is not a generic TypeScript compiler.  
+It understands **FiveM/RedM runtimes**, **OpenCore architecture**, and the constraints of each execution environment.
 
-The CLI distinguishes between three main types of components:
+Conceptually, it plays a role similar to:
+- NestJS CLI (project orchestration)
+- Vite (fast, opinionated builds)
 
-- **Core**: The central brain of your server. It contains the framework runtime and shared logic.
-- **Satellite Resources**: Modular resources that depend on the Core. They are optimized for small bundle sizes and high performance.
-- **Standalone Resources**: Independent resources that don't require the framework (e.g., legacy Lua scripts or utility JS).
+…but designed **specifically** for FiveM and RedM and OpenCore.
 
-## Why Go?
+---
 
-The CLI and its compiler are written in **Go (Golang)** for several critical reasons:
+## What problem does it solve? 🧠
 
-1.  **Extreme Performance**: Go's native compilation and efficient concurrency model (goroutines) allow us to run builds in parallel across all your CPU cores.
-2.  **Single Binary**: No need to install complex dependencies. The CLI comes as a single executable that includes everything it needs to build your project.
-3.  **Low Resource Footprint**: Building 10+ resources simultaneously consumes minimal RAM compared to Node.js-based build tools.
+FiveM/RedM is not a single runtime.
 
-## CLI Syntax
+You are dealing with:
+- Node.js (server)
+- Neutral JS runtimes (client)
+- Browsers (NUI / Views)
 
-When using CLI commands, you will see arguments wrapped in specific brackets. Understanding these is crucial for correct usage:
+Each with **different rules**, APIs, and limitations.
 
-- **`<argument>`**: **Required**. You must provide this value for the command to work (e.g., `<type>` in `create`).
-- **`[argument]`**: **Optional**. You can omit this value, and the CLI will either use a default or prompt you for it (e.g., `[name]` in `init`).
+The OpenCore CLI:
+- Detects what you are building
+- Validates what is allowed
+- Produces **runtime-safe artifacts**
+- Fails early when something is invalid
 
-## Recommended Environment
+This removes an entire class of hard-to-debug runtime errors.
 
-### Package Manager: `pnpm`
-While `npm` and `yarn` are supported, **`pnpm` is highly recommended** and is the primary choice for OpenCore projects.
-- **Compatibility**: The CLI's dependency linker is optimized for `pnpm`'s content-addressable storage.
-- **Performance**: Faster installations and efficient disk usage across multiple resources.
-- **Strictness**: Ensures that resources only access dependencies explicitly declared in their `package.json`.
+---
 
-## Technical Dependencies
+## Core concepts
 
-The CLI isn't just a wrapper; it manages a complex build pipeline that depends on your project's configuration and the UI frameworks you choose:
+The CLI understands three types of components:
 
-### NUI / Views Dependencies
-The compiler (`internal/builder/embedded/views.js`) automatically detects which framework you are using and requires the corresponding adapters to be installed in your project:
+### 🧠 Core
+The central brain of your server.
 
-- **React**: Requires `react` and `react-dom`.
-- **Svelte**: Requires `svelte` and `esbuild-svelte`.
-- **Vue**: Requires `vue` and `esbuild-plugin-vue3`.
-- **SASS/SCSS**: Requires `sass` and `esbuild-sass-plugin`.
+- Hosts the OpenCore runtime
+- Exposes exports to other resources
+- Owns global systems (commands, players, identity)
 
-If the compiler detects these files but the dependencies are missing, it will provide a clear error message with the exact `pnpm add` command needed.
+There is usually **one Core** per server.
 
-### Framework Adapters
-The CLI's behavior changes based on how your resources interact with the **OpenCore Framework**:
-- **Satellite Resources**: Depend on the Core's exports. The CLI ensures these exports are correctly mapped during the build.
-- **Neutral Runtime**: For client-side code, the CLI strips all Node.js and Web APIs, as the FiveM client environment is "neutral" (JS only).
+---
+
+### 🛰️ Satellite Resources
+Modular resources that **depend on the Core**.
+
+- Contain gameplay logic
+- Register commands and events
+- Delegate shared systems to Core
+- Built for **small bundles and fast iteration**
+
+This is the recommended way to scale a server.
+
+---
+
+### 📦 Standalone Resources
+Independent resources that do **not** rely on OpenCore.
+
+- Legacy Lua scripts
+- Utility JS resources
+- Third-party tools
+
+The CLI supports them, but does not enforce framework rules.
+
+---
+
+## High-level build flow 🔁
+
+```
+
+Source Code
+↓
+Discovery (server / client / views)
+↓
+Runtime validation
+↓
+Adapter selection
+↓
+Parallel compilation
+↓
+FiveM-ready artifacts
+
+````
+
+You do not configure this manually.  
+The CLI infers it from structure and intent.
+
+---
+
+## Why Go? ⚙️
+
+The CLI and compiler are written in **Go (Golang)** by design.
+
+Key reasons:
+
+- **Performance**: Parallel builds using goroutines
+- **Single binary**: No Node.js dependency for the tool itself
+- **Low memory usage**: Stable even with many resources
+- **Fast startup**: Near-instant command execution
+
+This makes the CLI reliable in both development and CI environments.
+
+---
+
+## CLI syntax basics 🧪
+
+Command arguments follow a simple convention:
+
+- **`<argument>`** → required  
+- **`[argument]`** → optional  
+
+Example:
+```bash
+opencore create <type> [name]
+````
+
+This mirrors standard CLI conventions and avoids ambiguity.
+
+---
+
+## Automatic discovery 🔍
+
+The CLI performs **automatic project analysis**:
+
+* Detects server entrypoints:
+
+  * `main.ts`, `index.ts`, `server.ts`
+* Detects client entrypoints:
+
+  * `client.ts`, `index.ts`
+* Discovers NUI / view entrypoints
+* Infers runtime targets per file
+
+No explicit configuration is required.
+
+---
+
+## Recommended environment 🧰
+
+### Package manager: `pnpm` (recommended)
+
+While `npm` and `yarn` are supported, **`pnpm` is strongly recommended**.
+
+Reasons:
+
+* Faster installs
+* Lower disk usage
+* Strict dependency isolation
+* Optimized integration with the CLI linker
+
+The CLI is designed around `pnpm`’s dependency model.
+
+---
+
+## NUI / Views support 🖥️
+
+The compiler automatically detects your UI framework and expects the correct adapters to be installed.
+
+Supported setups include:
+
+* **React** → `react`, `react-dom`
+* **Vue** → `vue`, `esbuild-plugin-vue3`
+* **Svelte** → `svelte`, `esbuild-svelte`
+* **SASS / SCSS** → `sass`, `esbuild-sass-plugin`
+
+If required dependencies are missing:
+
+* The build fails
+* A clear error is shown
+* The exact `pnpm add` command is suggested
+
+No guessing, no silent failures.
+
+---
+
+## Runtime adapters 🧠
+
+The CLI adapts its behavior based on runtime context:
+
+* **Server (Node.js)**
+  Full Node APIs allowed
+
+* **Client (Neutral runtime)**
+  Node.js and Web APIs are stripped
+
+* **NUI (Browser)**
+  Standard web environment
+
+This ensures:
+
+* Correct bundling
+* No invalid imports
+* Predictable runtime behavior
+
+---
+
+## Philosophy ✨
+
+The OpenCore CLI is opinionated by design.
+
+Its goals are:
+
+* Safety over flexibility
+* Correctness over convenience
+* Explicit failures instead of silent bugs
+
+You can build your own tooling —
+but the CLI is the **reference implementation** for OpenCore projects.
+
+---
+
+This overview defines *what* the CLI is.
+The following sections explain *how* to use it.

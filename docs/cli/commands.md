@@ -2,76 +2,186 @@
 title: Commands
 ---
 
-## Project Structure
+## Project structure 📁
 
-OpenCore projects follow a standardized structure enforced by the CLI:
-- **Resources**: Framework-connected modules in the `resources/` folder. They have access to the Dependency Injection (DI) container, shared services, and the core runtime.
-- **Standalones**: Independent scripts in the `standalones/` folder. These are self-contained and have no framework dependencies, making them ideal for simple utilities or legacy logic.
+OpenCore projects follow a **clear and enforced structure**, understood and validated by the CLI.
 
-## Command Reference
+- **Resources (`resources/`)**  
+  Framework-connected modules.  
+  They have access to:
+  - Dependency Injection (DI)
+  - Core exports
+  - Shared services
+  - Runtime lifecycle
 
-### `opencore init [name]`
-Initializes a new OpenCore project with a guided wizard. 
-- Creates the base directory structure.
-- Generates `package.json` and `opencore.config.ts`.
-- Prepares the workspace for your favorite package manager.
+- **Standalones (`standalones/`)**  
+  Independent scripts with **no framework dependency**.  
+  Ideal for:
+  - Legacy Lua/JS scripts
+  - Utilities
+  - Third-party integrations
 
-#### Flags 
-- `--dir, -d <path>`: Directory where the project folder will be created.
-  - Example: `opencore init my-server -d "D:/dev/servers"` creates `D:/dev/servers/my-server`
-- `--architecture <domain-driven|layer-based|feature-based|hybrid>`: Preselects the project architecture (also usable in non-interactive mode).
-- `--minify`: Enables minification in the generated config.
-- `--module <name>` (repeatable): Installs/declares official modules during init.
-  - Example: `--module @open-core/identity`
-- `--destination <path>`: Sets the build output directory (usually your FiveM `resources` folder).
-  - **Note:** This is the **final build output** (what gets produced by `opencore build`).
-- `--skip-destination`: Do not set `destination` during init (you can edit ``opencore.config.ts`` later).
-- `--non-interactive`: Do not run the wizard; use flags/defaults. Requires `project-name`.
+The CLI uses this structure to infer **build targets, runtime rules, and dependency boundaries**.
 
-### `opencore dev`
-Starts the development mode with high-productivity features:
-- **Hot Reload**: Automatically reloads modified modules in the FiveM server without restarting the entire resource.
-- **Incremental Watching**: Only recompiles the files you change, keeping the feedback loop under 500ms.
-- **Live Logging**: Captures framework events and logs directly in your terminal.
-
-### `opencore build`
-Prepares all resources for production deployment.
-- **Parallel Compilation**: Distributes the workload across all CPU cores using the Go engine.
-- **Dependency Linking**: Automatically handles `node_modules` symlinking for server-side resources to prevent duplication.
-- **Native Package Detection**: Scans your dependencies for C++ bindings (like `bcrypt` or `sqlite3`) and warns you if they are incompatible with the FiveM runtime.
-- **Optimization**: Applies minification and strips development-only reflection data.
-
-### `opencore create <type> [name]`
-Generates standardized boilerplate for different project components.
-
-#### Sub-commands:
-- `feature [name]`: Creates a new feature module in the core (or a specific resource using `-r`).
-- `resource [name]`: Creates a new satellite resource in the `resources/` folder.
-- `standalone [name]`: Creates an independent script in the `standalones/` folder.
-
-#### Flags:
-- `-r, --resource <name>`: Specify a target resource for a new feature.
-- `--with-client`: Include a client-side entry point.
-- `--with-nui`: Include NUI (web) scaffolding.
-
-### `opencore clone <template>`
-Downloads official templates from the [opencore-templates](https://github.com/newcore-network/opencore-templates) repository.
-- `-l, --list`: Lists all available templates (e.g., `xchat`, `identity-base`).
-- `--api`: Forces the use of the GitHub API if `git` is not available on the system.
-
-### `opencore doctor`
-Validates your environment and project health. It checks for:
-- Required Node.js and Go versions.
-- Correct project structure.
-- Missing or invalid configuration fields.
-
-### `opencore update`
-Checks for and installs the latest version of the OpenCore CLI.
-
-#### Flags:
-- `-f, --force`: Forces an update check by ignoring the local version cache. Use this if you know a new version is out but the CLI says it's up to date.
 ---
 
-## Global Flags
-- `-v, --version`: Display the current version of the CLI.
-- `-h, --help`: Show help for any command.
+## Command reference 🧭
+
+### `opencore init [name]`
+
+Initializes a new OpenCore project using a guided wizard.
+
+What it does:
+- Creates the base workspace
+- Generates `package.json` and `opencore.config.ts`
+- Prepares the project for immediate development
+
+#### Flags
+
+- `--dir, -d <path>`  
+  Directory where the project folder will be created  
+  ```bash
+    opencore init my-server -d "D:/dev/servers"
+  ```
+
+* `--architecture <domain-driven|layer-based|feature-based|hybrid>`
+  Preselects the project architecture (also usable in non-interactive mode)
+
+* `--minify`
+  Enables production minification in the generated config
+
+* `--module <name>` *(repeatable)*
+  Installs and declares official modules during initialization
+
+  ```bash
+  --module @open-core/identity
+  ```
+
+* `--destination <path>`
+  Sets the final build output directory
+  (usually your FiveM `resources` folder)
+
+* `--skip-destination`
+  Skip destination setup (can be edited later)
+
+* `--non-interactive`
+  Run without the wizard (requires `project-name`)
+
+---
+
+### `opencore dev`
+
+Starts development mode with fast feedback loops ⚡
+
+Features:
+
+* Hot reload for resources
+* Incremental recompilation
+* Live logs and framework events streamed to the terminal
+
+Designed for:
+
+* Rapid iteration
+* Gameplay tuning
+* Debugging framework behavior
+
+---
+
+### `opencore build`
+
+Builds all resources for production deployment.
+
+What happens internally:
+
+* Parallel compilation using all CPU cores
+* Runtime-aware bundling (server / client / NUI)
+* Dependency linking to avoid duplicated `node_modules`
+* Detection of native Node.js packages incompatible with FiveM
+* Minification and cleanup of development metadata
+
+This command produces **ready-to-run FiveM resources**.
+
+---
+
+### `opencore create <type> [name]`
+
+Generates standardized boilerplate.
+
+#### Sub-commands
+
+* `feature [name]`
+  Creates a new feature module
+  (in Core or in a specific resource using `-r`)
+
+* `resource [name]`
+  Creates a new satellite resource under `resources/`
+
+* `standalone [name]`
+  Creates an independent script under `standalones/`
+
+#### Flags
+
+* `-r, --resource <name>`
+  Target a specific resource
+
+* `--with-client`
+  Include a client-side entry point
+
+* `--with-nui`
+  Include NUI (web) scaffolding
+
+---
+
+### `opencore clone <template>`
+
+Downloads official templates from
+[https://github.com/newcore-network/opencore-templates](https://github.com/newcore-network/opencore-templates)
+
+Options:
+
+* `-l, --list` – List available templates
+* `--api` – Use GitHub API if `git` is unavailable
+
+Useful for:
+
+* Reference implementations
+* Quick starts
+* Best-practice examples
+
+---
+
+### `opencore doctor`
+
+Checks project and environment health 🩺
+
+Validates:
+
+* Node.js and Go versions
+* Project structure
+* Configuration correctness
+* Missing or invalid fields
+
+Recommended to run when:
+
+* Setting up a new machine
+* Debugging unexpected behavior
+
+---
+
+### `opencore update`
+
+Checks for and installs the latest version of the OpenCore CLI.
+
+Keeps your tooling aligned with framework changes.
+
+---
+
+## Global flags 🌍
+
+* `-v, --version` – Display CLI version
+* `-h, --help` – Show help for any command
+
+---
+
+The CLI is **not optional tooling**.
+It is the reference implementation for building and validating OpenCore projects.

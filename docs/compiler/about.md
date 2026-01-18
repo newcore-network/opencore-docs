@@ -4,80 +4,291 @@ title: The Compiler
 
 ## Overview
 
-The OpenCore Compiler is the heart of the CLI. It is a high-performance build engine specifically designed to handle the complexities of FiveM's three distinct runtime environments (Server, Client, and NUI).
+The **OpenCore Compiler** is the technical core of the OpenCore CLI.  
+It is not just a transpiler or a bundler: it is a **monorepo-aware build orchestrator** designed specifically for FiveM and similar GTA runtimes.
+
+Its job is to:
+- Understand **what each environment can and cannot do**
+- Compile **server, client, and UI (NUI)** code correctly
+- Coordinate **multiple resources in parallel**
+- Produce **drop-in ready artifacts** for FiveM
+
+All of this is done with **performance, safety, and predictability** as first-class goals ⚙️
+
+---
+
+## The Compiler as a Monorepo Orchestrator 🧠
+
+An OpenCore project is effectively a **monorepo of runtime units**:
+
+```
+
+workspace/
+├─ core/
+│  ├─ server/
+│  ├─ client/
+│  └─ views/
+├─ resources/
+│  ├─ inventory/
+│  │  ├─ server/
+│  │  ├─ client/
+│  │  └─ views/
+│  ├─ jobs/
+│  └─ chat/
+└─ shared/
+
+````
+
+The compiler:
+- Discovers **all resources automatically**
+- Detects **entrypoints per environment**
+- Builds **each unit independently**
+- Runs them **in parallel** when possible
+- Resolves **cross-resource framework contracts** (CORE ↔ RESOURCE)
+
+Think of it less as “`tsc` for FiveM” and more as:
+
+> **A coordinator that understands the topology of your server**
+
+---
 
 ## FiveM Runtime Environments
 
-FiveM has **three distinct runtime environments**. Understanding their differences is essential for building compatible resources.
+FiveM runs JavaScript in **three fundamentally different environments**.  
+The compiler enforces **hard boundaries** between them.
 
-### Quick matrix
+### Runtime Matrix
 
-| Environment | Platform | What you can rely on | What will break |
-|------------|----------|----------------------|----------------|
-| Server | `node` | Node.js APIs, `node_modules`, FiveM server APIs | Web APIs (`window`, `DOM`), GTA natives |
-| Client | `neutral` | Pure JS (V8), FiveM client APIs, GTA natives | Node.js APIs, Web APIs, non-bundled deps |
-| Views (NUI) | `browser` | Web APIs, UI frameworks, NUI callbacks/messages | Node.js APIs, GTA natives, direct FiveM APIs |
+| Environment | Target | Purpose | What you can use | What will break |
+|------------|--------|--------|------------------|----------------|
+| **Server** | Node.js | Backend logic | Node APIs, DBs, filesystem | DOM, Web APIs, GTA natives |
+| **Client** | Neutral JS | Gameplay logic | GTA natives, FiveM events | Node APIs, browser APIs |
+| **Views (NUI)** | Browser | UI / HUD | DOM, fetch, UI frameworks | Node APIs, natives |
 
-### Server (Node.js)
+---
 
-**Node version**:
-- **Node 22** if you explicitly select it in the resource `fxmanifest.lua` [fivem docs](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/)
-- Otherwise **Node 16** is used by default
+## Server Environment (Node.js)
 
-Examples:
-- **✅ Do**: read config files, call external APIs, database access, background jobs.
-- **✅ Works**: `import fs from 'fs'`, `import crypto from 'crypto'`, `await fetch(...)` (Node), `require('pg')`.
-- **❌ Don’t**: use `window`, `document`, `localStorage`.
-- **❌ Will break**: GTA natives (no game context).
+The **server** runs on FiveM’s Node runtime.
 
-### Client (Neutral JS / V8)
+- Default: **Node 16**
+- Optional: **Node 22** (via `fxmanifest.lua`)
 
-Treat client code as **neutral**: assume **no `node` and no browser**.
+### Intended responsibilities
+- Authentication & persistence
+- Command handling
+- Business logic
+- External APIs
+- Background jobs
 
-Examples:
-- **✅ Do**: game interaction, player input, natives, minimal logic.
-- **✅ Works**: FiveM client events, `GetEntityCoords(...)`, simple state, math/logic.
-- **❌ Don’t**: `import fs from 'fs'`, `process.env`, `Buffer`, `require(...)`.
-- **❌ Don’t**: `fetch`, `window`, `document`, `localStorage`.
-- **❌ Will break**: packages that aren’t bundled (or that rely on Node/Web internals).
+### Examples
 
-### Views (NUI / Browser)
+**✅ Allowed**
+```ts
+import fs from 'fs'
+import crypto from 'crypto'
+import pg from 'pg'
+````
 
-NUI is **browser-like**, but not guaranteed to match modern Chrome 1:1.
+**❌ Forbidden**
 
-Examples:
-- **✅ Do**: UI (React/Vue/etc.), `fetch` to your own endpoints, local UI state.
-- **✅ Works**: `window.postMessage` patterns, NUI callbacks (`RegisterNUICallback` / `SendNUIMessage`).
-- **❌ Don’t**: `fs`, `path`, `process`, native Node addons.
-- **❌ Don’t**: call natives / FiveM APIs directly.
+```ts
+window
+document
+GetEntityCoords(...)
+```
 
-**Compatibility note**: the embedded Chromium has **version limitations**. If you rely on a modern Web API, test it on real FiveM.
+The compiler:
+
+* Targets Node explicitly
+* Keeps `node_modules`
+* Preserves Node globals
+
+---
+
+## Client Environment (Neutral JS / V8)
+
+Client code runs inside the GTA V client, **not Node, not a browser**.
+
+This environment is intentionally minimal.
+
+### Intended responsibilities
+
+* Player input
+* Game state
+* Entity interaction
+* Natives and events
+
+### Examples
+
+**✅ Allowed**
+
+```ts
+onNet('event', ...)
+GetEntityCoords(PlayerPedId())
+Math.random()
+```
+
+**❌ Forbidden**
+
+```ts
+fs
+process
+fetch
+window
+require('some-lib')
+```
+
+The compiler:
+
+* Bundles everything into a **single file**
+* Strips Node & browser globals
+* Fails fast on incompatible imports
+
+This is one of the **main reasons a generic bundler is not enough**.
+
+---
+
+## Views (NUI / Browser)
+
+Views run in an **embedded Chromium instance**.
+
+This is a browser-like environment, but **not guaranteed to be modern Chrome**.
+
+### Intended responsibilities
+
+* UI / HUD
+* Menus
+* Web-based interactions
+* Styling & animations
+
+### Examples
+
+**✅ Allowed**
+
+```ts
+fetch('/api')
+window.postMessage(...)
+React / Vue / Svelte
+```
+
+**❌ Forbidden**
+
+```ts
+fs
+path
+process
+GTA natives
+```
+
+The compiler:
+
+* Detects the UI framework automatically
+* Injects the correct esbuild plugins
+* Builds optimized browser bundles
+* Copies static assets (HTML, CSS, fonts, images)
+
+---
+
+## Automatic Environment Discovery 🔍
+
+The compiler does **zero-config discovery**.
+
+It scans for:
+
+* `server.ts`, `client.ts`, `index.ts`, `main.ts`
+* View entrypoints (`views/`, `ui/`, `nui/`)
+* Resource boundaries
+
+Diagram:
+
+```
+Resource
+ ├─ server → Node build
+ ├─ client → Neutral JS build
+ └─ views  → Browser build
+```
+
+If an environment does not exist, it is simply skipped.
+
+---
 
 ## Technology Stack
 
-The compiler is built using a hybrid approach for maximum efficiency:
+The compiler is a **hybrid system**, each tool doing exactly what it’s best at:
 
-- **Go (Core Engine)**: Handles the orchestration, file system watching, and parallel worker pool.
-- **SWC (Transformation)**: A super-fast TypeScript/JavaScript transformer written in Rust. We use it to handle **Decorators** and **Metadata Reflection**.
-- **esbuild (Bundling)**: The fastest JavaScript bundler available, used to link all dependencies into a single FiveM-compatible file.
+* **Go** → orchestration, parallelism, filesystem, process control
+* **SWC (Rust)** → TypeScript, decorators, metadata reflection
+* **esbuild** → ultra-fast bundling and linking
+* **Custom plugins** → FiveM-specific constraints
 
-## Why it's different
+This separation is deliberate:
 
-Most FiveM build systems use standard Webpack or Rollup configurations which are slow and don't understand FiveM's unique constraints. The OpenCore compiler provides:
+* Go handles **scale**
+* Rust handles **syntax & speed**
+* JS tooling handles **ecosystem compatibility**
 
-### 1. Multi-Core Parallelism
-While standard tools compile resources one by one, our Go engine distributes the work across all available CPU cores. This reduces build times from several seconds to **milliseconds**.
+---
 
-### 2. FiveM-Specific Targeting
-The compiler automatically applies different rules depending on the target:
-- **Server**: Optimized for Node.js runtime.
-- **Client**: Strips all Node.js and Web APIs, ensuring the code is compatible with FiveM's restricted "neutral" JS environment.
-- **NUI**: Standard browser bundling.
+## Parallel Build Model ⚡
 
-### 3. Automated Asset Management
-Beyond code, the compiler manages your `fxmanifest.lua` generation, copies static assets, and ensures that the final `dist/` folder is ready to be dropped into your server without manual tweaks.
+Traditional FiveM builds are sequential.
 
-## Performance Metrics
-On a typical project with 10 resources:
-- **Sequential Build**: ~2.3 seconds
-- **Parallel Build (8 cores)**: **~0.5 seconds**
+OpenCore is not.
+
+```
+┌────────────┐
+│ Resource A │──┐
+├────────────┤  ├─ parallel workers
+│ Resource B │──┤
+├────────────┤  │
+│ Resource C │──┘
+└────────────┘
+```
+
+Each resource:
+
+* Is built in isolation
+* Has its own dependency graph
+* Does not block others
+
+Typical results:
+
+* 8–12 resources → **< 1 second build**
+* CPU-bound, not IO-bound
+
+---
+
+## Why this Matters
+
+The compiler guarantees that:
+
+* Server code **cannot accidentally leak into client**
+* Client code **cannot rely on Node**
+* UI code **stays browser-safe**
+* CORE and RESOURCE builds stay **contract-correct**
+* Large projects remain **maintainable and fast**
+
+In short:
+
+> The compiler encodes the rules of the FiveM universe so you don’t have to remember them.
+
+---
+
+## Final Mental Model
+
+```
+CLI
+ └─ Compiler
+     ├─ Discovers project structure
+     ├─ Orchestrates monorepo builds
+     ├─ Enforces runtime boundaries
+     ├─ Runs parallel workers
+     └─ Emits ready-to-run resources
+```
+
+This is what enables OpenCore to scale from:
+
+* a single script
+  to
+* a full modular server architecture 🚀
