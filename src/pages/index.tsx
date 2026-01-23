@@ -218,23 +218,40 @@ async spawnCar(player: Server.Player, data: { model: string }) {
         filename: 'SecurityExample.ts'
     },
 ];
- 
+const PLATFORMS = [
+    { name: 'FiveM', style: 'gradientText' },
+    { name: 'RedM', style: 'redMText' }
+] as const;
+
 const RELEASE_URL = 'https://api.github.com/repos/newcore-network/opencore/releases/latest';
- 
+
 type GitHubRelease = { tag_name: string };
- 
+
 export default function Home(): JSX.Element {
     const [tag, setTag] = useState<string>('—');
     const [selectedFeature, setSelectedFeature] = useState(FEATURES_DATA[0]);
     const [comparisonTab, setComparisonTab] = useState(COMPARISON_TABS[0]);
- 
+    const [platformIndex, setPlatformIndex] = useState(0);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+
     useEffect(() => {
         fetch(RELEASE_URL, { headers: { Accept: 'application/vnd.github+json' } })
             .then(res => res.json())
             .then((data: GitHubRelease) => setTag(data.tag_name ?? '—'))
             .catch(() => setTag('v0.3.x'));
     }, []);
- 
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsTransitioning(true);
+            setTimeout(() => {
+                setPlatformIndex(prev => (prev + 1) % PLATFORMS.length);
+                setIsTransitioning(false);
+            }, 300);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <Layout title="OpenCore Framework" description="The TypeScript-first multiplayer runtime for FiveM">
             <main className={styles.homeContainer}>
@@ -248,7 +265,15 @@ export default function Home(): JSX.Element {
                             </div>
                             <h1 className={styles.heroTitle}>
                                 The Industrial <br />
-                                <span className={styles.gradientText}>Runtime for FiveM</span>
+                                <span className={styles.gradientText}>Runtime for</span>{' '}
+                                <span 
+                                    className={clsx(
+                                        styles[PLATFORMS[platformIndex].style],
+                                        isTransitioning && styles.fadeOut
+                                    )}
+                                >
+                                    {PLATFORMS[platformIndex].name}
+                                </span>
                             </h1>
                             <p className={styles.heroSubtitle}>
                                 TypeScript-first framework with Dependency Injection, validation,

@@ -190,6 +190,22 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  display: inline-block;
+}
+
+.redMText {
+  background: linear-gradient(to right, #ff6b6b, #ee5a6f, #c92a2a);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  display: inline-block;
+}
+
+.fadeOut {
+  opacity: 0 !important;
+  transform: translateY(-10px) !important;
 }
 
 .heroSubtitle {
