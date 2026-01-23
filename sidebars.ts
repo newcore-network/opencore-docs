@@ -5,8 +5,6 @@ const sidebars: SidebarsConfig = {
     'intro',
     'why-opencore',
     'features',
-    'roadmap',
-    'releases',
     {
       type: 'category',
       label: 'Getting Started',
@@ -195,6 +193,8 @@ const sidebars: SidebarsConfig = {
         'templates/about',
       ],
     },
+    'roadmap',
+    'releases',
     'contributions',
   ],
 };

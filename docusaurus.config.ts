@@ -54,6 +54,7 @@ const config: Config = {
     },
     navbar: {
       title: 'OpenCore',
+      hideOnScroll: false,
       items: [
         {
           type: 'docSidebar',
@@ -70,7 +71,48 @@ const config: Config = {
     },
     footer: {
       style: 'dark',
-      copyright: `Copyright © ${new Date().getFullYear()} OpenCore.`,
+      links: [
+        {
+          title: 'Framework',
+          items: [
+            {
+              label: 'Introduction',
+              to: '/docs/intro',
+            },
+            {
+              label: 'Decorators',
+              to: '/docs/decorators/introduction',
+            },
+            {
+              label: 'Services',
+              to: '/docs/services/introduction',
+            },
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/hDG25CPwpM',
+            },
+            {
+              label: 'GitHub',
+              href: 'https://github.com/newcore-network/opencore',
+            },
+          ],
+        },
+        {
+          title: 'More',
+          items: [
+            {
+              label: 'Release Notes',
+              href: 'https://github.com/newcore-network/opencore/releases',
+            },
+          ],
+        },
+      ],
+      copyright: `Copyright © ${new Date().getFullYear()} OpenCore Framework. Built with passion for the Cfx ecosystem.`
     },
     prism: {
       theme: prismThemes.github,          
