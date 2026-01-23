@@ -199,6 +199,7 @@ It scans for:
 * `server.ts`, `client.ts`, `index.ts`, `main.ts`
 * View entrypoints (`views/`, `ui/`, `nui/`)
 * Resource boundaries
+* Binary files (`bin/`, `bin/win32`, `bin/linux`)
 
 Diagram:
 
@@ -224,22 +225,22 @@ The compiler is a **hybrid system**, each tool doing exactly what it’s best at
 
 This separation is deliberate:
 
-* Go handles **scale**
-* Rust handles **syntax & speed**
-* JS tooling handles **ecosystem compatibility**
+* Go handles **scale** (Esbuild and CLI)
+* Rust handles **syntax & speed** (SWC)
+* JS tooling handles **ecosystem compatibility** (embedded js)
 
 ---
 
 ## Parallel Build Model ⚡
 
-Traditional FiveM builds are sequential.
+Traditional builds are sequential.
 
 OpenCore is not.
 
 ```
 ┌────────────┐
 │ Resource A │──┐
-├────────────┤  ├─ parallel workers
+├────────────┤  ├─ parallel workers ⚡
 │ Resource B │──┤
 ├────────────┤  │
 │ Resource C │──┘

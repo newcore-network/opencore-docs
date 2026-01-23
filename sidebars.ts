@@ -4,6 +4,7 @@ const sidebars: SidebarsConfig = {
   docs: [
     'intro',
     'why-opencore',
+    'features',
     'roadmap',
     'releases',
     {
@@ -38,6 +39,8 @@ const sidebars: SidebarsConfig = {
             'decorators/server/export',
             'decorators/server/guard',
             'decorators/server/public',
+            'decorators/server/binary-service',
+            'decorators/server/binary-call'
           ],
         },
         {
@@ -181,7 +184,14 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Ecosystem',
       items: [
-        'libraries/about',
+        {
+          type: 'category',
+          label: 'Official Libraries',
+          items: [
+            'libraries/about',
+            'libraries/official-libraries/opencore-identity',
+          ],
+        },
         'templates/about',
       ],
     },

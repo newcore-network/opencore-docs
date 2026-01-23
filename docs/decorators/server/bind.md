@@ -38,3 +38,5 @@ export class InternalProcessor {
     // internal logic
 }
 ```
+
+## Notes
