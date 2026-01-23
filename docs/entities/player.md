@@ -10,13 +10,11 @@ The `Player` entity is the core of server-side interaction. It represents a conn
 - `clientID`: The FiveM server ID (source).
 - `accountID`: The persistent account identifier (only available after authentication).
 - `name`: The player's FiveM display name.
-- `identifiers`: An object containing the player's licenses (license, steam, discord, etc.).
 
 ## Methods
 
 ### Communication
 - `emit(eventName: string, ...args: any[])`: Sends a net event directly to this specific player (client-side).
-- `trigger(eventName: string, ...args: any[])`: Executes a local server event with this player as the context.
 - `send(message: string, type?: 'chat' | 'error' | 'success' | 'warning')`: Sends a formatted private message to the player's chat.
 
 ### State & Metadata
@@ -28,14 +26,15 @@ The `Player` entity is the core of server-side interaction. It represents a conn
 
 ### Physical & Lifecycle
 - `getPosition()`: Returns the current `Vector3` coordinates of the player.
-- `teleport(vector: Vector3)`: Forces the player's position using server-side natives.
-- `teleportClient(vector: Vector3)`: Requests the client to teleport itself (preferred for smooth transitions).
-- `spawn(vector: Vector3, model?: string)`: Requests the client to spawn at a specific location with a model.
+- `teleport(vector: Vector3)`: Requests the client to teleport via the spawner system.
+- `setPosition(vector: Vector3)`: Sets the player position using the platform-agnostic API. (Force)
+- `spawn(vector: Vector3, model?: string)`: Requests the client to spawn at a specific location with a optional model.
 - `setRoutingBucket(bucket: number)`: Sets the player's virtual world (dimension).
+- `getRoutingBucket`: Gets the current routing bucket (dimension).
 - `kick(reason?: string)`: Disconnects the player from the server.
 
 ### Health & Combat
-- `getHealth()` / `setHealth(value: number)`: Manages player ped health (0-200, 100 is dead).
+- `getHealth()` / `setHealth(value: number)`: Manages player ped health (0-200, 0 is dead).
 - `getArmor()` / `setArmor(value: number)`: Manages player ped armor (0-100).
 - `kill()`: Instantly kills the player.
 - `isAlive()`: Checks if the player is currently alive.
