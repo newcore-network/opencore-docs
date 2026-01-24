@@ -19,6 +19,37 @@ This only works within each resource context; that is, if it's in the core, it o
 The event name is strongly typed and must be a valid key of InternalEventMap.
 The method signature should accept the payload type associated with the selected event.
 
+## Events and Types
+import this into the Server namespace,  e.g: `Server.PlayerSessionCreatedPayload`
+
+- `internal:playerSessionCreated`: emmited as soon as the player session is created.
+```ts
+interface PlayerSessionCreatedPayload {
+  clientId: number
+  license: string | undefined
+}
+```
+- `internal:playerSessionDestroyed`: emmited as soon as the player session is destroyed.
+```ts
+interface PlayerSessionDestroyedPayload {
+  clientId: number
+}
+```
+- `internal:playerFullyConnected`: It is emitted when the player is deemed safe to manage.
+```ts
+interface PlayerFullyConnectedPayload {
+  player: Player
+}
+```
+- `internal:playerSessionRecovered`: It is emitted when session has been recovered, this usually only happens when there is a core restart.
+```ts
+interface PlayerSessionRecoveredPayload {
+  clientId: number
+  player: Player
+  license: string | undefined
+}
+```
+
 ## Example
 ```ts
 import { Server } from '@open-core/framework/server'
@@ -26,8 +57,8 @@ import { Server } from '@open-core/framework/server'
 @Server.Controller()
 export class SystemController {
   @Server.OnFrameworkEvent('internal:playerFullyConnected')
-  onPlayerConnected(payload: PlayerFullyConnectedPayload) {
-    console.log(`Player ${payload.player.session.clientId} connected`)
+  onPlayerConnected(payload: Server.PlayerFullyConnectedPayload) {
+    console.log(`Player ${payload.player.id} connected`)
   }
 }
 ```
