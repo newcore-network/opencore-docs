@@ -20,7 +20,7 @@ The event name is strongly typed and must be a valid key of InternalEventMap.
 The method signature should accept the payload type associated with the selected event.
 
 ## Events and Types
-import this into the Server namespace,  e.g: `Server.PlayerSessionCreatedPayload`
+Use this type from the Server namespace, e.g:  `Server.PlayerSessionCreatedPayload`
 
 - `internal:playerSessionCreated`: emmited as soon as the player session is created.
 ```ts
