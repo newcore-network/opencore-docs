@@ -1,5 +1,5 @@
 ---
-title: OnNet
+title: OnNet (Client)
 ---
 ## Description
 ``@Client.OnNet()`` registers a method as a client-side network event handler.

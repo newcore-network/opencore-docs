@@ -1,224 +1,218 @@
 ---
-title: 'BinaryCall'
+title: '@BinaryCall'
+description: Defines request-response calls from OpenCore to a Binary Service.
 ---
 
-## Description
+## Overview
 
-`@BinaryCall` marks a method as a **remote binary action** executed by a `BinaryService`.
-When a method decorated with `@BinaryCall` is invoked, its implementation is **never executed locally**.
-Instead, OpenCore replaces the method at runtime with an asynchronous proxy that:
+`@BinaryCall` defines a **request-response operation** executed against a `@BinaryService`.
 
-1. Serializes the method arguments
-2. Sends a request to the associated binary process
-3. Waits for a response
-4. Resolves or rejects the returned Promise
+It maps a TypeScript method to a **remote action** executed inside a binary process,
+using the Binary Protocol.
 
-From the developer’s perspective, the method behaves like a normal async function, while the actual logic is executed externally.
+From the developer perspective, it behaves like an **async function call**.
 
 ---
 
-## How it works
+## What a Binary Call Represents
 
-A method decorated with `@BinaryCall` does not contain business logic.
+A Binary Call is:
 
-During server bootstrap, OpenCore:
+- A single request sent to a binary process
+- Matched to exactly one response
+- Asynchronous and promise-based
+- Isolated from the Node.js runtime
 
-- reads decorator metadata
-- registers the method as a binary action
-- replaces the method implementation with a proxy function
-- routes calls through the `BinaryProcessManager`
+A Binary Call is **not**:
 
-The original method body is ignored.
+- A stream
+- A background job
+- A fire-and-forget message
+- A direct function invocation
+
+Each call is a **remote procedure call over stdin/stdout**.
 
 ---
 
-## Arguments
+## Declaring a Binary Call
+
+A binary call is declared by decorating a method with `@Server.BinaryCall`.
 
 ```ts
-@Server.BinaryCall(options?)
-```
+import { BinaryService, BinaryCall } from "@open-core/framework/server";
 
-All options are optional.
-
-
-### `options.action`
-
-Defines the action name sent to the binary process.
-
-If omitted, the method name is used as the action.
-
-```ts
-@Server.BinaryCall({ action: 'sum' })
-sum(a: number, b: number): Promise<number>
-```
-
-Binary request:
-
-```json
-{
-  "action": "sum"
+@Server.BinaryService({ name: "crypto" })
+export class CryptoBinary {
+  @Server.BinaryCall("hashPassword")
+  hash(password: string): Promise<{ hash: string }> {
+    return null as any;
+  }
 }
 ```
 
+This declaration:
 
-### `options.service` (optional)
+* Binds the method to a protocol `action`
+* Transforms the method into a remote call
+* Replaces the method body at runtime
 
-Overrides the target binary service name.
-
-Useful when a class needs to communicate with multiple binary services.
-
-```ts
-@Server.BinaryCall({
-  service: 'crypto',
-  action: 'hash'
-})
-hash(value: string): Promise<string>
-```
-
-If not provided, the service declared by `@BinaryService` is used.
-
-
-### `options.timeoutMs` (optional)
-
-Overrides the timeout for this specific binary call.
-
-If the binary does not respond within the specified time, the Promise is rejected.
-
-```ts
-@Server.BinaryCall({
-  action: 'expensiveTask',
-  timeoutMs: 5000,
-})
-run(): Promise<void>
-```
+The method body is never executed.
 
 ---
 
-## Method signature
+## Action Mapping
 
-A `BinaryCall` method must follow these rules:
-
-* Must return a `Promise<T>`
-* Arguments are sent positionally
-* Parameter names are not transmitted
-* Only argument values are serialized
-
-Example:
+The string passed to `@Server.BinaryCall` defines the **action name** sent to the binary.
 
 ```ts
-@Server.BinaryCall({ action: 'sum' })
-sum(a: number, b: number): Promise<number>
+@Server.BinaryCall("hashPassword")
 ```
 
-Binary receives:
+This results in a protocol request:
 
 ```json
 {
-  "params": [a, b]
+  "id": "...",
+  "action": "hashPassword",
+  "params": [...]
 }
 ```
 
----
-
-## Stub implementation
-
-Because the method body is never executed, it should act as a stub.
-
-Recommended patterns:
-
-```ts
-throw new Error('BinaryCall proxy')
-```
-
-or
-
-```ts
-return null as any
-```
-
-The error will never be thrown unless the method is executed outside of OpenCore’s lifecycle.
+If no name is provided, the method name is used by default.
 
 ---
 
-## Return value
+## Parameters and Serialization
 
-The resolved value of the Promise corresponds to the `result` field returned by the binary.
+Method parameters are serialized **positionally** and sent as `params`.
+
+```ts
+@Server.BinaryCall()
+compare(a: string, b: string): Promise<boolean> {}
+```
+
+Produces:
+
+```json
+{
+  "action": "compare",
+  "params": ["a", "b"]
+}
+```
+
+Rules:
+
+* Parameters must be JSON-serializable
+* Functions and class instances are not allowed
+* Validation is responsibility of the binary
+
+---
+
+## Return Values
+
+The return type of the method represents the expected `result` field.
+
+```ts
+@Server.BinaryCall()
+sign(data: string): Promise<string> {}
+```
 
 Binary response:
 
 ```json
 {
   "status": "ok",
-  "result": 42
+  "result": "signature"
 }
 ```
 
-TypeScript:
-
-```ts
-const value = await service.method()
-// value === 42
-```
+Type safety exists **only at the TypeScript boundary**.
+The binary must enforce correctness.
 
 ---
 
-## Error handling
+## Error Propagation
 
-If the binary responds with:
+If the binary responds with `status: "error"`:
+
+* The promise is rejected
+* The error message is propagated
+* Optional error codes are preserved
 
 ```json
 {
   "status": "error",
-  "error": "invalid parameters"
-}
-```
-
-The Promise is rejected with an `AppError`.
-
-Errors can be handled normally:
-
-```ts
-try {
-  await service.sum(1, 2)
-} catch (err) {
-  // binary-level error
-}
-```
-
-Timeouts and process failures are also propagated as errors.
-
----
-
-## Example
-
-```ts
-@Server.BinaryService({
-  name: 'math',
-  binary: 'math',
-})
-export class MathBinaryService {
-
-  @Server.BinaryCall({ action: 'sum' })
-  sum(a: number, b: number): Promise<number> {
-    throw new Error('BinaryCall proxy')
+  "error": {
+    "message": "Invalid key"
   }
 }
 ```
 
-Usage:
-
-```ts
-const total = await math.sum(2, 3)
-```
+From JavaScript, this behaves like a thrown exception.
 
 ---
 
-## Notes
+## Timeouts
 
-* The method body is never executed
-* Parameter names are irrelevant
-* Argument order is preserved
-* The method behaves as a transparent async proxy
-* All execution occurs outside the FiveM runtime
+Each call is executed with a timeout.
 
-`BinaryCall` enables TypeScript to interact with native processes as if they were local asynchronous functions, while maintaining strict process isolation and runtime safety.
+If the binary does not respond in time:
+
+* The call fails
+* The promise is rejected
+* The service may be restarted
+
+Timeouts protect the server from blocked processes.
+
+---
+
+## Execution Guarantees
+
+* Calls are matched using a unique `id`
+* Responses are resolved exactly once
+* Late or duplicate responses are ignored
+* Calls are isolated per Binary Service instance
+
+There is no implicit retry.
+
+---
+
+## Relation to Other Decorators
+
+* **`@BinaryService`**
+  Defines where the call is executed.
+
+* **`@BinaryCall`**
+  Defines how a request is sent and resolved.
+
+* **`@BinaryEvent`**
+  Is unrelated to calls and does not affect responses.
+
+Calls and events can coexist but are handled independently.
+
+---
+
+## Mental Model
+
+A `@BinaryCall` is best understood as:
+
+* A remote function invocation
+* Executed outside the JS runtime
+* With strict request/response semantics
+
+If the binary crashes, the call fails.
+If the protocol breaks, the call fails.
+This is intentional.
+
+---
+
+## Summary
+
+`@BinaryCall` provides:
+
+* Clear request-response semantics
+* Strong isolation
+* Predictable failure behavior
+* A clean async API for native code
+
+If you need a value back from a binary, this is the tool.

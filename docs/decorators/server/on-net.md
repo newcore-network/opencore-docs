@@ -1,5 +1,5 @@
 ---
-title: OnNet
+title: OnNet (Server)
 ---
 
 ## Description
