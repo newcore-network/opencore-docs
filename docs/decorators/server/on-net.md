@@ -1,71 +1,123 @@
 ---
-title: OnNet (Server)
+title: '@OnNet  (Server)'
+description: Registers a server-side network event handler.
 ---
 
-## Description
+## Overview
 
-`@Server.OnNet()` is a method decorator used to register a method as a server-side network event handler.
+`@Server.OnNet()` is a method decorator used to register a **server-side network event handler**.
 
-Network events are triggered by clients and delivered to the server. This decorator allows a controller method to handle those events in a structured, secure, and optionally validated way.
+Network events are triggered by clients and delivered to the server through FiveM’s
+network event system (`emitNet → onNet`).
 
-The decorator stores metadata describing the network event, its validation rules, and the expected parameter types. During server bootstrap, the framework scans this metadata and binds the method to the corresponding network event.
-
-The behavior of argument parsing and validation is **consistent with `@Server.Command()`**, including support for **spread parameters (rest operator)** starting from `v0.3.x`.
-
----
-
-## Arguments
-
-- `eventName` – The name of the network event to register.
-- `schema` *(optional)* – A Zod schema used to validate the event payload.
-
-The schema can be provided in two ways:
-- Directly as the second argument **(recommended)**
-- Inside an options object with a `schema` property *(legacy support)*
+This decorator allows controller methods to handle those events in a **structured,
+secure, and optionally validated** way, without manually binding `onNet(...)`.
 
 ---
 
-## Validation behavior
+## Execution Model
 
-- Primitive values (`string | number | boolean | any[]`) are auto-validated.
-- `z.tuple([...])` validates positional arguments.
-- `z.object({...})` validates a single structured payload.
-- Tuple schemas support **rest parameters (`...args`)**.
+- Events are **initiated by clients**
+- Handlers run **exclusively on the server**
+- The framework binds the handler during server bootstrap
+- Argument parsing and validation occur **before execution**
 
-If validation fails, the handler is **not executed** and the event is rejected.
+If validation fails, the handler is **never executed**.
 
 ---
 
-## Spread operator (rest parameters)
+## Decorator Signature
 
-Starting from **v0.3.x**, network event handlers support **rest parameters** in the same way as commands.
+```ts
+@Server.OnNet(eventName, schema?)
+````
 
-This allows network events to accept a variable number of arguments while preserving validation and type safety.
+### Arguments
+
+* **`eventName`**
+  The name of the network event to register.
+
+* **`schema`** *(optional)*
+  A Zod schema used to validate the incoming payload.
+
+The schema can be provided in two forms:
+
+* Directly as the second argument (**recommended**)
+
+---
+
+## Handler Signature
+
+A server network handler must always follow this rule:
+
+> **The first parameter is always `Server.Player`.**
+
+```ts
+@Server.OnNet('example:event')
+handle(player: Server.Player, ...args) {}
+```
+
+This guarantees:
+
+* Clear event origin
+* Access to player identity and state
+* Consistent security enforcement
+
+---
+
+## Validation Behavior
+
+Validation rules are consistent with `@Server.Command()`.
+
+### Supported patterns
+
+* **Primitive auto-validation**
+  `string | number | boolean | any[]`
+
+* **Tuple validation**
+  Positional arguments using `z.tuple([...])`
+
+* **Object validation**
+  Single structured payload using `z.object({...})`
+
+If validation fails:
+
+* The event is rejected
+* The handler is not executed
+* A structured error is logged
+
+---
+
+## Spread Parameters (Rest Operator)
+
+Starting from **v0.3.x**, `@Server.OnNet()` supports **spread parameters**
+in the same way as commands.
+
+This enables variable-length payloads while preserving validation.
 
 ### Rules
 
-- The first parameter must always be `Server.Player`.
-- Rest parameters must come **after fixed parameters**.
-- Only **one rest parameter** is allowed.
-- Validation happens **before** the handler executes.
+* The first parameter must be `Server.Player`
+* Rest parameters must appear **after fixed parameters**
+* Only **one rest parameter** is allowed
+* Validation occurs **before execution**
 
 ---
 
-### Simple spread example
+### Simple Spread Example
 
 ```ts
 @Server.OnNet('chat:message')
 onChat(player: Server.Player, ...message: string[]) {
   const text = message.join(' ')
-  // handle message
 }
-````
+```
 
 All remaining arguments sent by the client are grouped into `message`.
 
 ---
 
-### Spread parameters with schema validation
+### Spread Parameters with Validation
 
 Spread parameters can be validated using tuple schemas with `rest()`.
 
@@ -73,20 +125,19 @@ Spread parameters can be validated using tuple schemas with `rest()`.
 @Server.OnNet(
   'chat:say',
   z.tuple([
-    z.number(),          // channel id
-  ]).rest(z.string())   // message words
+    z.number(),        // channel id
+  ]).rest(z.string()) // message words
 )
 onSay(player: Server.Player, channelId: number, ...message: string[]) {
   const text = message.join(' ')
-  // handle event
 }
 ```
 
 Validation rules:
 
-* Fixed parameters are validated first.
-* The `rest()` schema applies to all remaining arguments.
-* If any argument fails validation, the event is rejected.
+* Fixed parameters are validated first
+* `rest()` applies to all remaining arguments
+* If any argument fails validation, the event is rejected
 
 ---
 
@@ -105,51 +156,59 @@ export class ExampleController {
 
   // Primitive auto-validation
   @Server.OnNet('example:ping')
-  ping(player: Server.Player, message: string) {
-    // message is auto-validated
-  }
+  ping(player: Server.Player, message: string) {}
 
-  // Handler with schema (recommended for complex payloads)
+  // Structured payload validation (recommended)
   @Server.OnNet('example:data', PayloadSchema)
-  handleData(player: Server.Player, data: Infer<typeof PayloadSchema>) {
-    // data is validated against the schema
-  }
+  handleData(player: Server.Player, data: Infer<typeof PayloadSchema>) {}
 
-  // Legacy usage with options object
-  @Server.OnNet('example:legacy', { schema: PayloadSchema })
-  handleLegacy(player: Server.Player, data: Infer<typeof PayloadSchema>) {
-    // legacy-compatible registration
-  }
-
-  // Handler using spread parameters
+  // Spread parameters
   @Server.OnNet(
     'example:note',
     z.tuple([z.number()]).rest(z.string())
   )
   note(player: Server.Player, targetId: number, ...message: string[]) {
     const text = message.join(' ')
-    // event logic
   }
 }
 ```
 
-In all cases:
+---
 
-* The first parameter of the handler is always `Server.Player`.
-* Validation occurs before execution.
-* Invalid payloads never reach the handler.
+## Security Model
+
+* Server network handlers are **protected by default**
+* Player context is always enforced
+* Invalid or malformed payloads are rejected early
+
+To allow unauthenticated access explicitly, use:
+
+```ts
+@Server.Public()
+```
+
+This should be used **sparingly**.
 
 ---
 
 ## Notes
 
-* Network events can be declared in any resource; execution stays local to the defining resource.
-* Spread parameters are supported from `v0.3.x` onward.
+* Network handlers are local to the resource that defines them
+* Spread parameters are supported from `v0.3.x`
 * If a schema is provided:
 
-  * `z.tuple([...])` validates positional arguments (including rest parameters).
-  * Any other schema validates a single payload argument (`args[0]`).
-* If no schema is provided, only primitive parameters can be auto-validated.
-* Complex or untrusted payloads should always use an explicit Zod schema.
-* Network handlers are protected by the framework’s security layer by default.
-* Use `@Server.Public()` to explicitly allow unauthenticated access when required.
+  * `z.tuple(...)` validates positional arguments (including rest)
+  * Any other schema validates a single payload argument
+* Complex or untrusted payloads should always use Zod schemas
+* This decorator is **server-only**
+
+---
+
+## Summary
+
+`@Server.OnNet()` provides:
+
+* Declarative server-side network event handling
+* Strong validation and safety guarantees
+* Consistent player context
+* A clean alternative to manual `onNet(...)` bindings

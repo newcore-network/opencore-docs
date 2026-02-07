@@ -40,10 +40,14 @@ const sidebars: SidebarsConfig = {
         'communication/overview',
         {
           type: 'category',
-          label: 'Net Events',
+          label: 'Events',
           items: [
+            'communication/events-api',
             'decorators/server/on-net',
             'decorators/client/on-net',
+            'decorators/server/on-framework-event',
+            'decorators/server/on-runtime-event',
+            'decorators/client/local-event',
           ],
         },
         {
@@ -51,13 +55,11 @@ const sidebars: SidebarsConfig = {
           label: 'RPC',
           items: [
             'communication/rpc',
+            'communication/rpc-api',
             'decorators/server/on-rpc',
             'decorators/client/on-rpc',
           ],
         },
-        'decorators/server/on-framework-event',
-        'decorators/server/on-runtime-event',
-        'decorators/client/local-event',
         {
           type: 'category',
           label: 'Binary Protocol',

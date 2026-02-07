@@ -1,5 +1,5 @@
 ---
-title: OnRuntimeEvent
+title: '@OnRuntimeEvent'
 ---
 
 ## Description

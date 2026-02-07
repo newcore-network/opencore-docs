@@ -1,5 +1,5 @@
 ---
-title: OnLocalEvent
+title: '@OnLocalEvent'
 ---
 
 ## Description

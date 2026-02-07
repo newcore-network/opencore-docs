@@ -1,5 +1,5 @@
 ---
-title: Public
+title: '@Public'
 ---
 ## Description
 ``@Server.Public()`` is a method decorator used to mark a server handler as publicly accessible, disabling authentication requirements.

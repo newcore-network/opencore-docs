@@ -1,5 +1,5 @@
 ---
-title: OnFrameworkEvent
+title: '@OnFrameworkEvent'
 ---
 
 ## Description

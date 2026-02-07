@@ -1,5 +1,5 @@
 ---
-title: OnTick
+title: '@OnTick'
 ---
 ## Description
 ``@Server.OnTick()`` is a method decorator used to register a method as a server tick handler.

@@ -1,5 +1,5 @@
 ---
-title: Guard
+title: '@Guard'
 ---
 
 ## Description

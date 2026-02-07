@@ -1,5 +1,5 @@
 ---
-title: Controller
+title: '@Controller'
 ---
 ## Description
 

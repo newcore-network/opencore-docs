@@ -1,5 +1,5 @@
 ---
-title: Bind
+title: '@Bind'
 ---
 
 ## Description
