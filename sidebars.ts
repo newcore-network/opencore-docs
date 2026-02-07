@@ -4,6 +4,7 @@ const sidebars: SidebarsConfig = {
   docs: [
     'intro',
     'why-opencore',
+    'features',
 
     // ── Getting Started ───────────────────────────────────────────
     {
@@ -11,9 +12,9 @@ const sidebars: SidebarsConfig = {
       label: 'Getting Started',
       items: [
         'getting-started/installation',
+        'getting-started/first-project',
         'getting-started/project-structure',
-        'getting-started/first-server',
-        'getting-started/setup',
+        'getting-started/setups',
         'getting-started/runtime-modes',
       ],
     },
@@ -25,29 +26,9 @@ const sidebars: SidebarsConfig = {
       items: [
         'core-concepts/runtime-lifecycle',
         'core-concepts/dependency-injection',
-        'core-concepts/controllers-and-services',
-        'decorators/introduction',
-        'core-concepts/ports-and-contracts',
-        {
-          type: 'category',
-          label: 'Ports',
-          items: [
-            'ports/introduction',
-            'ports/player-directory',
-            'ports/principal',
-            'ports/command-execution',
-            'ports/session-lifecycle',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'Contracts',
-          items: [
-            'contracts/introduction',
-            'contracts/player-persistence',
-            'contracts/repository',
-          ],
-        },
+        'core-concepts/controllers',
+        'core-concepts/decorators-overview',
+        'core-concepts/contracts',
       ],
     },
 
@@ -57,9 +38,23 @@ const sidebars: SidebarsConfig = {
       label: 'Communication',
       items: [
         'communication/overview',
-        'decorators/server/on-net',
-        'decorators/client/on-net',
-        'communication/rpc',
+        {
+          type: 'category',
+          label: 'Net Events',
+          items: [
+            'decorators/server/on-net',
+            'decorators/client/on-net',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'RPC',
+          items: [
+            'communication/rpc',
+            'decorators/server/on-rpc',
+            'decorators/client/on-rpc',
+          ],
+        },
         'decorators/server/on-framework-event',
         'decorators/server/on-runtime-event',
         'decorators/client/local-event',
@@ -70,10 +65,17 @@ const sidebars: SidebarsConfig = {
             'communication/binary-protocol',
             'decorators/server/binary-service',
             'decorators/server/binary-call',
+            'decorators/server/binary-event',
           ],
         },
-        'decorators/server/export',
-        'decorators/client/export',
+        {
+          type: 'category',
+          label: 'Exports',
+          items: [
+            'decorators/server/export',
+            'decorators/client/export',
+          ],
+        },
       ],
     },
 
@@ -82,8 +84,10 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Client Runtime',
       items: [
+        'client/overview',
         'decorators/client/controller',
         'decorators/client/on-view',
+        'client/nui-bridge',
         'decorators/client/game-event',
         'decorators/client/key',
         'decorators/client/on-tick',
@@ -93,71 +97,54 @@ const sidebars: SidebarsConfig = {
       ],
     },
 
-    // ── Gameplay Logic ────────────────────────────────────────────
+    // ── Gameplay ──────────────────────────────────────────────────
     {
       type: 'category',
-      label: 'Gameplay Logic',
+      label: 'Gameplay',
       items: [
         {
           type: 'category',
           label: 'Entities',
           items: [
-            'entities/introduction',
             'entities/player',
             'entities/vehicle',
+            'entities/channel',
           ],
         },
         'decorators/server/command',
         'decorators/server/requires-state',
         'decorators/server/on-tick',
-      ],
-    },
-
-    // ── Server Services ───────────────────────────────────────────
-    {
-      type: 'category',
-      label: 'Server Services',
-      items: [
-        'services/introduction',
-        'services/server/chat-service',
-        'services/server/vehicle-service',
-        'services/server/vehicle-modification-service',
-        'services/server/persistence-service',
-        'services/server/rate-limiter.service',
-        'services/server/parallel-service',
-        'services/server/auth-service',
-      ],
-    },
-
-    // ── Client Services ───────────────────────────────────────────
-    {
-      type: 'category',
-      label: 'Client Services',
-      items: [
-        'services/client/introduction',
-        'services/client/spawn-service',
-        'services/client/appearance-service',
-        'services/client/notification-service',
-        'services/client/blip-service',
-        'services/client/marker-service',
-        'services/client/ped-service',
-        'services/client/textui-service',
-        'services/client/streaming-service',
-        'services/client/progress-service',
-        'services/client/vehicle-client-service',
-        'services/client/vehicle-low-level-service',
-        'services/client/some-service',
-      ],
-    },
-
-    // ── Built-in Controllers ──────────────────────────────────────
-    {
-      type: 'category',
-      label: 'Built-in Controllers',
-      items: [
-        'controllers/introduction',
-        'controllers/server/chat',
-        'controllers/client/spawner',
+        {
+          type: 'category',
+          label: 'APIs',
+          items: [
+            'apis/chat',
+            'apis/vehicles',
+            'apis/vehicle-modifications',
+            'apis/appearance',
+            'apis/parallel-compute',
+            'apis/players',
+            'apis/authorization',
+            'apis/channels',
+            'apis/persistence',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Client APIs',
+          items: [
+            'apis/client/spawn',
+            'apis/client/appearance',
+            'apis/client/notifications',
+            'apis/client/blips',
+            'apis/client/markers',
+            'apis/client/peds',
+            'apis/client/textui',
+            'apis/client/streaming',
+            'apis/client/progress',
+            'apis/client/vehicle',
+          ],
+        },
       ],
     },
 
@@ -171,16 +158,9 @@ const sidebars: SidebarsConfig = {
         'decorators/server/throttle',
         'decorators/server/public',
         'security/input-validation',
-        {
-          type: 'category',
-          label: 'Security Contracts',
-          items: [
-            'contracts/security/principal-provider',
-            'contracts/security/security-handler',
-            'contracts/security/net-event-security-observer',
-            'contracts/security/command-security-observer',
-          ],
-        },
+        'security/security-handler',
+        'security/net-event-observer',
+        'security/command-error-observer',
       ],
     },
 
@@ -192,7 +172,16 @@ const sidebars: SidebarsConfig = {
         'advanced/performance',
         'advanced/scaling-resources',
         'advanced/session-recovery',
-        'dev-mode/about',
+        {
+          type: 'category',
+          label: 'Dev Mode',
+          items: [
+            'dev-mode/about',
+            'dev-mode/event-interceptor',
+            'dev-mode/player-simulator',
+            'dev-mode/state-inspector',
+          ],
+        },
       ],
     },
 
@@ -212,25 +201,8 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'API Reference',
       items: [
-        {
-          type: 'category',
-          label: 'Server Decorators',
-          items: [
-            'api-reference/server-decorators',
-            'decorators/server/controller',
-            'decorators/server/bind',
-            'decorators/server/service',
-            'decorators/server/repo',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'Client Decorators',
-          items: [
-            'api-reference/client-decorators',
-          ],
-        },
-        'api-reference/runtime-apis',
+        'api-reference/server-decorators',
+        'api-reference/client-decorators',
         'api-reference/configuration',
       ],
     },
@@ -241,13 +213,17 @@ const sidebars: SidebarsConfig = {
       label: 'Ecosystem',
       items: [
         'libraries/about',
-        'libraries/official-libraries/opencore-identity',
+        {
+          type: 'category',
+          label: 'Official Libraries',
+          items: [
+            'libraries/official-libraries/opencore-identity',
+          ],
+        },
         'templates/about',
       ],
     },
 
-    // ── Bottom-level pages ────────────────────────────────────────
-    'features',
     'roadmap',
     'releases',
     'contributions',

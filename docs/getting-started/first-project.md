@@ -1,16 +1,17 @@
 ---
-title: First Server
+title: First project
 ---
 
 ## 1. The Entry Point
 
-Create a server-side entry file (for example `server/index.ts`).  
-You must initialize the `Server` application **once**, before any gameplay logic runs.
+Create a server-side and client-side entry file (for example `server/index.ts`, `client/index.ts`).  
+You must initialize the `Server` and `Client` application **once**, before any gameplay logic runs.
 
-From **v0.3.x onward**, OpenCore follows a **zero-config initialization model**:
+OpenCore follows a **zero-config initialization model**:
 - Features are enabled automatically.
 - Providers are inferred from the runtime mode.
 - No manual feature wiring is required.
+- Automatic controllers discovery and auto import.
 
 ---
 
@@ -26,19 +27,17 @@ Server.init({
   devMode: {
     enabled: true,
   },
-})
-  .then(() => {
+}).then(() => {
     console.log('OpenCore [server] initialized')
-  })
-  .catch((error: unknown) => {
+}).catch((error: unknown) => {
     console.error(error)
-  })
+})
 ```
 
 Important notes:
 
 * `mode: 'CORE'` indicates that this resource acts as the core runtime.
-* There is **no `features` configuration** in v0.3.x.
+* There is **no `features` configuration**. Only disable options if you want.
 * Initialization automatically emits the internal `core:ready` lifecycle event once bootstrapping is complete.
 
 You **do not need to emit or handle `core:ready` manually** in most cases.
@@ -55,16 +54,14 @@ import { Client } from '@open-core/framework/client'
 
 Client.init({
   mode: 'CORE',
-})
-  .then(() => {
+}).then(() => {
     console.log('OpenCore [client] initialized')
-  })
-  .catch((error: unknown) => {
+}).catch((error: unknown) => {
     console.error(error)
-  })
+})
 ```
 
-Server and client runtimes are initialized independently, but follow the same lifecycle rules.
+Server and client runtimes are initialized independently, but follow the **same lifecycle rules**.
 
 ---
 
@@ -73,7 +70,7 @@ Server and client runtimes are initialized independently, but follow the same li
 Controllers are the entry points for your gameplay logic.
 They define commands, network events, ticks, and other runtime-bound behavior.
 
-Controllers are discovered automatically **when their files are imported**.
+Controllers are discovered automatically, **You don't need to import them manually**, as each driver is discovered and imported automatically at compile time.
 
 ---
 
@@ -90,12 +87,11 @@ export class HelloController {
   @Server.Command({
     command: 'hello',
     usage: '/hello [name]',
-  }, z.tuple([z.string().optional()]))
-  onHelloCommand(player: Server.Player, name?: string) {
-    const finalName = name ?? player.name
-
+    schema: z.tuple([z.string().optional()])
+  })
+  onHelloCommand(player: Server.Player, name: string) {
     console.log(`Hello command received from ${player.name}`)
-    player.send(`Welcome, ${finalName}`, 'chat')
+    player.send(`Welcome, ${name}`, 'chat')
 
     emitNet('bye:event', player.source, 'bye!')
   }
@@ -108,6 +104,8 @@ Key points:
 * Argument validation happens **before** execution.
 * Schema-based validation is optional but recommended.
 * Commands are globally registered but executed in the defining resource.
+
+Read more about commands at [](../api-reference/server-decorators.md)
 
 ---
 

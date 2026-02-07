@@ -1,0 +1,5 @@
+---
+title: BinaryEvent
+---
+
+# @Server.BinaryEvent()
