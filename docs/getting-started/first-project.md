@@ -84,6 +84,8 @@ import { Server } from '@open-core/framework/server'
 @Server.Controller()
 export class HelloController {
 
+  constructor(private readonly events: EventsApi){}
+
   @Server.Command({
     command: 'hello',
     usage: '/hello [name]',
@@ -94,6 +96,11 @@ export class HelloController {
     player.send(`Welcome, ${name}`, 'chat')
 
     emitNet('bye:event', player.source, 'bye!')
+  }
+
+  @Server.Command('random-event')
+  onRandomEvent(player: Server.Player, text: string){
+    emitNet
   }
 }
 ```

@@ -10,7 +10,7 @@ title: Installation
 
 OpenCore is distributed as an NPM package. You can add it to an existing resource or start a new project with our CLI!
 
-### With our CLI *(Recommended)* [CLI installation](../cli/introduction.md)
+### With our [CLI](../cli/introduction) *(Recommended)*
 
 first, install the CLI
 ```bash
@@ -45,7 +45,7 @@ and ready!
 pnpm add @open-core/framework reflect-metadata tsyringe zod uuid
 ```
 
-### Required Peer Dependencies
+#### Required Peer Dependencies
 
 - `reflect-metadata`: For decorator support.
 - `tsyringe`: For Dependency Injection.
