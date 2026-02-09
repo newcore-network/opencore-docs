@@ -1,5 +1,5 @@
 ---
-title: OnView
+title: '@OnView'
 ---
 ## Description
 ``@Client.OnView()`` registers a method as a NUI callback handler on the client.

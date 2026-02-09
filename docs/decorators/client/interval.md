@@ -1,5 +1,5 @@
 ---
-title: Interval
+title: '@Interval'
 ---
 ## Description
 ``@Client.Interval()`` is a method decorator used to execute a client-side handler at a fixed time interval.

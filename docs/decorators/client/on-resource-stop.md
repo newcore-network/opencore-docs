@@ -1,5 +1,5 @@
 ---
-title: OnResourceStop
+title: '@OnResourceStop'
 ---
 
 ## Description

@@ -78,39 +78,58 @@ Controllers are discovered automatically, **You don't need to import them manual
 
 ```ts
 // src/server/controllers/hello.controller.ts
-import { z } from '@open-core/framework'
+import { z, EventsAPI } from '@open-core/framework'
 import { Server } from '@open-core/framework/server'
 
 @Server.Controller()
 export class HelloController {
+  constructor(private readonly events: EventsAPI<'server'>) {}
 
-  constructor(private readonly events: EventsApi){}
-
+  @Server.Public()
   @Server.Command({
     command: 'hello',
     usage: '/hello [name]',
-    schema: z.tuple([z.string().optional()])
+    schema: z.tuple([z.string().optional()]),
   })
-  onHelloCommand(player: Server.Player, name: string) {
-    console.log(`Hello command received from ${player.name}`)
-    player.send(`Welcome, ${name}`, 'chat')
+  onHelloCommand(player: Server.Player, name?: string): void {
+    player.send(`Welcome ${name ?? player.name}`, 'chat')
 
-    emitNet('bye:event', player.source, 'bye!')
+    emitNet('bye:event', player.id, 'Bye from server 👋')
   }
 
-  @Server.Command('random-event')
-  onRandomEvent(player: Server.Player, text: string){
-    emitNet
+  @Server.Guard({
+    permission: 'use-random-event',
+    rank: 5,
+  })
+  @Server.OnNet('random-event')
+  onRandomEvent(player: Server.Player, text: string): void {
+    this.events.emit('data', player, text)
+  }
+
+  @Server.Throttle(2, 2000)
+  @Server.OnRPC('rpc-event')
+  async onRpcEvent(player: Server.Player): Promise<string> {
+    return `Yes ${player.name}, I'm here`
+  }
+
+  @Server.OnFrameworkEvent('internal:playerFullyConnected')
+  onPlayerConnected(payload: Server.PlayerFullyConnectedPayload): void {
+    payload.player.spawn({ x: -1257, y: -2704, z: 56 })
+  }
+
+  @Server.OnRuntimeEvent('entityCreated')
+  handleRuntime(handle: number): void {
+    //...
   }
 }
 ```
 
 Key points:
 
-* The first parameter is always `Server.Player`.
+* The first parameter is always `Server.Player` for commands and network listeners.
 * Argument validation happens **before** execution.
 * Schema-based validation is optional but recommended.
-* Commands are globally registered but executed in the defining resource.
+* Commands are globally registered but executed in the defining resource. You can create commands on any resource, the core will perform the security check and delegate its functionality to the responsible resource.
 
 Read more about commands at [](../api-reference/server-decorators.md)
 
@@ -121,37 +140,55 @@ Read more about commands at [](../api-reference/server-decorators.md)
 ```ts
 // src/client/controllers/bye.controller.ts
 import { Client } from '@open-core/framework/client'
+import { EventsAPI } from '@open-core/framework'
+import { ByeViewPayload } from './bye.types'
 
 @Client.Controller()
 export class ByeController {
+  constructor(
+    private readonly nui: Client.NuiBridge,
+    private readonly events: EventsAPI<'client'>,
+  ) {}
 
   @Client.OnNet('bye:event')
-  handleByeEvent(message: string) {
-    console.log(`Server says: ${message}`)
+  handleByeEvent(message: string): void {
+    console.log('Server says:', message)
+
+    this.nui.send('bye:show', { message })
+  }
+
+  @Client.OnView('bye:confirm')
+  handleByeFromView(payload: ByeViewPayload): void {
+    console.log('Bye confirmed:', payload.reason)
+
+    // Forward to server (platform-agnostic)
+    this.events.emit('random-event', payload.reason)
+  }
+
+  @Client.Key('f5', 'optional')
+  toggleByeView(): void {
+    this.nui.toggle(true)
+  }
+
+  @Client.OnGameEvent('CEventExplosionHeard')
+  handleExplosion(): void {
+    console.log('Explosion heard')
+  }
+
+  @Client.Interval(5000)
+  handleInterval(): void {
+    // periodic logic
   }
 }
 ```
 
 ---
 
-## 3. Controller discovery (IMPORTANT)
+## 3. Controller discovery
 
-Controllers are **not loaded automatically** by the runtime.
-You must import them in your entry file so the framework can register their metadata.
-
-```ts
-// server/index.ts
-import { Server } from '@open-core/framework/server'
-import './controllers/hello.controller'
-
-Server.init({
-  mode: 'CORE',
-})
-```
+From v1.x onwards, drivers are automatically discovered unless you explicitly disable this option, the OpenCore compiler will automatically generate the auto-import barrels that the framework will use.
 
 The same rule applies to client controllers.
-
-If a controller file is not imported, it will not be registered.
 
 ---
 

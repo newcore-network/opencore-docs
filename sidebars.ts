@@ -48,6 +48,8 @@ const sidebars: SidebarsConfig = {
             'decorators/server/on-framework-event',
             'decorators/server/on-runtime-event',
             'decorators/client/local-event',
+            'decorators/client/game-event',
+            'decorators/client/on-view',
           ],
         },
         {
@@ -88,14 +90,12 @@ const sidebars: SidebarsConfig = {
       items: [
         'client/overview',
         'decorators/client/controller',
-        'decorators/client/on-view',
-        'client/nui-bridge',
-        'decorators/client/game-event',
         'decorators/client/key',
         'decorators/client/on-tick',
         'decorators/client/interval',
         'decorators/client/on-resource-start',
         'decorators/client/on-resource-stop',
+        'client/nui-bridge',
       ],
     },
 

@@ -1,5 +1,5 @@
 ---
-title: OnGameEvent
+title: '@OnGameEvent'
 ---
 
 ## Description

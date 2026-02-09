@@ -1,5 +1,5 @@
 ---
-title: OnresourceStart
+title: '@OnresourceStart'
 ---
 ## Description
 ``@Client.OnResourceStart()`` registers a method to be executed when the current client resource starts.

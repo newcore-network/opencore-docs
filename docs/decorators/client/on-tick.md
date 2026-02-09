@@ -1,5 +1,5 @@
 ---
-title: OnTick
+title: '@OnTick'
 ---
 ## Description
 ``@Client.Tick()`` registers a method to be executed on every client frame.

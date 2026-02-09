@@ -1,8 +1,8 @@
 ---
-title: KeyMapping
+title: '@Key'
 ---
 ## Description
-``@Client.KeyMapping()`` is a method decorator used to register a client-side key mapping handler.
+``@Client.Key()`` is a method decorator used to register a client-side key mapping handler.
 
 It allows a method to be bound to a specific keyboard key, enabling player interactions through configurable key mappings.
 The decorator does not bind the key immediately. Instead, it stores metadata that the framework later uses during client bootstrap to register the key mapping and attach the handler.
@@ -20,7 +20,7 @@ import { Client } from '@open-core/framework/client'
 
 @Client.Controller()
 export class InteractionController {
-  @Client.KeyMapping('E', 'Interact')
+  @Client.Key('E', 'Interact')
   interact() {
     // interaction logic
   }

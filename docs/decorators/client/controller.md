@@ -1,5 +1,5 @@
 ---
-title: Controller
+title: '@Controller'
 ---
 ## Description
 ``@Client.Controller()`` is a class decorator used to declare a class as a client-side controller.
