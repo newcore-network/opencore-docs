@@ -1,5 +1,5 @@
 ---
-title: Notifications API (Client)
+title: Notifications
 ---
 
 ## Description

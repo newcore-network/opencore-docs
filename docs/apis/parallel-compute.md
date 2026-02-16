@@ -1,5 +1,5 @@
 ---
-title: Parallel Compute API (Server)
+title: Parallel Compute
 ---
 
 ## Description

@@ -1,5 +1,5 @@
 ---
-title: Streaming API (Client)
+title: Streaming
 ---
 
 ## Description

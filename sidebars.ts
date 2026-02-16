@@ -139,6 +139,8 @@ const sidebars: SidebarsConfig = {
           items: [
             'apis/client/spawn',
             'apis/client/appearance',
+            'apis/client/camera',
+            'apis/client/cinematic',
             'apis/client/notifications',
             'apis/client/blips',
             'apis/client/markers',

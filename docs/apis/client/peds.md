@@ -1,5 +1,5 @@
 ---
-title: Peds API (Client)
+title: Peds
 ---
 
 ## Description

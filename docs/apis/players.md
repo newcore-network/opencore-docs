@@ -1,5 +1,5 @@
 ---
-title: Players API (Server)
+title: Players
 ---
 
 ## Description

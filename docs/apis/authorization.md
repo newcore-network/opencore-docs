@@ -1,5 +1,5 @@
 ---
-title: Authorization API (Server)
+title: Authorization
 ---
 
 ## Description

@@ -1,5 +1,5 @@
 ---
-title: Progress API (Client)
+title: Progress
 ---
 
 ## Description

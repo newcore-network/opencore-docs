@@ -1,5 +1,5 @@
 ---
-title: Vehicle API (Client)
+title: Vehicle
 ---
 
 ## Description

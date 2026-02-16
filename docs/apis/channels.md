@@ -1,5 +1,5 @@
 ---
-title: Channels API (Server)
+title: Channels
 ---
 
 ## Description

@@ -1,5 +1,5 @@
 ---
-title: Spawn API (Client)
+title: Spawn
 ---
 
 ## Description

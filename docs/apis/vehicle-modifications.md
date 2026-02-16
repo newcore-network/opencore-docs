@@ -1,5 +1,5 @@
 ---
-title: Vehicle Modifications API (Server)
+title: Vehicle Modifications
 ---
 
 ## Description

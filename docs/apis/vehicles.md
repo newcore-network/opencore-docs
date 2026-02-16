@@ -1,5 +1,5 @@
 ---
-title: Vehicles API (Server)
+title: Vehicles
 ---
 
 ## Description

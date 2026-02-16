@@ -1,5 +1,5 @@
 ---
-title: TextUI API (Client)
+title: TextUI
 ---
 
 ## Description

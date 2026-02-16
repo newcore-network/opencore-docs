@@ -1,5 +1,5 @@
 ---
-title: Appearance API (Client)
+title: Appearance
 ---
 
 ## Description

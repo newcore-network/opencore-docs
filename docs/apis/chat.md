@@ -1,5 +1,5 @@
 ---
-title: Chat API
+title: Chat
 ---
 
 ## Description

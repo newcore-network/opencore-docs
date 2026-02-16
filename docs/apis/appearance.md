@@ -1,5 +1,5 @@
 ---
-title: Appearance API (Server)
+title: Appearance
 ---
 
 ## Description

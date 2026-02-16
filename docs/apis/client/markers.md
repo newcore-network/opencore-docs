@@ -1,5 +1,5 @@
 ---
-title: Markers API (Client)
+title: Markers
 ---
 
 ## Description

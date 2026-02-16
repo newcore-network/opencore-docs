@@ -1,5 +1,5 @@
 ---
-title: Blips API (Client)
+title: Blips
 ---
 
 ## Description

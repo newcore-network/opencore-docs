@@ -1,5 +1,5 @@
 ---
-title: Persistence API (Server)
+title: Persistence
 ---
 
 ## Description
