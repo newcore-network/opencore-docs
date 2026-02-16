@@ -20,13 +20,14 @@ title: Server Decorators
 | `@Server.OnRPC()` | `eventName: string` | Subscribes to an RPC call. Returns a value to the caller. | [Details](../decorators/server/on-rpc.md) |
 | `@Server.OnTick()` | — | Executes on every server tick. Use for lightweight, high-frequency logic. | [Details](../decorators/server/on-tick.md) |
 | `@Server.OnFrameworkEvent()` | `eventName: string` | Listens to internal framework lifecycle events. | [Details](../decorators/server/on-framework-event.md) |
+| `@Server.OnLibraryEvent()` | `libraryName: string, eventName: string` | Listens to server-side library domain events emitted through `library.emit(...)`. | [Details](../decorators/server/on-library-event.md) |
 | `@Server.OnRuntimeEvent()` | `eventName: string` | Subscribes to native FiveM events (`playerJoining`, `playerDropped`, etc.). | [Details](../decorators/server/on-runtime-event.md) |
 | `@Server.RequiresState()` | `state: string` | Ensures the player has a specific state flag before execution. | [Details](../decorators/server/requires-state.md) |
 | `@Server.Throttle()` | `limit, windowMs` | Rate-limits the method per player or context. | [Details](../decorators/server/throttle.md) |
 | `@Server.Export()` | `exportName?: string` | Exposes the method as a FiveM export for inter-resource APIs. | [Details](../decorators/server/export.md) |
 | `@Server.Guard()` | `{ permission?, rank? }` | Applies access control before execution. | [Details](../decorators/server/guard.md) |
 | `@Server.Public()` | — | Marks the method as explicitly public, bypassing guards. | [Details](../decorators/server/public.md) |
-| `@Server.BinaryService()` | `serviceId: number` | Registers a binary protocol service handler. | [Details](../decorators/server/binary-service.mdx) |
+| `@Server.BinaryService()` | `serviceId: number` | Registers a binary protocol service handler. | [Details](../decorators/server/binary-service.md) |
 | `@Server.BinaryCall()` | `callId: number` | Registers a binary protocol call handler. | [Details](../decorators/server/binary-call.md) |
 | `@Server.BinaryEvent()` | `eventId: number` | Registers a binary protocol event handler. | [Details](../decorators/server/binary-event.md) |
 

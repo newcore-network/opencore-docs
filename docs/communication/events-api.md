@@ -54,7 +54,7 @@ import { EventsAPI } from '@open-core/framework'
 @Server.Service()
 export class ChatService {
   constructor(
-    private readonly events: EventsAPI,
+    private readonly events: EventsAPI<'server'>,
   ) {}
 
   broadcast(message: string) {
@@ -69,6 +69,7 @@ Key properties:
 * No global functions
 * Same API on server and client
 * Transport resolved automatically
+* The side, `server` or `client`, must be defined for correct typing.
 
 ---
 

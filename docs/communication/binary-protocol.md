@@ -272,7 +272,7 @@ while (read line from stdin):
 
 This protocol is consumed by:
 
-* **`@BinaryService`** → Process lifecycle and binding. [Read more](../decorators/server/binary-service.mdx)
+* **`@BinaryService`** → Process lifecycle and binding. [Read more](../decorators/server/binary-service.md)
 * **`@BinaryCall`** → Request / Response mapping. [Read more](../decorators/server/binary-call.md)
 * **`@BinaryEvent`** → Event subscription. [Read more](../decorators/server/binary-event.md)
 

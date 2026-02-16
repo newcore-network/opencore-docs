@@ -14,6 +14,7 @@ title: Client Decorators
 | --- | --- | --- | --- |
 | `@Client.OnNet()` | `eventName: string` | Subscribes to a network event (server → client). | [Details](../decorators/client/on-net.md) |
 | `@Client.OnRPC()` | `eventName: string` | Subscribes to an RPC call from the server. Returns a value. | [Details](../decorators/client/on-rpc.md) |
+| `@Client.OnLibraryEvent()` | `libraryName: string, eventName: string` | Listens to client-side library domain events emitted through `library.emit(...)`. | [Details](../decorators/client/on-library-event.md) |
 | `@Client.LocalEvent()` | `eventName: string` | Subscribes to a local (client-only) event for internal communication. | [Details](../decorators/client/local-event.md) |
 | `@Client.GameEvent()` | `eventName: string` | Listens to GTA V native game events (damage, explosions, entity interactions). | [Details](../decorators/client/game-event.md) |
 | `@Client.OnTick()` | — | Executes on every client tick. Avoid heavy computations to prevent FPS drops. | [Details](../decorators/client/on-tick.md) |

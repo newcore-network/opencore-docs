@@ -114,6 +114,7 @@ If you remember only one rule:
 | [@Server.OnNet()](./server/on-net.md) | Subscribes the method to a network event (onNet). Used for client → server or server → client communication via FiveM networking. |
 | [@Server.OnTick()](./server/on-tick.md) | Executes the method on every server tick. Intended for lightweight, high-frequency logic. Heavy operations should be avoided to prevent performance issues. |
 | [@Server.OnFrameworkEvent()](./server/on-framework-event.md) | Listens to internal framework events. Useful for reacting to lifecycle hooks, module events, or cross-system communication inside the framework. |
+| [@Server.OnLibraryEvent()](./server/on-library-event.md) | Listens to server-side library domain events emitted through `library.emit(...)`. Useful for projections, audit hooks, and decoupled module reactions. |
 | [@Server.OnRuntimeEvent()](./server/on-runtime-event.md) | Subscribes the method to a native FiveM event (e.g. playerJoining, playerDropped). Acts as a clean abstraction over on() for FiveM events. |
 | [@Server.RequiresState()](./server/requires-state.md) | Ensures the player is in a specific state before executing the method. If the requirement is not met, the method is skipped or rejected. Commonly used for gameplay state validation (logged in, spawned, etc.). |
 | [@Server.Throttle()](./server/throttle.md) | Applies rate limiting to the method. Prevents spam or abuse by limiting how frequently the method can be executed per player or context. |
@@ -121,6 +122,7 @@ If you remember only one rule:
 | [@Server.Guard()](./server/guard.md) | Applies access control rules to the method. Can enforce permissions, roles, ranks, or custom authorization logic before execution. |
 | [@Server.Public()](./server/public.md) | Marks the method as explicitly public and callable without restrictions. Useful for APIs that should bypass guards or internal access checks. |
 | [@Client.OnNet()](./client/on-net.md) | Subscribes the method to a network event (onNet) on the client. Typically used for server → client communication and synchronized gameplay events. |
+| [@Client.OnLibraryEvent()](./client/on-library-event.md) | Listens to client-side library domain events emitted through `library.emit(...)`. Useful for UI projections and local side effects. |
 | [@Client.LocalEvent()](./client/local-event.md) | Subscribes the method to a local (client-only) event. Useful for internal communication between client systems without involving networking. |
 | [@Client.GameEvent()](./client/game-event.md) | Listens to a GTA V game-native event (gameEventTriggered). Allows reacting to low-level engine events such as damage, explosions, or entity interactions. |
 | [@Client.OnTick()](./client/on-tick.md) | Executes the method on every client tick. Intended for lightweight, frame-based logic. Heavy computations should be avoided to prevent FPS drops. |

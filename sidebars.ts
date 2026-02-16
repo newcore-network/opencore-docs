@@ -46,6 +46,8 @@ const sidebars: SidebarsConfig = {
             'decorators/server/on-net',
             'decorators/client/on-net',
             'decorators/server/on-framework-event',
+            'decorators/server/on-library-event',
+            'decorators/client/on-library-event',
             'decorators/server/on-runtime-event',
             'decorators/client/local-event',
             'decorators/client/game-event',
@@ -215,6 +217,7 @@ const sidebars: SidebarsConfig = {
       label: 'Ecosystem',
       items: [
         'libraries/about',
+        'libraries/library-api-usage',
         {
           type: 'category',
           label: 'Official Libraries',
