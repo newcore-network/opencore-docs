@@ -3,7 +3,7 @@ title: '@Command'
 ---
 
 ## Description
-`@Server.Command()` registers a method as a server-side command handler executed through an OpenCore-compatible chat system.
+`@Command()` registers a method as a server-side command handler executed through an OpenCore-compatible chat system.
 
 Commands can be declared in any resource. During server startup, the framework discovers all commands, collects their metadata into the core, and exposes them through an internal communication bus.  
 When a command is executed by a player, the call is routed back and executed inside the resource that originally defined the command.
@@ -11,7 +11,7 @@ When a command is executed by a player, the call is routed back and executed ins
 This design allows commands to be globally available while keeping execution logic isolated, modular, and resource-safe.
 
 Commands are intended for explicit player actions such as administration, utilities, or roleplay interactions.  
-If the method declares parameters, the **first parameter must always be `Server.Player`**.
+If the method declares parameters, the **first parameter must always be `Player`**.
 
 ---
 
@@ -52,8 +52,8 @@ This allows a command to accept a variable number of arguments while preserving 
 ### Simple spread example
 
 ```ts
-@Server.Command('announce')
-announce(player: Server.Player, ...message: string[]) {
+@Command('announce')
+announce(player: Player, ...message: string[]) {
   const text = message.join(' ')
   this.chatService.broadcast(text)
 }
@@ -72,13 +72,13 @@ In this example:
 Spread parameters can be validated using a tuple schema with `rest()`.
 
 ```ts
-@Server.Command(
+@Command(
   'say',
   z.tuple([
     z.string(),        // first argument
   ]).rest(z.string()) // remaining arguments
 )
-say(player: Server.Player, ...args: string[]) {
+say(player: Player, ...args: string[]) {
   // args contains all validated arguments
 }
 ```
@@ -95,54 +95,53 @@ Validation rules:
 
 ```ts
 import { z, Infer } from '@open-core/framework'
-import { Server } from '@open-core/framework/server'
 
 const BanSchema = z.object({
   targetId: z.number().min(0).max(65565),
   reason: z.string().min(5).max(50),
 })
 
-@Server.Controller()
+@Controller()
 export class AdminController {
 
   // Simple command with primitive auto-validation
-  @Server.Command('ping')
-  ping(player: Server.Player, value: number) {
+  @Command('ping')
+  ping(player: Player, value: number) {
     // value is auto-parsed and validated
   }
 
   // Command with full configuration
-  @Server.Command({
+  @Command({
     command: 'kick',
     usage: '/kick <playerId:number> <reason:text>',
     description: 'Kick a player from the server',
   })
-  kick(player: Server.Player, targetId: number, reason: string) {
+  kick(player: Player, targetId: number, reason: string) {
     // command logic
   }
 
   // Command using schema-based validation (recommended for complex inputs)
-  @Server.Command({
+  @Command({
     command: 'ban',
     usage: '/ban <playerId:number> <reason:text>',
     description: 'Ban a player from the server',
   }, BanSchema)
-  ban(player: Server.Player, data: Infer<typeof BanSchema>) {
+  ban(player: Player, data: Infer<typeof BanSchema>) {
     // data is strongly typed and validated by Zod
   }
 
   // Short form with schema
-  @Server.Command('dosomething', BanSchema)
-  doSomething(player: Server.Player, data: Infer<typeof BanSchema>) {
+  @Command('dosomething', BanSchema)
+  doSomething(player: Player, data: Infer<typeof BanSchema>) {
     // concise, strongly typed command
   }
 
   // Command with spread parameters
-  @Server.Command(
+  @Command(
     'note',
     z.tuple([z.number()]).rest(z.string())
   )
-  note(player: Server.Player, targetId: number, ...message: string[]) {
+  note(player: Player, targetId: number, ...message: string[]) {
     const text = message.join(' ')
     // command logic
   }
@@ -162,10 +161,10 @@ In these examples:
 
 * Commands can be defined in any resource; metadata is collected in the core, execution stays local to the resource.
 * To use commands, you must run an OpenCore-compatible chat resource. `xchat` is the reference implementation and recommended starting point.
-* The first parameter is always `Server.Player`.
+* The first parameter is always `Player`.
 * Primitive arguments have basic validation; complex data or strict rules require a schema.
 * Spread parameters are supported from `v0.3.x` onward.
 * `z` and `Infer` are framework-provided wrappers around Zod. You may use Zod directly, but the wrappers are recommended to ensure version compatibility.
-* Commands are authenticated by default and can be combined with `@Server.Guard()`, `@Server.Throttle()`, `@Server.RequiresState()`, and `@Server.Public()` for security and gameplay rules.
+* Commands are authenticated by default and can be combined with `@Guard()`, `@Throttle()`, `@RequiresState()`, and `@Public()` for security and gameplay rules.
 
 ```

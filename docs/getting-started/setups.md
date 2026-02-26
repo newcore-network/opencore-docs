@@ -7,7 +7,7 @@ title: Setups
 From **v0.3.x onward**, OpenCore follows a **zero-config by default** philosophy.
 
 This means:
-- You can start a server with `Server.init({ mode: 'CORE' })` and everything works.
+- You can start a server with `init({ mode: 'CORE' })` and everything works.
 - Core systems (commands, players, net events, identity, sessions) are auto-configured.
 - Reasonable **default implementations** are installed internally.
 
@@ -19,7 +19,7 @@ You only need it if you want to **replace or extend core behavior**.
 
 ## What is a Setup?
 
-A *setup* is a set of explicit registrations into the global DI container **before** `Server.init()` runs.
+A *setup* is a set of explicit registrations into the global DI container **before** `init()` runs.
 
 Internally, OpenCore uses a global dependency container (`GLOBAL_CONTAINER`).  
 Setup helpers allow you to register your own implementations for critical contracts.
@@ -37,9 +37,9 @@ Typical use cases:
 ### Principal Provider
 
 ```ts
-import { Server } from '@open-core/framework/server'
+import { setPrincipalProvider } from '@open-core/framework/server'
 
-Server.setPrincipalProvider(MyPrincipalProvider)
+setPrincipalProvider(MyPrincipalProvider)
 ````
 
 Registers a custom implementation of:
@@ -50,7 +50,7 @@ Registers a custom implementation of:
 
 * Player identity
 * Roles, permissions, claims
-* Authorization logic used by `@Server.Guard`
+* Authorization logic used by `@Guard`
 
 **Default behavior if not set:**
 
@@ -69,7 +69,7 @@ Use a custom provider if you need:
 ### Security Handler
 
 ```ts
-Server.setSecurityHandler(MySecurityHandler)
+setSecurityHandler(MySecurityHandler)
 ```
 
 Registers:
@@ -93,7 +93,7 @@ You usually only replace this for **deep framework integrations**.
 ### Player Persistence Provider
 
 ```ts
-Server.setPersistenceProvider(MyPlayerPersistence)
+setPersistenceProvider(MyPlayerPersistence)
 ```
 
 Registers:
@@ -122,7 +122,7 @@ Use a custom provider if you want:
 ### Net Event Security Observer
 
 ```ts
-Server.setNetEventSecurityObserver(MyNetEventObserver)
+setNetEventSecurityObserver(MyNetEventObserver)
 ```
 
 Registers:
@@ -150,7 +150,7 @@ Useful for:
 ### Command Error Observer
 
 ```ts
-Server.setCommandErrorObserver(MyCommandErrorObserver)
+setCommandErrorObserver(MyCommandErrorObserver)
 ```
 
 Registers:
@@ -200,17 +200,21 @@ This is intentional to prevent insecure deployments.
 
 ## Execution order (important)
 
-Setups **must be executed before** calling `Server.init()`.
+Setups **must be executed before** calling `init()`.
 
 Correct pattern:
 
 ```ts
-import { Server } from '@open-core/framework/server'
+import {
+  init,
+  setPersistenceProvider,
+  setPrincipalProvider,
+} from '@open-core/framework/server'
 
-Server.setPrincipalProvider(MyPrincipalProvider)
-Server.setPersistenceProvider(MyPersistence)
+setPrincipalProvider(MyPrincipalProvider)
+setPersistenceProvider(MyPersistence)
 
-await Server.init({
+await init({
   mode: 'CORE',
 })
 ```
@@ -218,8 +222,8 @@ await Server.init({
 Incorrect pattern (too late):
 
 ```ts
-await Server.init({ mode: 'CORE' })
-Server.setPrincipalProvider(MyPrincipalProvider) // ❌ ignored
+await init({ mode: 'CORE' })
+setPrincipalProvider(MyPrincipalProvider) // ❌ ignored
 ```
 
 ---
@@ -267,7 +271,7 @@ You should **not** perform setup logic inside `core:ready`.
 * Setup is **optional**, not mandatory
 * Defaults exist for everything except critical security contracts
 * Use setups only when you need custom behavior
-* Always configure setups **before** `Server.init()`
+* Always configure setups **before** `init()`
 * `core:ready` is automatic and reliable
 
 This keeps OpenCore:

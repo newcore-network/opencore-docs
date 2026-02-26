@@ -9,10 +9,9 @@ A **Contract** is an abstract class that defines a set of methods the framework 
 Contracts allow OpenCore to remain decoupled from your database, authentication system, and security policies while still enabling powerful extensibility.
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
 // You implement the contract
-@Server.Bind(PlayerPersistenceContract)
+@Bind(PlayerPersistenceContract)
 export class MySqlPersistence extends PlayerPersistenceContract {
   async onSessionLoad(player: Player) {
     const data = await MySQL.query('SELECT * FROM users WHERE license = ?', [player.license])
@@ -37,19 +36,18 @@ export class MySqlPersistence extends PlayerPersistenceContract {
 
 ## How to register a Contract
 
-From **v0.3.x**, contracts are registered through the **Setup API** before calling `Server.init()`:
+From **v0.3.x**, contracts are registered through the **Setup API** before calling `init()`:
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-Server.setPersistenceProvider(MySqlPersistence)
-Server.setPrincipalProvider(MySecurityProvider)
+setPersistenceProvider(MySqlPersistence)
+setPrincipalProvider(MySecurityProvider)
 
-await Server.init({ mode: 'CORE' })
+await init({ mode: 'CORE' })
 ```
 
 :::info
-`@Server.Bind()` makes the class injectable. `Server.setX(...)` tells the framework which implementation to use. Both are needed.
+`@Bind()` makes the class injectable. `setX(...)` tells the framework which implementation to use. Both are needed.
 :::
 
 ---
@@ -103,7 +101,7 @@ The framework handles the **timing** — you only provide the **logic**.
 OpenCore includes an abstract `Repository` base class for standardized CRUD operations:
 
 ```ts
-@Server.Repo()
+@Repo()
 export class UserRepository extends Repository<User> {
   protected tableName = 'users'
 

@@ -1,11 +1,11 @@
 ---
-title: '@OnLibraryEvent (Client)'
+title: '@OnLibraryEvent'
 description: Listens to client-side library domain events emitted with library.emit(...).
 ---
 
 ## Overview
 
-`@Client.OnLibraryEvent()` registers a method as a listener for a **client-side library domain event**.
+`@OnLibraryEvent()` registers a method as a listener for a **client-side library domain event**.
 
 This decorator listens to events emitted by client library wrappers through `library.emit(...)`.
 
@@ -14,7 +14,7 @@ Like other OpenCore decorators, it stores metadata first; binding happens during
 ## Signature
 
 ```ts
-@Client.OnLibraryEvent(libraryName, eventName)
+@OnLibraryEvent(libraryName, eventName)
 ```
 
 ### Arguments
@@ -37,14 +37,13 @@ Handlers receive:
 ## Example
 
 ```ts
-import { Client } from '@open-core/framework/client'
 
-@Client.Controller()
+@Controller()
 export class InventoryUiProjection {
-  @Client.OnLibraryEvent('inventory', 'items:updated')
+  @OnLibraryEvent('inventory', 'items:updated')
   onItemsUpdated(
     payload: { count: number },
-    meta: Client.LibraryEventMetadata,
+    meta: LibraryEventMetadata,
   ) {
     // react to local client library domain updates
   }
@@ -53,7 +52,7 @@ export class InventoryUiProjection {
 
 ## Important Scope Rule
 
-`@Client.OnLibraryEvent()` listens only to `library.emit(...)` events.
+`@OnLibraryEvent()` listens only to `library.emit(...)` events.
 
 It does **not** listen to transport bridge methods such as:
 

@@ -2,7 +2,7 @@
 title: '@Interval'
 ---
 ## Description
-``@Client.Interval()`` is a method decorator used to execute a client-side handler at a fixed time interval.
+``@Interval()`` is a method decorator used to execute a client-side handler at a fixed time interval.
 
 It allows client logic to run periodically without being tied to the frame rate.
 This is useful for synchronization, polling, or periodic UI or gameplay updates that do not need to run every frame.
@@ -15,12 +15,11 @@ The decorator stores scheduling metadata, which the framework processes during c
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework/client'
 
-@Client.Controller()
+@Controller()
 export class SyncController {
     
-  @Client.Interval(1000)
+  @Interval(1000)
   syncOncePerSecond() {
     // runs every second
   }

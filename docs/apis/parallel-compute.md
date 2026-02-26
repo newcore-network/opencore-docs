@@ -4,7 +4,7 @@ title: Parallel Compute
 
 ## Description
 
-The `ParallelComputeService` is OpenCore's solution for handling CPU-intensive tasks without blocking the main GTA/FiveM thread. It utilizes a **Worker Pool** system to execute TypeScript code in background threads.
+`ParallelCompute` is OpenCore's runtime API for handling CPU-intensive tasks without blocking the main GTA/FiveM thread. It uses a **Worker Pool** to execute TypeScript code in background threads.
 
 This is critical for maintaining high server FPS when performing heavy operations like complex pathfinding, data processing, or large-scale mathematical simulations.
 

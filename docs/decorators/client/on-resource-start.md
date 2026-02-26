@@ -1,8 +1,8 @@
 ---
-title: '@OnresourceStart'
+title: '@OnResourceStart'
 ---
 ## Description
-``@Client.OnResourceStart()`` registers a method to be executed when the current client resource starts.
+``@OnResourceStart()`` registers a method to be executed when the current client resource starts.
 
 This decorator hooks into the FiveM client lifecycle event onClientResourceStart.
 The handler is only executed when the started resource matches the current resource, ensuring correct scoping and avoiding cross-resource side effects.
@@ -14,11 +14,10 @@ This decorator does not accept any arguments.
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework/client'
 
-@Client.Controller()
+@Controller()
 export class LifecycleController {
-  @Client.OnResourceStart()
+  @OnResourceStart()
   onStart(resourceName: string) {
     // initialization logic
   }

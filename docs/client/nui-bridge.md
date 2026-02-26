@@ -6,19 +6,19 @@ title: NUI Bridge
 
 The NUI Bridge is the communication layer between your client-side gameplay logic (Lua/TypeScript) and your web-based UI (HTML/CSS/JavaScript). In FiveM, this is handled through the **NUI (Native UI)** system.
 
-OpenCore provides the `@Client.OnView()` decorator to make this communication explicit and type-safe.
+OpenCore provides the `@OnView()` decorator to make this communication explicit and type-safe.
 
 ## How it Works
 
 ### UI → Client (NUI Callbacks)
 
-When your UI sends a message to the client script, the `@Client.OnView()` decorator handles it:
+When your UI sends a message to the client script, the `@OnView()` decorator handles it:
 
 ```ts
-@Client.Controller()
+@Controller()
 export class InventoryController {
 
-  @Client.OnView('inventory:use-item')
+  @OnView('inventory:use-item')
   onUseItem(data: { itemId: string }) {
     console.log(`Player used item: ${data.itemId}`)
     return { success: true }
@@ -62,7 +62,7 @@ SetNuiFocus(false, false)  // Hide cursor, release keyboard
 
 ## Notes
 
-- `@Client.OnView()` callbacks automatically parse the JSON body and return the response to the UI.
+- `@OnView()` callbacks automatically parse the JSON body and return the response to the UI.
 - NUI communication is **local only** — it never touches the network.
 - Keep NUI callbacks lightweight. Heavy logic should be delegated to services.
-- Use `@Client.LocalEvent()` to communicate between NUI handlers and other client controllers.
+- Use `@LocalEvent()` to communicate between NUI handlers and other client controllers.

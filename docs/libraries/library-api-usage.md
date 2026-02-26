@@ -16,6 +16,8 @@ It gives each library:
 
 This page focuses on **usage** of the API once a library instance already exists in your module.
 
+For install-time extension and bootstrap registration, see [Plugin API Usage](./plugin-api-usage.md).
+
 ## Core Concepts
 
 ### 1) Local Domain Events
@@ -54,7 +56,7 @@ Libraries expose two naming helpers:
 const namespaced = charactersLib.buildEventName('session:created')
 // opencore:characters:session:created
 
-const id = Server.buildLibraryEventId('characters', 'session:created')
+const id = buildLibraryEventId('characters', 'session:created')
 // characters:session:created
 ```
 
@@ -69,8 +71,8 @@ When listening with `@OnLibraryEvent(...)`, handlers receive metadata describing
 - `side`
 
 ```ts
-@Server.OnLibraryEvent('characters', 'session:created')
-onSessionCreated(payload: { sessionId: string }, meta: Server.LibraryEventMetadata) {
+@OnLibraryEvent('characters', 'session:created')
+onSessionCreated(payload: { sessionId: string }, meta: LibraryEventMetadata) {
   // meta.side === 'server'
 }
 ```
@@ -122,7 +124,7 @@ const compact = config.get('uiCompactMode')
 
 ## `OnLibraryEvent` Scope
 
-`@Server.OnLibraryEvent(...)` and `@Client.OnLibraryEvent(...)` observe **only** domain emissions from `library.emit(...)`.
+`@OnLibraryEvent(...)` and `@OnLibraryEvent(...)` observe **only** domain emissions from `library.emit(...)`.
 
 They do **not** observe transport bridge methods:
 
@@ -138,3 +140,12 @@ This keeps domain events and transport concerns clearly separated.
 - Use `OnLibraryEvent` for optional listeners (projections, analytics, notifications).
 - Use bridge methods only when crossing runtime/resource boundaries is required.
 - Keep event names stable and explicit; treat them as part of your library contract.
+
+## When to Combine With Plugin API
+
+A common pattern for official libraries is:
+
+1. Install and wire dependencies via Plugin API (`init({ plugins: [...] })`).
+2. Use Library API at runtime for domain events and transport wrappers.
+
+This separation keeps boot lifecycle concerns out of your domain event model.

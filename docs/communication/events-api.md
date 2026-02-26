@@ -51,7 +51,7 @@ It can be injected into services, controllers, or any injectable class.
 ```ts
 import { EventsAPI } from '@open-core/framework'
 
-@Server.Service()
+@Service()
 export class ChatService {
   constructor(
     private readonly events: EventsAPI<'server'>,

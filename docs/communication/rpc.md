@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: RPC Overview
 description: Remote Procedure Calls between server and client in OpenCore.
 ---
 
@@ -181,8 +181,8 @@ This overview describes the **transport and execution model**.
 
 The following decorators build on top of it:
 
-- **`@Server.OnRPC()`** – server-side RPC handlers
-- **`@Client.OnRPC()`** – client-side RPC handlers
+- **`@OnRPC()`** – server-side RPC handlers
+- **`@OnRPC()`** – client-side RPC handlers
 
 They do not change the model, only how handlers are declared.
 

@@ -143,7 +143,7 @@ interface CameraShakeOptions {
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class CameraDemoController {
   constructor(private readonly camera: Camera) {}
 

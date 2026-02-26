@@ -3,7 +3,7 @@ title: '@OnResourceStop'
 ---
 
 ## Description
-@Client.OnResourceStop() registers a method to be executed when the current client resource stops.
+@OnResourceStop() registers a method to be executed when the current client resource stops.
 
 It listens to the FiveM client lifecycle event onClientResourceStop and ensures the handler is only called when the stopping resource matches the current one.
 
@@ -14,11 +14,10 @@ This decorator does not accept any arguments.
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework/client'
 
-@Client.Controller()
+@Controller()
 export class LifecycleController {
-  @Client.OnResourceStop()
+  @OnResourceStop()
   onStop(resourceName: string) {
     // cleanup logic
   }

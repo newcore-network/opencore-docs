@@ -6,15 +6,14 @@ title: Controllers & Services
 
 A **Controller** is a class that acts as an entry point for your gameplay logic. Controllers group commands, network events, ticks, and other handlers that react to player actions or engine events.
 
-Mark a class with `@Server.Controller()` (server) or `@Client.Controller()` (client) to register it in the framework.
+Mark a class with `@Controller()` (server) or `@Controller()` (client) to register it in the framework.
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class PlayerController {
-  @Server.Command({ command: 'hello' })
-  sayHello(player: Server.Player) {
+  @Command({ command: 'hello' })
+  sayHello(player: Player) {
     player.send('Hello!', 'chat')
   }
 }
@@ -28,14 +27,13 @@ export class PlayerController {
 
 ---
 
-## Services (`@Server.Service()`)
+## Services (`@Service()`)
 
 A **Service** is a class that encapsulates reusable business logic. While controllers handle *how* a request arrives, services handle *what* to do.
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Service()
+@Service()
 export class InventoryService {
   addItem(playerId: number, item: string) {
     // business logic
@@ -56,12 +54,12 @@ Services are **singletons** by default — the framework creates one instance sh
 Services are injected automatically via the constructor. Never use `new MyService()` — let the framework handle the lifecycle.
 
 ```ts
-@Server.Controller()
+@Controller()
 export class ShopController {
   constructor(private readonly inventory: InventoryService) {}
 
-  @Server.Command({ command: 'buy' })
-  handleBuy(player: Server.Player, item: string) {
+  @Command({ command: 'buy' })
+  handleBuy(player: Player, item: string) {
     this.inventory.addItem(player.clientID, item)
   }
 }
@@ -69,12 +67,12 @@ export class ShopController {
 
 ---
 
-## Bind (`@Server.Bind()`)
+## Bind (`@Bind()`)
 
-`@Server.Bind()` registers a class in the dependency injection container without any semantic role. Use it for shared utilities, managers, adapters, or low-level classes that are not controllers or services.
+`@Bind()` registers a class in the dependency injection container without any semantic role. Use it for shared utilities, managers, adapters, or low-level classes that are not controllers or services.
 
 ```ts
-@Server.Bind()
+@Bind()
 export class InternalProcessor {
   process(data: string) {
     // internal logic
@@ -89,12 +87,12 @@ export class InternalProcessor {
 
 ---
 
-## Repositories (`@Server.Repo()`)
+## Repositories (`@Repo()`)
 
-`@Server.Repo()` is a semantic alias for `@Server.Bind()`, intended for data access and persistence layers.
+`@Repo()` is a semantic alias for `@Bind()`, intended for data access and persistence layers.
 
 ```ts
-@Server.Repo()
+@Repo()
 export class AccountRepository {
   async findById(id: string) {
     // persistence logic
@@ -112,9 +110,9 @@ Keeping repositories separate from services helps enforce clean architecture bou
 
 | Decorator | Purpose | Default scope |
 |-----------|---------|---------------|
-| `@Server.Controller()` / `@Client.Controller()` | Entry point for gameplay logic | Singleton |
-| `@Server.Service()` | Reusable business logic | Singleton |
-| `@Server.Bind()` | Generic injectable class | Singleton |
-| `@Server.Repo()` | Data access / persistence | Singleton |
+| `@Controller()` / `@Controller()` | Entry point for gameplay logic | Singleton |
+| `@Service()` | Reusable business logic | Singleton |
+| `@Bind()` | Generic injectable class | Singleton |
+| `@Repo()` | Data access / persistence | Singleton |
 
 All of these are automatically injectable via constructor injection. The framework manages their lifecycle — you never instantiate them manually.

@@ -18,7 +18,7 @@ In FiveM, resources usually talk to each other via raw strings and events. OpenC
 
 ### 3. Developer Productivity
 - **Dependency Injection**: Focus on logic, let the framework handle object instantiation.
-- **Declarative Programming**: Use decorators (`@Server.Command`, `@Server.Guard`) to describe *what* your code should do, not *how* to wire it up.
+- **Declarative Programming**: Use decorators (`@Command`, `@Guard`) to describe *what* your code should do, not *how* to wire it up.
 - **Dev Mode**: Real-time feedback loops with Hot Reload and Player Simulation.
 
 ### 4. Scalability

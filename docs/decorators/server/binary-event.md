@@ -5,9 +5,9 @@ description: Handles events emitted by a Binary Service.
 
 ## Overview
 
-`@Server.BinaryEvent` defines a **listener for events emitted by a binary process**.
+`@BinaryEvent` defines a **listener for events emitted by a binary process**.
 
-Unlike `@Server.BinaryCall`, events are:
+Unlike `@BinaryCall`, events are:
 
 - Initiated by the binary
 - Asynchronous and unsolicited
@@ -45,9 +45,9 @@ Binary events are declared by decorating a method with `@BinaryEvent`.
 ```ts
 import { BinaryService, BinaryEvent } from "@open-core/framework/server";
 
-@Server.BinaryService({ name: "worker" })
+@BinaryService({ name: "worker" })
 export class WorkerBinary {
-  @Server.BinaryEvent("worker.ready")
+  @BinaryEvent("worker.ready")
   onReady(data: { pid: number }) {
     console.log("Worker ready:", data.pid);
   }
@@ -89,7 +89,7 @@ If no handler exists for an event:
 The `data` field is passed directly to the handler method.
 
 ```ts
-@Server.BinaryEvent("progress")
+@BinaryEvent("progress")
 onProgress(data: { current: number; total: number }) {}
 ```
 

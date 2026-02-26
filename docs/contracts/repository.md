@@ -36,7 +36,7 @@ interface User {
   name: string;
 }
 
-@Server.Service()
+@Service()
 export class UserRepository extends Repository<User> {
   protected tableName = 'users';
 

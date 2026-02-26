@@ -29,7 +29,7 @@ The `ctx` object provides detailed information about the failure:
 ## Example
 
 ```ts
-@Server.Bind(NetEventSecurityObserverContract)
+@Bind(NetEventSecurityObserverContract)
 export class MyNetSecurityObserver extends NetEventSecurityObserverContract {
   async onInvalidPayload(player: Player, ctx: NetEventInvalidPayloadContext) {
     if (ctx.reason === 'zod') {
@@ -43,8 +43,8 @@ export class MyNetSecurityObserver extends NetEventSecurityObserverContract {
 ## Registration
 
 ```ts
-Server.setNetEventSecurityObserver(MyNetSecurityObserver)
-await Server.init({ mode: 'CORE' })
+setNetEventSecurityObserver(MyNetSecurityObserver)
+await init({ mode: 'CORE' })
 ```
 
 ## Notes

@@ -1,11 +1,11 @@
 ---
-title: '@OnLibraryEvent (Server)'
+title: '@OnLibraryEvent'
 description: Listens to server-side library domain events emitted with library.emit(...).
 ---
 
 ## Overview
 
-`@Server.OnLibraryEvent()` registers a method as a listener for a **server-side library domain event**.
+`@OnLibraryEvent()` registers a method as a listener for a **server-side library domain event**.
 
 This decorator listens to events emitted by library wrappers through `library.emit(...)`.
 
@@ -14,7 +14,7 @@ It does not bind immediately. The decorator stores metadata, and OpenCore binds 
 ## Signature
 
 ```ts
-@Server.OnLibraryEvent(libraryName, eventName)
+@OnLibraryEvent(libraryName, eventName)
 ```
 
 ### Arguments
@@ -37,14 +37,13 @@ Handlers receive:
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class CharacterSessionProjection {
-  @Server.OnLibraryEvent('characters', 'session:created')
+  @OnLibraryEvent('characters', 'session:created')
   onSessionCreated(
     payload: { sessionId: string; playerId: number },
-    meta: Server.LibraryEventMetadata,
+    meta: LibraryEventMetadata,
   ) {
     // payload from library.emit(...)
     // meta.eventId === 'characters:session:created'
@@ -54,7 +53,7 @@ export class CharacterSessionProjection {
 
 ## Important Scope Rule
 
-`@Server.OnLibraryEvent()` listens only to events emitted with `library.emit(...)`.
+`@OnLibraryEvent()` listens only to events emitted with `library.emit(...)`.
 
 It does **not** listen to:
 

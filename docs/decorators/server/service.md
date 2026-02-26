@@ -1,13 +1,13 @@
 ---
-title: Service
+title: '@Service'
 ---
 ## Description
-``@Server.Service()`` is a class decorator used to mark a class as a framework-managed service.
+``@Service()`` is a class decorator used to mark a class as a framework-managed service.
 
 A service represents business logic or domain logic that can be reused across controllers and other services.
 This decorator registers the class in the dependency injection container using a defined lifecycle scope, allowing it to be injected wherever it is needed.
 
-Internally, ``@Server.Service()`` is a semantic wrapper over the lower-level [Bind](./bind.md) decorator. Its purpose is to clearly express intent and allow service-specific behavior to be introduced in the future without breaking user code.
+Internally, ``@Service()`` is a semantic wrapper over the lower-level [Bind](./bind.md) decorator. Its purpose is to clearly express intent and allow service-specific behavior to be introduced in the future without breaking user code.
 
 ## Arguments
 ``options.scope`` - (optional) Defines the binding scope of the service.
@@ -17,9 +17,8 @@ Possible values:
 
 ## Example
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Service()
+@Service()
 export class InventoryService {
   addItem() {
     // business logic

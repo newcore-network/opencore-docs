@@ -70,8 +70,8 @@ export class MyCommandErrorObserver extends CommandErrorObserverContract {
 ## Registration
 
 ```ts
-Server.setCommandErrorObserver(MyCommandErrorObserver)
-await Server.init({ mode: 'CORE' })
+setCommandErrorObserver(MyCommandErrorObserver)
+await init({ mode: 'CORE' })
 ```
 
 ## Default Behavior

@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: CLI Overview
 ---
 
 ## What is OpenCore CLI?

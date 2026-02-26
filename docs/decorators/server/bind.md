@@ -7,7 +7,7 @@ title: '@Bind'
 Registers a class in the dependency injection container, making it available
 for constructor injection across the server runtime.
 
-`@Server.Bind()` is intended for reusable, non-controller classes such as
+`@Bind()` is intended for reusable, non-controller classes such as
 managers, helpers, adapters, or low-level services.
 
 By default, the bound class is treated as a **singleton** and instantiated
@@ -31,7 +31,7 @@ Use this decorator when a class:
 [Example code en typescript]
 
 ```ts
-@Server.Bind() // @Server.Bind('transient')
+@Bind() // @Bind('transient')
 export class InternalProcessor {
 
     process(data: string)

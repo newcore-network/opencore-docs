@@ -44,12 +44,12 @@ Reverts a vehicle to its factory default state (removes all mods, resets colors 
 ## Example
 
 ```ts
-@Server.Controller()
+@Controller()
 export class MechanicController {
   constructor(private readonly modService: VehicleModificationService) {}
 
-  @Server.OnNet('mechanic:applyEngine')
-  handleEngineUpgrade(player: Server.Player, networkId: number, level: number) {
+  @OnNet('mechanic:applyEngine')
+  handleEngineUpgrade(player: Player, networkId: number, level: number) {
     const success = this.modService.applyModifications({
       networkId,
       requestedBy: player.clientID,

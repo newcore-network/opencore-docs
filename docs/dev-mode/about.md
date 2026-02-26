@@ -40,7 +40,7 @@ The framework always runs normally. Development Mode **observes and assists**, i
 Development Mode is enabled during server initialization:
 
 ```ts
-Server.init({
+init({
   mode: 'CORE',
   devMode: {
     enabled: true,

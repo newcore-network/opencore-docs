@@ -29,11 +29,11 @@ drawText3D(position: Vector3, text: string, options?: Text3DOptions)
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class InteractionController {
   constructor(private readonly textUI: TextUIService) {}
 
-  @Client.OnTick()
+  @OnTick()
   renderLabels() {
     this.textUI.drawText3D({ x: 1.0, y: 2.0, z: 3.0 }, "[E] Open Trunk", {
       background: true

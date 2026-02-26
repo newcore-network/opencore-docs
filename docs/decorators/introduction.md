@@ -1,3 +1,7 @@
+---
+title: '@Decorators'
+---
+
 ## What is a Decorator?
 
 A TypeScript decorator is a special kind of function that can attach behavior or metadata to classes, methods, properties, accessors, or parameters. Conceptually, it is similar to “annotations” in languages like Java or “attributes” in C#. It does not change TypeScript’s type system; it runs at runtime (JavaScript execution time), not during type checking.
@@ -16,9 +20,9 @@ OpenCore uses TypeScript decorators to declare **runtime behavior** in a way tha
 Decorators are the primary “wiring language” of the framework. In OpenCore, a decorator is a declaration that attaches meaning to code.
 
 Examples:
-- “this class is a controller” (`@Server.Controller()`)
-- “this method handles a net event” (`@Server.OnNet('event:name')`)
-- “this method is a command” (`@Server.Command({ ... })`)
+- “this class is a controller” (`@Controller()`)
+- “this method handles a net event” (`@OnNet('event:name')`)
+- “this method is a command” (`@Command({ ... })`)
 
 The important point:
 
@@ -66,7 +70,7 @@ Reference:
 Decorators provide a stable contract:
 
 - **Consistent entry points**
-  - handlers receive a `Server.Player` context where required
+  - handlers receive a `Player` context where required
 - **Centralized validation and security**
   - schemas and security decorators run before your logic
 - **Explicit runtime wiring**
@@ -102,35 +106,35 @@ If you remember only one rule:
 ### Class Decorators
 | Name | Description |
 | -------- | ------- |
-| [@Server.Controller()](./server/controller.md) | Marks a server-side class as a Controller. Controllers are entry points for gameplay logic and can handle commands, events, and framework callbacks. The class is automatically registered and instantiated by the framework. |
-| [@Client.Controller()](./client/controller.md) | Same concept as @Server.Controller, but for the client-side. Used to handle UI interactions, player input, client events, and client-only logic. |
-| [@Server.Bind()](./server/bind.md) | Registers a class as injectable in the dependency container. By default, it is treated as a singleton. Useful for shared utilities, managers, adapters, or low-level services that are not Controllers. |
-| [@Server.Service()](./server/service.md) | Semantic alias for @Server.Bind(). Indicates that the class contains domain or business logic. Improves readability and architectural clarity. |
-| [@Server.Repo()](./server/repo.md) | Semantic alias for @Server.Bind(). Intended for data access and persistence layers (repositories, stores, database adapters). Helps enforce a clean separation of concerns. |
+| [@Controller()](./server/controller.md) | Marks a server-side class as a Controller. Controllers are entry points for gameplay logic and can handle commands, events, and framework callbacks. The class is automatically registered and instantiated by the framework. |
+| [@Controller()](./client/controller.md) | Same concept as @Controller, but for the client-side. Used to handle UI interactions, player input, client events, and client-only logic. |
+| [@Bind()](./server/bind.md) | Registers a class as injectable in the dependency container. By default, it is treated as a singleton. Useful for shared utilities, managers, adapters, or low-level services that are not Controllers. |
+| [@Service()](./server/service.md) | Semantic alias for @Bind(). Indicates that the class contains domain or business logic. Improves readability and architectural clarity. |
+| [@Repo()](./server/repo.md) | Semantic alias for @Bind(). Intended for data access and persistence layers (repositories, stores, database adapters). Helps enforce a clean separation of concerns. |
 ### Method Decorators
 | Name | Description |
 | -------- | ------- |
-| [@Server.Command()](./server/command.md) | Registers the method as a chat/console command handler. The method is executed when the command is invoked by a player. Supports argument parsing and validation. |
-| [@Server.OnNet()](./server/on-net.md) | Subscribes the method to a network event (onNet). Used for client → server or server → client communication via FiveM networking. |
-| [@Server.OnTick()](./server/on-tick.md) | Executes the method on every server tick. Intended for lightweight, high-frequency logic. Heavy operations should be avoided to prevent performance issues. |
-| [@Server.OnFrameworkEvent()](./server/on-framework-event.md) | Listens to internal framework events. Useful for reacting to lifecycle hooks, module events, or cross-system communication inside the framework. |
-| [@Server.OnLibraryEvent()](./server/on-library-event.md) | Listens to server-side library domain events emitted through `library.emit(...)`. Useful for projections, audit hooks, and decoupled module reactions. |
-| [@Server.OnRuntimeEvent()](./server/on-runtime-event.md) | Subscribes the method to a native FiveM event (e.g. playerJoining, playerDropped). Acts as a clean abstraction over on() for FiveM events. |
-| [@Server.RequiresState()](./server/requires-state.md) | Ensures the player is in a specific state before executing the method. If the requirement is not met, the method is skipped or rejected. Commonly used for gameplay state validation (logged in, spawned, etc.). |
-| [@Server.Throttle()](./server/throttle.md) | Applies rate limiting to the method. Prevents spam or abuse by limiting how frequently the method can be executed per player or context. |
-| [@Server.Export()](./server/export.md) | Exposes the method as a FiveM export, making it callable from other resources. Useful for inter-resource APIs and modular architectures. |
-| [@Server.Guard()](./server/guard.md) | Applies access control rules to the method. Can enforce permissions, roles, ranks, or custom authorization logic before execution. |
-| [@Server.Public()](./server/public.md) | Marks the method as explicitly public and callable without restrictions. Useful for APIs that should bypass guards or internal access checks. |
-| [@Client.OnNet()](./client/on-net.md) | Subscribes the method to a network event (onNet) on the client. Typically used for server → client communication and synchronized gameplay events. |
-| [@Client.OnLibraryEvent()](./client/on-library-event.md) | Listens to client-side library domain events emitted through `library.emit(...)`. Useful for UI projections and local side effects. |
-| [@Client.LocalEvent()](./client/local-event.md) | Subscribes the method to a local (client-only) event. Useful for internal communication between client systems without involving networking. |
-| [@Client.GameEvent()](./client/game-event.md) | Listens to a GTA V game-native event (gameEventTriggered). Allows reacting to low-level engine events such as damage, explosions, or entity interactions. |
-| [@Client.OnTick()](./client/on-tick.md) | Executes the method on every client tick. Intended for lightweight, frame-based logic. Heavy computations should be avoided to prevent FPS drops. |
-| [@Client.Interval()](./client/interval.md) | Executes the method at a fixed time interval (in milliseconds). Useful for periodic logic that does not need to run every tick (polling, checks, UI sync). |
-| [@Client.Key()](./client/key.md) | Binds the method to a keyboard key press. Executes when the specified key is pressed by the player. Ideal for gameplay shortcuts or UI interactions. |
-| [@Client.OnView()](./client/on-view.md) | Registers the method as a NUI callback handler. Executed when the UI (HTML/JS) sends a message to the client script. Acts as the bridge between UI and gameplay logic. |
-| [@Client.Export()](./client/export.md) | Exposes the method as a FiveM client export, allowing other resources to call it directly. Useful for inter-resource client APIs. |
-| [@Client.ResourceLifecycle()](./client/on-resource-start.md) | Subscribes the method to resource lifecycle events (start, stop, restart). Useful for initialization and cleanup logic on the client side. |
+| [@Command()](./server/command.md) | Registers the method as a chat/console command handler. The method is executed when the command is invoked by a player. Supports argument parsing and validation. |
+| [@OnNet()](./server/on-net.md) | Subscribes the method to a network event (onNet). Used for client → server or server → client communication via FiveM networking. |
+| [@OnTick()](./server/on-tick.md) | Executes the method on every server tick. Intended for lightweight, high-frequency logic. Heavy operations should be avoided to prevent performance issues. |
+| [@OnFrameworkEvent()](./server/on-framework-event.md) | Listens to internal framework events. Useful for reacting to lifecycle hooks, module events, or cross-system communication inside the framework. |
+| [@OnLibraryEvent()](./server/on-library-event.md) | Listens to server-side library domain events emitted through `library.emit(...)`. Useful for projections, audit hooks, and decoupled module reactions. |
+| [@OnRuntimeEvent()](./server/on-runtime-event.md) | Subscribes the method to a native FiveM event (e.g. playerJoining, playerDropped). Acts as a clean abstraction over on() for FiveM events. |
+| [@RequiresState()](./server/requires-state.md) | Ensures the player is in a specific state before executing the method. If the requirement is not met, the method is skipped or rejected. Commonly used for gameplay state validation (logged in, spawned, etc.). |
+| [@Throttle()](./server/throttle.md) | Applies rate limiting to the method. Prevents spam or abuse by limiting how frequently the method can be executed per player or context. |
+| [@Export()](./server/export.md) | Exposes the method as a FiveM export, making it callable from other resources. Useful for inter-resource APIs and modular architectures. |
+| [@Guard()](./server/guard.md) | Applies access control rules to the method. Can enforce permissions, roles, ranks, or custom authorization logic before execution. |
+| [@Public()](./server/public.md) | Marks the method as explicitly public and callable without restrictions. Useful for APIs that should bypass guards or internal access checks. |
+| [@OnNet()](./client/on-net.md) | Subscribes the method to a network event (onNet) on the client. Typically used for server → client communication and synchronized gameplay events. |
+| [@OnLibraryEvent()](./client/on-library-event.md) | Listens to client-side library domain events emitted through `library.emit(...)`. Useful for UI projections and local side effects. |
+| [@LocalEvent()](./client/local-event.md) | Subscribes the method to a local (client-only) event. Useful for internal communication between client systems without involving networking. |
+| [@OnGameEvent()](./client/game-event.md) | Listens to a GTA V game-native event (gameEventTriggered). Allows reacting to low-level engine events such as damage, explosions, or entity interactions. |
+| [@OnTick()](./client/on-tick.md) | Executes the method on every client tick. Intended for lightweight, frame-based logic. Heavy computations should be avoided to prevent FPS drops. |
+| [@Interval()](./client/interval.md) | Executes the method at a fixed time interval (in milliseconds). Useful for periodic logic that does not need to run every tick (polling, checks, UI sync). |
+| [@Key()](./client/key.md) | Binds the method to a keyboard key press. Executes when the specified key is pressed by the player. Ideal for gameplay shortcuts or UI interactions. |
+| [@OnView()](./client/on-view.md) | Registers the method as a NUI callback handler. Executed when the UI (HTML/JS) sends a message to the client script. Acts as the bridge between UI and gameplay logic. |
+| [@Export()](./client/export.md) | Exposes the method as a FiveM client export, allowing other resources to call it directly. Useful for inter-resource client APIs. |
+| [@ResourceLifecycle()](./client/on-resource-start.md) | Subscribes the method to resource lifecycle events (start, stop, restart). Useful for initialization and cleanup logic on the client side. |
 
 ## Design Notes (Client Side)
 
@@ -138,5 +142,5 @@ If you remember only one rule:
 - Prefer Interval over OnTick when possible to reduce CPU usage.
 - LocalEvent is the recommended way to communicate between client systems.
 - GameEvent is powerful but low-level—use it only when FiveM-native events are insufficient.
-- NUI communication is explicit and isolated through @Client.Nui().
+- NUI communication is explicit and isolated through @Nui().
 - This keeps the client runtime predictable, performant, and clean, even as UI and gameplay complexity grow.

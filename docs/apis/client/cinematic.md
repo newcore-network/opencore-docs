@@ -186,7 +186,7 @@ interface CinematicResult {
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class IntroCinematicController {
   constructor(private readonly cinematic: Cinematic) {}
 

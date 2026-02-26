@@ -197,11 +197,10 @@ Observers are treated as **user-land code** and must never be able to break the 
 To override the default behavior, register your own observer **before initialization**:
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-Server.setCommandErrorObserver(MyCommandErrorObserver)
+setCommandErrorObserver(MyCommandErrorObserver)
 
-await Server.init({
+await init({
   mode: 'CORE',
 })
 ```

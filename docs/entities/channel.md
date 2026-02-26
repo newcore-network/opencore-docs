@@ -18,18 +18,18 @@ A **Channel** is a server-side entity that represents a communication group. Cha
 Channels are managed through the [Channels API](../apis/channels.md). You create a channel, subscribe players to it, and broadcast events to all subscribers.
 
 ```ts
-@Server.Controller()
+@Controller()
 export class RadioController {
   constructor(private readonly channels: Channels) {}
 
-  @Server.OnNet('radio:tune')
-  onTune(player: Server.Player, frequency: string) {
+  @OnNet('radio:tune')
+  onTune(player: Player, frequency: string) {
     this.channels.subscribe(`radio:${frequency}`, player)
     player.send(`Tuned to frequency ${frequency}`, 'chat')
   }
 
-  @Server.OnNet('radio:speak')
-  onSpeak(player: Server.Player, frequency: string, message: string) {
+  @OnNet('radio:speak')
+  onSpeak(player: Player, frequency: string, message: string) {
     this.channels.broadcast(`radio:${frequency}`, 'radio:message', player.name, message)
   }
 }

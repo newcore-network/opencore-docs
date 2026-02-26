@@ -20,12 +20,12 @@ The server-side appearance API is typically used during:
 - Admin commands that modify player appearance
 
 ```ts
-@Server.Controller()
+@Controller()
 export class CharacterController {
   constructor(private readonly appearance: AppearanceService) {}
 
-  @Server.OnNet('character:select')
-  async onCharacterSelect(player: Server.Player, characterId: string) {
+  @OnNet('character:select')
+  async onCharacterSelect(player: Player, characterId: string) {
     const savedAppearance = player.getMeta('appearance')
     if (savedAppearance) {
       player.emit('appearance:apply', savedAppearance)

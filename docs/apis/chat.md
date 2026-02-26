@@ -4,7 +4,7 @@ title: Chat
 
 ## Description
 
-The `ChatService` is the central authority for sending chat messages to players. It abstracts the underlying network events and provides a clean API for broadcasting, private messaging, and radius-based communication.
+`Chat` is the server runtime API for sending chat messages to players. It abstracts underlying network events and provides a clean API for broadcast, private, and proximity communication.
 
 By using this service instead of raw `emitNet` calls, you ensure that messages follow the framework's standard formatting and color protocols.
 
@@ -27,7 +27,7 @@ broadcast(message: string, author?: string, color?: RGB)
 Sends a message to a specific player.
 
 ```ts
-sendPrivate(player: Server.Player, message: string, author?: string, color?: RGB)
+sendPrivate(player: Player, message: string, author?: string, color?: RGB)
 ```
 
 ### `sendNearby()`
@@ -35,7 +35,7 @@ sendPrivate(player: Server.Player, message: string, author?: string, color?: RGB
 Sends a message to all players within a certain distance of an origin player. Ideal for local roleplay chat.
 
 ```ts
-sendNearby(playerFrom: Server.Player, message: string, radius: number, author?: string, color?: RGB)
+sendNearby(playerFrom: Player, message: string, radius: number, author?: string, color?: RGB)
 ```
 
 ### `clearChat()` / `clearChatAll()`
@@ -51,18 +51,18 @@ A helper method to send important system-wide alerts with a distinct light blue 
 ## Example
 
 ```ts
-@Server.Controller()
+@Controller()
 export class ChatController {
-  constructor(private readonly chat: ChatService) {}
+  constructor(private readonly chat: Chat) {}
 
-  @Server.Command('me')
-  handleMe(player: Server.Player, message: string) {
+  @Command('me')
+  handleMe(player: Player, message: string) {
     this.chat.sendNearby(player, message, 10.0, `* ${player.name}`, { r: 200, g: 100, b: 200 })
   }
 
-  @Server.Command('announce')
-  @Server.Guard(AdminGuard)
-  handleAnnounce(player: Server.Player, message: string) {
+  @Command('announce')
+  @Guard(AdminGuard)
+  handleAnnounce(player: Player, message: string) {
     this.chat.broadcastSystem(`ANNOUNCEMENT: ${message}`)
   }
 }

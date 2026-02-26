@@ -69,4 +69,4 @@ OpenCore relies heavily on decorators. You **must** enable specific compiler opt
 }
 ```
 
-### [First Server](../getting-started/first-server.md) 
+### [First Project](./first-project)

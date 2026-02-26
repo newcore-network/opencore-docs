@@ -1,11 +1,11 @@
 ---
-title: '@OnRPC (Server)'
+title: '@OnRPC'
 description: Registers a server-side RPC handler.
 ---
 
 ## Overview
 
-`@Server.OnRPC()` is a method decorator used to register a **server-side RPC handler**.
+`@OnRPC()` is a method decorator used to register a **server-side RPC handler**.
 
 RPC handlers allow the **client to invoke authoritative server logic** and receive
 a deterministic response.
@@ -29,7 +29,7 @@ If a handler throws or fails, the RPC call is rejected.
 ## Decorator Signature
 
 ```ts
-@Server.OnRPC(actionName?, options?)
+@OnRPC(actionName?, options?)
 ````
 
 ### Arguments
@@ -47,11 +47,11 @@ If a handler throws or fails, the RPC call is rejected.
 
 A server RPC handler must follow this rule:
 
-> **The first parameter is always `Server.Player`.**
+> **The first parameter is always `Player`.**
 
 ```ts
-@Server.OnRPC('inventory:get')
-getInventory(player: Server.Player): InventoryDto {}
+@OnRPC('inventory:get')
+getInventory(player: Player): InventoryDto {}
 ```
 
 This ensures:
@@ -71,8 +71,8 @@ RPC handlers support **schema-based validation**.
 Primitive values are auto-validated:
 
 ```ts
-@Server.OnRPC()
-ping(player: Server.Player, value: number): number {
+@OnRPC()
+ping(player: Player, value: number): number {
   return value
 }
 ```
@@ -84,14 +84,14 @@ ping(player: Server.Player, value: number): number {
 Use Zod schemas for complex or untrusted payloads.
 
 ```ts
-@Server.OnRPC(
+@OnRPC(
   'bank:deposit',
   z.object({
     amount: z.number().positive(),
   })
 )
 deposit(
-  player: Server.Player,
+  player: Player,
   data: { amount: number }
 ) {
   // validated before execution
@@ -110,8 +110,8 @@ If validation fails:
 The return value of the handler is sent back to the caller.
 
 ```ts
-@Server.OnRPC()
-getHealth(player: Server.Player): number {
+@OnRPC()
+getHealth(player: Player): number {
   return player.health
 }
 ```
@@ -155,7 +155,7 @@ This includes:
 To allow unauthenticated access explicitly:
 
 ```ts
-@Server.Public()
+@Public()
 ```
 
 This should be used only for safe, non-sensitive operations.
@@ -178,7 +178,7 @@ There is no implicit retry.
 * **RPC Overview**
   Defines the request–response model and targets.
 
-* **`@Client.OnRPC()`**
+* **`@OnRPC()`**
   Defines client-side RPC handlers.
 
 * **Network Events**
@@ -202,7 +202,7 @@ The server always remains the source of truth.
 
 ## Summary
 
-`@Server.OnRPC()` provides:
+`@OnRPC()` provides:
 
 * Deterministic server-side RPC handling
 * Strong validation and security guarantees

@@ -36,14 +36,14 @@ Each call is a **remote procedure call over stdin/stdout**.
 
 ## Declaring a Binary Call
 
-A binary call is declared by decorating a method with `@Server.BinaryCall`.
+A binary call is declared by decorating a method with `@BinaryCall`.
 
 ```ts
 import { BinaryService, BinaryCall } from "@open-core/framework/server";
 
-@Server.BinaryService({ name: "crypto" })
+@BinaryService({ name: "crypto" })
 export class CryptoBinary {
-  @Server.BinaryCall("hashPassword")
+  @BinaryCall("hashPassword")
   hash(password: string): Promise<{ hash: string }> {
     return null as any;
   }
@@ -62,10 +62,10 @@ The method body is never executed.
 
 ## Action Mapping
 
-The string passed to `@Server.BinaryCall` defines the **action name** sent to the binary.
+The string passed to `@BinaryCall` defines the **action name** sent to the binary.
 
 ```ts
-@Server.BinaryCall("hashPassword")
+@BinaryCall("hashPassword")
 ```
 
 This results in a protocol request:
@@ -87,7 +87,7 @@ If no name is provided, the method name is used by default.
 Method parameters are serialized **positionally** and sent as `params`.
 
 ```ts
-@Server.BinaryCall()
+@BinaryCall()
 compare(a: string, b: string): Promise<boolean> {}
 ```
 
@@ -113,7 +113,7 @@ Rules:
 The return type of the method represents the expected `result` field.
 
 ```ts
-@Server.BinaryCall()
+@BinaryCall()
 sign(data: string): Promise<string> {}
 ```
 

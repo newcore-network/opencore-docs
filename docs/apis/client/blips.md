@@ -41,7 +41,7 @@ Removes a specific blip or all managed blips.
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class JobController {
   private destinationBlipId?: string
 

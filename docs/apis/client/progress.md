@@ -30,7 +30,7 @@ async start(options: ProgressOptions): Promise<boolean>
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class RepairController {
   constructor(private readonly progress: ProgressService) {}
 

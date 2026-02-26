@@ -2,7 +2,7 @@
 title: '@OnView'
 ---
 ## Description
-``@Client.OnView()`` registers a method as a NUI callback handler on the client.
+``@OnView()`` registers a method as a NUI callback handler on the client.
 
 NUI callbacks are invoked when the browser UI (HTML/JS) sends a message to the client runtime using FiveM’s NUI messaging system.
 This decorator does not bind the callback immediately. It stores metadata that the framework processes during client bootstrap.
@@ -25,12 +25,11 @@ optional return value
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework/client'
 
-@Client.Controller()
+@Controller()
 export class SettingsController {
 
-  @Client.OnView('settings:save')
+  @OnView('settings:save')
   saveSettings(payload: unknown) {
     // process UI data
     return data // data to return to NUI

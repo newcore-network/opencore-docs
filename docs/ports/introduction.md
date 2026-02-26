@@ -28,7 +28,7 @@ While Services handle business logic, **Ports** handle **Framework Infrastructur
 | **Logic** | Specific (Vehicles, Chat) | General (Sessions, Permissions) |
 | **Location** | Defined in any resource | Defined by the Framework Core |
 | **Access** | Local to the resource | Cross-resource (Remote access) |
-| **Injection** | Via `@Server.Service()` | Via abstract class injection |
+| **Injection** | Via `@Service()` | Via abstract class injection |
 
 ## 3. How it works (Remote Access)
 
@@ -39,13 +39,13 @@ When you ask for a Port in a resource that isn't the Core:
 4. The result is returned to your resource as if it were local.
 
 ```ts
-@Server.Controller()
+@Controller()
 export class MyController {
   // You don't care if the player directory is local or in another resource
-  constructor(private readonly playerDirectory: PlayerDirectoryPort) {}
+  constructor(private readonly playerDirectory: Players) {}
 
-  @Server.Command('online')
-  checkOnline(player: Server.Player) {
+  @Command('online')
+  checkOnline(player: Player) {
     const total = this.playerDirectory.getAll().length;
     // ...
   }
@@ -54,13 +54,13 @@ export class MyController {
 
 ## 4. Key Ports available
 
-- **[PlayerDirectoryPort](/docs/ports/player-directory)**: Access to active player sessions and metadata.
-- **[PrincipalPort](/docs/ports/principal)**: Access to permissions, ranks, and authorization.
+- **[Players](/docs/ports/player-directory)**: Access to active player sessions and metadata.
+- **[Authorization Port](/docs/ports/principal)**: Access to permissions, ranks, and authorization.
 - **[CommandExecutionPort](/docs/ports/command-execution)**: Registration and routing of chat commands.
 - **[PlayerSessionLifecyclePort](/docs/ports/session-lifecycle)**: Creating and destroying sessions (Core-only).
 
 ---
 
 :::info
-For more details on how to use these in your logic, see the [Services Section](/docs/services/introduction).
+Use ports when you need framework-level boundaries across runtime modes. For gameplay-focused operations, prefer the APIs listed under the Gameplay section.
 :::

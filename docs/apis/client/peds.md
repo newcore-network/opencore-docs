@@ -37,7 +37,7 @@ Batch deletion of all managed peds.
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class QuestController {
   constructor(private readonly pedService: PedService) {}
 

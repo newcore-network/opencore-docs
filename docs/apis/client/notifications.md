@@ -46,16 +46,16 @@ Displays a centered text message at the bottom of the screen, typically used for
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class InteractionController {
   constructor(private readonly notification: NotificationService) {}
 
-  @Client.OnNet('item:used')
+  @OnNet('item:used')
   onItemUsed(itemName: string) {
     this.notification.showWithType(`You used ${itemName}`, 'success')
   }
 
-  @Client.Interval(1000)
+  @Interval(1000)
   checkArea() {
     this.notification.showHelp('Press ~INPUT_CONTEXT~ to interact')
   }

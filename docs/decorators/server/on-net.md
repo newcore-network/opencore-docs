@@ -1,11 +1,11 @@
 ---
-title: '@OnNet  (Server)'
+title: '@OnNet'
 description: Registers a server-side network event handler.
 ---
 
 ## Overview
 
-`@Server.OnNet()` is a method decorator used to register a **server-side network event handler**.
+`@OnNet()` is a method decorator used to register a **server-side network event handler**.
 
 Network events are triggered by clients and delivered to the server through FiveM’s
 network event system (`emitNet → onNet`).
@@ -29,7 +29,7 @@ If validation fails, the handler is **never executed**.
 ## Decorator Signature
 
 ```ts
-@Server.OnNet(eventName, schema?)
+@OnNet(eventName, schema?)
 ````
 
 ### Arguments
@@ -50,11 +50,11 @@ The schema can be provided in two forms:
 
 A server network handler must always follow this rule:
 
-> **The first parameter is always `Server.Player`.**
+> **The first parameter is always `Player`.**
 
 ```ts
-@Server.OnNet('example:event')
-handle(player: Server.Player, ...args) {}
+@OnNet('example:event')
+handle(player: Player, ...args) {}
 ```
 
 This guarantees:
@@ -67,7 +67,7 @@ This guarantees:
 
 ## Validation Behavior
 
-Validation rules are consistent with `@Server.Command()`.
+Validation rules are consistent with `@Command()`.
 
 ### Supported patterns
 
@@ -90,14 +90,14 @@ If validation fails:
 
 ## Spread Parameters (Rest Operator)
 
-Starting from **v0.3.x**, `@Server.OnNet()` supports **spread parameters**
+Starting from **v0.3.x**, `@OnNet()` supports **spread parameters**
 in the same way as commands.
 
 This enables variable-length payloads while preserving validation.
 
 ### Rules
 
-* The first parameter must be `Server.Player`
+* The first parameter must be `Player`
 * Rest parameters must appear **after fixed parameters**
 * Only **one rest parameter** is allowed
 * Validation occurs **before execution**
@@ -107,8 +107,8 @@ This enables variable-length payloads while preserving validation.
 ### Simple Spread Example
 
 ```ts
-@Server.OnNet('chat:message')
-onChat(player: Server.Player, ...message: string[]) {
+@OnNet('chat:message')
+onChat(player: Player, ...message: string[]) {
   const text = message.join(' ')
 }
 ```
@@ -122,13 +122,13 @@ All remaining arguments sent by the client are grouped into `message`.
 Spread parameters can be validated using tuple schemas with `rest()`.
 
 ```ts
-@Server.OnNet(
+@OnNet(
   'chat:say',
   z.tuple([
     z.number(),        // channel id
   ]).rest(z.string()) // message words
 )
-onSay(player: Server.Player, channelId: number, ...message: string[]) {
+onSay(player: Player, channelId: number, ...message: string[]) {
   const text = message.join(' ')
 }
 ```
@@ -145,29 +145,28 @@ Validation rules:
 
 ```ts
 import { z, Infer } from '@open-core/framework'
-import { Server } from '@open-core/framework/server'
 
 const PayloadSchema = z.object({
   message: z.string().min(2),
 })
 
-@Server.Controller()
+@Controller()
 export class ExampleController {
 
   // Primitive auto-validation
-  @Server.OnNet('example:ping')
-  ping(player: Server.Player, message: string) {}
+  @OnNet('example:ping')
+  ping(player: Player, message: string) {}
 
   // Structured payload validation (recommended)
-  @Server.OnNet('example:data', PayloadSchema)
-  handleData(player: Server.Player, data: Infer<typeof PayloadSchema>) {}
+  @OnNet('example:data', PayloadSchema)
+  handleData(player: Player, data: Infer<typeof PayloadSchema>) {}
 
   // Spread parameters
-  @Server.OnNet(
+  @OnNet(
     'example:note',
     z.tuple([z.number()]).rest(z.string())
   )
-  note(player: Server.Player, targetId: number, ...message: string[]) {
+  note(player: Player, targetId: number, ...message: string[]) {
     const text = message.join(' ')
   }
 }
@@ -184,7 +183,7 @@ export class ExampleController {
 To allow unauthenticated access explicitly, use:
 
 ```ts
-@Server.Public()
+@Public()
 ```
 
 This should be used **sparingly**.
@@ -206,7 +205,7 @@ This should be used **sparingly**.
 
 ## Summary
 
-`@Server.OnNet()` provides:
+`@OnNet()` provides:
 
 * Declarative server-side network event handling
 * Strong validation and safety guarantees

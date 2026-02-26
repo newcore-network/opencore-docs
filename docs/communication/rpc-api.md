@@ -25,8 +25,8 @@ The RpcAPI is the **central execution layer** for all RPC interactions.
 
 All RPC decorators, including:
 
-- `@Server.OnRPC`
-- `@Client.OnRPC`
+- `@OnRPC`
+- `@OnRPC`
 
 ultimately register their handlers into the **RpcAPI** during the bootstrap phase.
 
@@ -49,7 +49,7 @@ It can be injected into services, controllers, or any injectable class.
 ```ts
 import { RpcAPI } from '@open-core/framework'
 
-@Client.Service()
+@Service()
 export class UiService {
   constructor(
     private readonly rpc: RpcAPI,

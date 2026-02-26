@@ -40,12 +40,12 @@ Sends requests to the server to modify the vehicle's condition or security.
 ### Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class VehicleMenuController {
   constructor(private readonly vehicleClient: VehicleClientService) {}
 
   async requestSpawn(model: string) {
-    const result = await this.vehicleClient.createVehicle({
+    const result = await this.vehiclecreateVehicle({
       model: model,
       position: GetEntityCoords(PlayerPedId(), true)
     })
@@ -86,7 +86,7 @@ Applies a batch of modifications directly to a vehicle handle.
 ### Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class MechanicController {
   constructor(private readonly vehicle: VehicleService) {}
 

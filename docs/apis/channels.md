@@ -21,8 +21,8 @@ create(channelId: string, options?: ChannelOptions): Channel
 Adds or removes a player from a channel.
 
 ```ts
-subscribe(channelId: string, player: Server.Player): void
-unsubscribe(channelId: string, player: Server.Player): void
+subscribe(channelId: string, player: Player): void
+unsubscribe(channelId: string, player: Player): void
 ```
 
 ### `broadcast()`
@@ -42,12 +42,12 @@ Returns all players currently subscribed to a channel.
 ## Example
 
 ```ts
-@Server.Controller()
+@Controller()
 export class TeamController {
   constructor(private readonly channels: Channels) {}
 
-  @Server.OnNet('team:join')
-  onJoinTeam(player: Server.Player, teamId: string) {
+  @OnNet('team:join')
+  onJoinTeam(player: Player, teamId: string) {
     this.channels.subscribe(`team:${teamId}`, player)
     this.channels.broadcast(`team:${teamId}`, 'team:member-joined', player.name)
   }

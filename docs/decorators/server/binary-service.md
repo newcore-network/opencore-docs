@@ -5,7 +5,7 @@ description: Defines and manages external binary processes used by OpenCore.
 
 ## Overview
 
-`@Server.BinaryService` defines a **managed external binary process** and binds it to the OpenCore runtime.
+`@BinaryService` defines a **managed external binary process** and binds it to the OpenCore runtime.
 
 A binary service is responsible for:
 
@@ -14,7 +14,7 @@ A binary service is responsible for:
 - Providing a communication channel based on the Binary Protocol
 - Acting as the execution context for `@BinaryCall` and `@BinaryEvent`
 
-Every interaction with a binary **starts** with a `@Server.BinaryService`.
+Every interaction with a binary **starts** with a `@BinaryService`.
 
 ---
 
@@ -40,12 +40,12 @@ Think of it as a **worker process with a strict contract**.
 
 ## Declaring a Binary Service
 
-A binary service is declared by decorating a class with `@Server.BinaryService`.
+A binary service is declared by decorating a class with `@BinaryService`.
 
 ```ts
 import { BinaryService } from "@open-core/framework/server";
 
-@Server.BinaryService({
+@BinaryService({
   name: "crypto",
   binary: "crypto" // no need extension
 })

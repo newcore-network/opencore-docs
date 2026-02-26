@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Libraries Overview
 ---
 
 ## Overview
@@ -7,6 +7,18 @@ title: Overview
 OpenCore provides a set of official libraries designed to solve common problems in FiveM development. These libraries integrate directly with the framework’s dependency injection system and follow the same architectural conventions as the core.
 
 If you are already working with library runtime wrappers and events, see [Library API Usage](./library-api-usage.md).
+If you are integrating install-time runtime extensions, see [Plugin API Usage](./plugin-api-usage.md).
+
+## Library API vs Plugin API
+
+OpenCore now exposes two complementary integration layers:
+
+- **Library API**
+  Domain-level runtime helpers and event buses (`createServerLibrary`, `createClientLibrary`, `emit`, `OnLibraryEvent`, namespaced event ids).
+- **Plugin API**
+  Install-time runtime extensions through `init({ plugins })` / `init({ plugins })`, with DI registration and API extension hooks.
+
+Use Library API for domain communication. Use Plugin API for bootstrapping and extending runtime surface.
 
 ## Key Libraries
 
@@ -20,6 +32,16 @@ A focused identity and authentication library for OpenCore.
 - **Authentication Strategies**: Supports multiple authentication mechanisms through pluggable providers.
 - **Persistence Contracts**: Exposes clear contracts for storing and retrieving identity data.
 - **Framework Integration**: Designed to work seamlessly with OpenCore’s DI, decorators, and lifecycle.
+
+### [opencore-characters](./official-libraries/opencore-characters.md)
+Character domain library for account-owned characters, active selection state, policies, and events.
+
+**Responsibilities:**
+- **Character Lifecycle**: Create, update, delete, and select characters with ownership checks.
+- **Policy-Driven Rules**: Slot and deletion logic through explicit contracts.
+- **Event Integration**: Internal domain events via OpenCore Library API, with optional external bridge.
+- **Plugin-First Server Setup**: Install through OpenCore Plugin API (`init({ plugins })`).
+- **Minimal Client Surface**: Transport helpers only, no UI layer bundled.
 
 ## Why use official libraries?
 - **Clear Scope**: Each library solves one problem well.

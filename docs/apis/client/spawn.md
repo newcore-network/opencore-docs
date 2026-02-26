@@ -48,11 +48,11 @@ A helper that allows other services or controllers to pause execution until the 
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class SessionController {
   constructor(private readonly spawnService: SpawnService) {}
 
-  @Client.OnNet('core:client:spawn')
+  @OnNet('core:client:spawn')
   async handleInitialSpawn(data: any) {
     await this.spawnService.spawn(data.pos, data.model, data.heading, {
       appearance: data.appearance

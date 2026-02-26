@@ -4,7 +4,9 @@ title: Vehicles
 
 ## Description
 
-The `VehicleService` is the **authoritative manager** for all vehicle entities in OpenCore. It ensures that vehicle spawning is handled server-side to prevent common client-side exploits and maintains a reliable registry of every managed vehicle.
+`Vehicles` is the server-side API for authoritative vehicle management in OpenCore.
+
+It centralizes server-side spawning, registry/index operations, ownership/proximity checks, cleanup, and serialization.
 
 ## Key Concepts
 
@@ -14,7 +16,18 @@ Unlike standard FiveM scripts that spawn vehicles on the client, OpenCore uses `
 
 ### Vehicle Registry
 
-The service maintains an internal map of all vehicles indexed by their **Network ID**. Any resource can retrieve a vehicle object and interact with its state reliably.
+The API maintains an internal map of managed vehicles indexed by **networkId**.
+
+## Injection
+
+```ts
+import { Server, Vehicles } from '@open-core/framework/server'
+
+@Service()
+export class FleetService {
+  constructor(private readonly vehicles: Vehicles) {}
+}
+```
 
 ## API Methods
 
@@ -26,58 +39,81 @@ Spawns a vehicle on the server with specific options.
 async create(options: VehicleCreateOptions): Promise<VehicleSpawnResult>
 ```
 
-**Options include:**
-- `model` — String name or hash.
-- `position` — Vector3 coordinates.
-- `plate` — (Optional) Custom license plate text.
-- `owner` — (Optional) Assign ownership to a player or group.
-- `locked` — (Optional) Initial door lock state.
-
 ### `createForPlayer()`
 
-A specialized wrapper for `create()` that automatically assigns ownership to the player and warps them into the driver's seat upon spawning.
+Spawns a vehicle and assigns player ownership automatically. On success, emits a warp event to place the player in driver seat.
 
-### `getByNetworkId()` / `getByHandle()`
+```ts
+createForPlayer(clientID: number, options: VehicleCreateOptions): Promise<VehicleSpawnResult>
+```
 
-Retrieves a managed `Vehicle` instance. This object provides methods to manipulate the vehicle (colors, mods, health) which are synchronized across all clients.
+### Lookups and Lists
 
-### `delete()`
+- `getByNetworkId(networkId)`
+- `getByHandle(handle)`
+- `getPlayerVehicles(clientID)`
+- `getVehiclesInBucket(bucket)`
+- `getAll()`
+- `getCount()`
 
-Safely removes a vehicle from the world and the registry. Includes optional permission checks to ensure only the owner or an admin can delete it.
+### Deletion and Cleanup
 
-### `validateProximity()`
+- `delete(networkId, requestedBy?)`
+- `deletePlayerVehicles(clientID)`
+- `cleanup()`
 
-A security helper that checks if a player is physically near a vehicle. Use this before allowing actions like "opening the trunk" or "hotwiring".
+### Validation Helpers
+
+- `validateOwnership(networkId, clientID)`
+- `validateProximity(networkId, clientID, maxDistance?)`
+
+### Serialization
+
+- `serializeAll()`
+
+
+---
+
+## Return Shape
+
+`VehicleSpawnResult` includes:
+
+- `success: boolean`
+- `networkId: number`
+- `handle: number`
+- `error?: string`
 
 ---
 
 ## Example
 
 ```ts
-@Server.Controller()
+@Controller()
 export class GarageController {
-  constructor(private readonly vehicleService: VehicleService) {}
+  constructor(private readonly vehicles: Vehicles) {}
 
-  @Server.OnNet('garage:spawn')
-  async spawnVehicle(player: Server.Player, model: string) {
+  @OnNet('garage:spawn')
+  async spawnVehicle(player: Player, model: string) {
     const pos = player.getPosition()
 
-    const result = await this.vehicleService.createForPlayer(player.clientID, {
-      model: model,
+    const result = await this.vehicles.createForPlayer(player.clientID, {
+      model,
       position: pos,
-      plate: "OPENCORE",
+      plate: 'OPENCORE',
       persistent: true
     })
 
     if (!result.success) {
-      console.error("Failed to spawn:", result.error)
+      player.send(`Failed to spawn: ${result.error ?? 'unknown error'}`, 'error')
+      return
     }
+
+    player.send(`Vehicle spawned with networkId ${result.networkId}`, 'success')
   }
 }
 ```
 
 ## Notes
 
-- **Authority**: All vehicle creation **MUST** go through this service. Bypassing it with client-side natives will result in unmanaged entities.
-- **Cleanup**: The service includes a `cleanup()` method that automatically removes orphaned registry entries.
-- **Ownership**: The service tracks whether a vehicle is `temporary`, `player-owned`, or `shared`.
+- `Vehicles` is the authoritative path for managed vehicle creation.
+- Direct client-side spawning bypasses registry/security guarantees.

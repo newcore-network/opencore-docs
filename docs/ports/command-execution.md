@@ -5,7 +5,7 @@ title: Command Execution
 ## Description
 The `CommandExecutionPort` handles the registration and routing of chat commands. 
 
-**Note**: Most developers should use the **`@Server.Command()`** decorator instead of interacting with this port directly. This port is considered an **internal infrastructure component** used by the framework to bridge commands across resources.
+**Note**: Most developers should use the **`@Command()`** decorator instead of interacting with this port directly. This port is considered an **internal infrastructure component** used by the framework to bridge commands across resources.
 
 ## Key Features
 
@@ -23,9 +23,9 @@ Manually triggers a command execution for a player. This is more "internal" and 
 ## Decorator Integration
 
 This port is the engine behind:
-- **`@Server.Command('name', ...)`**: When you use this decorator, the framework calls `commandExecutionPort.register()` during bootstrap.
+- **`@Command('name', ...)`**: When you use this decorator, the framework calls `commandExecutionPort.register()` during bootstrap.
 
 ## Notes
 - This port is essential for creating custom "Command List" UIs or help menus.
 - It ensures that even if a command is defined in a remote resource, the Core can still "see" it for permission validation.
-- **Internal vs Public**: Direct registration via this port is discouraged; prefer the declarative `@Server.Command()` approach.
+- **Internal vs Public**: Direct registration via this port is discouraged; prefer the declarative `@Command()` approach.

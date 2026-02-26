@@ -29,20 +29,20 @@ Stops rendering and deletes markers from the managed registry.
 
 ### `drawOnce()`
 
-Draws a marker for exactly one frame. Useful for logic already running inside a `@Client.OnTick()`.
+Draws a marker for exactly one frame. Useful for logic already running inside a `@OnTick()`.
 
 ---
 
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class ShopController {
   private markerId?: string
 
   constructor(private readonly marker: MarkerService) {}
 
-  @Client.OnResourceStart()
+  @OnResourceStart()
   init() {
     this.markerId = this.marker.create({ x: 100.0, y: 200.0, z: 30.0 }, {
       type: 1,

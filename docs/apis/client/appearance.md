@@ -47,7 +47,7 @@ Retrieves the total number of available variations for a specific slot (e.g., ho
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class BarberController {
   constructor(private readonly appearance: AppearanceService) {}
 

@@ -29,6 +29,7 @@ const sidebars: SidebarsConfig = {
         'core-concepts/controllers',
         'core-concepts/decorators-overview',
         'core-concepts/contracts',
+        'decorators/introduction',
       ],
     },
 
@@ -110,8 +111,11 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Entities',
           items: [
+            'entities/introduction',
+            'entities/base-entity',
             'entities/player',
             'entities/vehicle',
+            'entities/npc',
             'entities/channel',
           ],
         },
@@ -124,13 +128,11 @@ const sidebars: SidebarsConfig = {
           items: [
             'apis/chat',
             'apis/vehicles',
+            'apis/npcs',
             'apis/vehicle-modifications',
             'apis/appearance',
             'apis/parallel-compute',
-            'apis/players',
-            'apis/authorization',
             'apis/channels',
-            'apis/persistence',
           ],
         },
         {
@@ -167,6 +169,37 @@ const sidebars: SidebarsConfig = {
         'security/security-handler',
         'security/net-event-observer',
         'security/command-error-observer',
+      ],
+    },
+
+    {
+      type: 'category',
+      label: 'Ports & Contracts',
+      items: [
+        {
+          type: 'category',
+          label: 'Ports',
+          items: [
+            'ports/introduction',
+            'ports/player-directory',
+            'ports/principal',
+            'ports/command-execution',
+            'ports/session-lifecycle',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Contracts',
+          items: [
+            'contracts/introduction',
+            'contracts/player-persistence',
+            'contracts/repository',
+            'contracts/security/security-handler',
+            'contracts/security/net-event-security-observer',
+            'contracts/security/principal-provider',
+            'contracts/security/command-security-observer',
+          ],
+        },
       ],
     },
 
@@ -209,6 +242,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'api-reference/server-decorators',
         'api-reference/client-decorators',
+        'api-reference/runtime-apis',
         'api-reference/configuration',
       ],
     },
@@ -220,11 +254,13 @@ const sidebars: SidebarsConfig = {
       items: [
         'libraries/about',
         'libraries/library-api-usage',
+        'libraries/plugin-api-usage',
         {
           type: 'category',
           label: 'Official Libraries',
           items: [
             'libraries/official-libraries/opencore-identity',
+            'libraries/official-libraries/opencore-characters',
           ],
         },
         'templates/about',

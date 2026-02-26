@@ -8,14 +8,14 @@ The Client Runtime is the player-facing layer of OpenCore. It handles interactio
 
 ## Automatic Injection
 
-Just like on the server, OpenCore handles the lifecycle of client services automatically. Use `@Client.Controller()` to define entry points, and inject services via the constructor.
+Just like on the server, OpenCore handles the lifecycle of client services automatically. Use `@Controller()` to define entry points, and inject services via the constructor.
 
 ```ts
-@Client.Controller()
+@Controller()
 export class MyUIController {
   constructor(private readonly notification: NotificationService) {}
 
-  @Client.Key('E')
+  @Key('E')
   onPressE() {
     this.notification.show('You pressed E!')
   }
@@ -52,6 +52,6 @@ The client runtime handles several critical areas:
 ## Design Notes
 
 - Client controllers are **event-driven**, not request-driven.
-- Prefer `@Client.Interval()` over `@Client.OnTick()` when possible to reduce CPU usage.
-- `@Client.LocalEvent()` is the recommended way to communicate between client systems.
-- NUI communication is explicit and isolated through `@Client.OnView()`.
+- Prefer `@Interval()` over `@OnTick()` when possible to reduce CPU usage.
+- `@LocalEvent()` is the recommended way to communicate between client systems.
+- NUI communication is explicit and isolated through `@OnView()`.

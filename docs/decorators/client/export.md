@@ -1,8 +1,8 @@
 ---
-title: '@Export (Client)'
+title: '@Export'
 ---
 ## Description
-``@Client.Export()`` is a method decorator used to expose a client-side method as a FiveM client export.
+``@Export()`` is a method decorator used to expose a client-side method as a FiveM client export.
 
 Client exports allow other resources to call client logic directly through FiveM’s exports system.
 This decorator does not immediately register the export. Instead, it stores metadata that the framework later processes during the client bootstrap phase to register the export correctly.
@@ -15,11 +15,10 @@ Exports are scoped to the resource where they are defined.
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework/client'
 
-@Client.Controller()
+@Controller()
 export class UiExports {
-  @Client.Export('setHudVisible')
+  @Export('setHudVisible')
   setHudVisible(visible: boolean) {
     // show or hide the HUD
   }

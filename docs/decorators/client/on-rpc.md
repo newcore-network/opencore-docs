@@ -1,11 +1,11 @@
 ---
-title: '@OnRPC (Client)'
+title: '@OnRPC'
 description: Registers a client-side RPC handler.
 ---
 
 ## Overview
 
-`@Client.OnRPC()` is a method decorator used to register a **client-side RPC handler**.
+`@OnRPC()` is a method decorator used to register a **client-side RPC handler**.
 
 Client RPC handlers allow the **server to invoke logic on a specific client**
 and optionally receive a response.
@@ -29,7 +29,7 @@ Client RPC handlers are **reactive**, not authoritative.
 ## Decorator Signature
 
 ```ts
-@Client.OnRPC(actionName?)
+@OnRPC(actionName?)
 ````
 
 ### Arguments
@@ -45,7 +45,7 @@ Client RPC handlers are **reactive**, not authoritative.
 Client RPC handlers **do not receive a `Player` parameter**.
 
 ```ts
-@Client.OnRPC('ui:confirm')
+@OnRPC('ui:confirm')
 confirmAction(data: { message: string }): boolean {
   return true
 }
@@ -70,7 +70,7 @@ If validation is required, it must be implemented manually in the handler.
 Client RPC handlers **may return a value**.
 
 ```ts
-@Client.OnRPC()
+@OnRPC()
 getResolution(): { width: number; height: number } {
   return {
     width: 1920,
@@ -139,7 +139,7 @@ RPC calls to clients should be treated as **best-effort**.
 * **RPC Overview**
   Defines the global request–response model.
 
-* **`@Server.OnRPC()`**
+* **`@OnRPC()`**
   Handles client-initiated RPC calls.
 
 * **RPC Calls / Notify**
@@ -164,7 +164,7 @@ The client decides *how* to respond.
 
 ## Summary
 
-`@Client.OnRPC()` provides:
+`@OnRPC()` provides:
 
 * Controlled server-to-client RPC handling
 * Optional response semantics

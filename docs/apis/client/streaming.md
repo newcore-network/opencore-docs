@@ -41,7 +41,7 @@ Frees loaded assets from memory.
 ## Example
 
 ```ts
-@Client.Controller()
+@Controller()
 export class EffectController {
   constructor(private readonly streaming: StreamingService) {}
 

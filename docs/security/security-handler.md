@@ -4,7 +4,7 @@ title: Security Handler
 
 ## Description
 
-The `SecurityHandlerContract` allows you to define custom actions when a security violation occurs. A violation happens when a player fails a `@Server.Guard()` check, attempts to use an unauthorized command, or triggers a rate limit.
+The `SecurityHandlerContract` allows you to define custom actions when a security violation occurs. A violation happens when a player fails a `@Guard()` check, attempts to use an unauthorized command, or triggers a rate limit.
 
 ## API Methods
 
@@ -13,7 +13,7 @@ The `SecurityHandlerContract` allows you to define custom actions when a securit
 Called whenever a `SecurityError` is thrown by the framework's security layer.
 
 ```ts
-abstract handleViolation(player: Server.Player, error: SecurityError): Promise<void>
+abstract handleViolation(player: Player, error: SecurityError): Promise<void>
 ```
 
 ---
@@ -21,9 +21,9 @@ abstract handleViolation(player: Server.Player, error: SecurityError): Promise<v
 ## Example
 
 ```ts
-@Server.Bind(SecurityHandlerContract)
+@Bind(SecurityHandlerContract)
 export class MySecurityHandler extends SecurityHandlerContract {
-  async handleViolation(player: Server.Player, error: SecurityError) {
+  async handleViolation(player: Player, error: SecurityError) {
     console.warn(`[Security] ${player.name} triggered a violation: ${error.message}`)
 
     await db.logs.security({
@@ -44,8 +44,8 @@ export class MySecurityHandler extends SecurityHandlerContract {
 Register your handler before initialization:
 
 ```ts
-Server.setSecurityHandler(MySecurityHandler)
-await Server.init({ mode: 'CORE' })
+setSecurityHandler(MySecurityHandler)
+await init({ mode: 'CORE' })
 ```
 
 ## Why use this?

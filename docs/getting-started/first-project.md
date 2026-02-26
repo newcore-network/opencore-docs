@@ -5,7 +5,7 @@ title: First project
 ## 1. The Entry Point
 
 Create a server-side and client-side entry file (for example `server/index.ts`, `client/index.ts`).  
-You must initialize the `Server` and `Client` application **once**, before any gameplay logic runs.
+You must initialize server and client runtimes **once**, before gameplay logic runs.
 
 OpenCore follows a **zero-config initialization model**:
 - Features are enabled automatically.
@@ -19,10 +19,10 @@ OpenCore follows a **zero-config initialization model**:
 
 ```ts
 // server/index.ts
-import { Server } from '@open-core/framework/server'
+import { init } from '@open-core/framework/server'
 
 // Initialize the server runtime
-Server.init({
+init({
   mode: 'CORE',
   devMode: {
     enabled: true,
@@ -50,9 +50,9 @@ Client initialization follows the same model:
 
 ```ts
 // client/index.ts
-import { Client } from '@open-core/framework/client'
+import { init } from '@open-core/framework/client'
 
-Client.init({
+init({
   mode: 'CORE',
 }).then(() => {
     console.log('OpenCore [client] initialized')
@@ -79,45 +79,57 @@ Controllers are discovered automatically, **You don't need to import them manual
 ```ts
 // src/server/controllers/hello.controller.ts
 import { z, EventsAPI } from '@open-core/framework'
-import { Server } from '@open-core/framework/server'
+import {
+  Command,
+  Controller,
+  Guard,
+  OnFrameworkEvent,
+  OnNet,
+  OnRPC,
+  OnRuntimeEvent,
+  Public,
+  Throttle,
+  type Player,
+  type PlayerFullyConnectedPayload,
+} from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class HelloController {
   constructor(private readonly events: EventsAPI<'server'>) {}
 
-  @Server.Public()
-  @Server.Command({
+  @Public()
+  @Command({
     command: 'hello',
     usage: '/hello [name]',
     schema: z.tuple([z.string().optional()]),
   })
-  onHelloCommand(player: Server.Player, name?: string): void {
+  onHelloCommand(player: Player, name?: string): void {
     player.send(`Welcome ${name ?? player.name}`, 'chat')
 
     emitNet('bye:event', player.id, 'Bye from server 👋')
   }
 
-  @Server.Guard({
+  @Guard({
     permission: 'use-random-event',
     rank: 5,
   })
-  @Server.OnNet('random-event')
-  onRandomEvent(player: Server.Player, text: string): void {
+  @OnNet('random-event')
+  onRandomEvent(player: Player, text: string): void {
     this.events.emit('data', player, text)
   }
 
-  @Server.Throttle(2, 2000)
-  @Server.OnRPC('rpc-event')
-  async onRpcEvent(player: Server.Player): Promise<string> {
+  @Throttle(2, 2000)
+  @OnRPC('rpc-event')
+  async onRpcEvent(player: Player): Promise<string> {
     return `Yes ${player.name}, I'm here`
   }
 
-  @Server.OnFrameworkEvent('internal:playerFullyConnected')
-  onPlayerConnected(payload: Server.PlayerFullyConnectedPayload): void {
+  @OnFrameworkEvent('internal:playerFullyConnected')
+  onPlayerConnected(payload: PlayerFullyConnectedPayload): void {
     payload.player.spawn({ x: -1257, y: -2704, z: 56 })
   }
 
-  @Server.OnRuntimeEvent('entityCreated')
+  @OnRuntimeEvent('entityCreated')
   handleRuntime(handle: number): void {
     //...
   }
@@ -126,7 +138,7 @@ export class HelloController {
 
 Key points:
 
-* The first parameter is always `Server.Player` for commands and network listeners.
+* The first parameter is always `Player` for commands and network listeners.
 * Argument validation happens **before** execution.
 * Schema-based validation is optional but recommended.
 * Commands are globally registered but executed in the defining resource. You can create commands on any resource, the core will perform the security check and delegate its functionality to the responsible resource.
@@ -139,25 +151,33 @@ Read more about commands at [](../api-reference/server-decorators.md)
 
 ```ts
 // src/client/controllers/bye.controller.ts
-import { Client } from '@open-core/framework/client'
 import { EventsAPI } from '@open-core/framework'
+import {
+  Controller,
+  Interval,
+  Key,
+  NuiBridge,
+  OnGameEvent,
+  OnNet,
+  OnView,
+} from '@open-core/framework/client'
 import { ByeViewPayload } from './bye.types'
 
-@Client.Controller()
+@Controller()
 export class ByeController {
   constructor(
-    private readonly nui: Client.NuiBridge,
+    private readonly nui: NuiBridge,
     private readonly events: EventsAPI<'client'>,
   ) {}
 
-  @Client.OnNet('bye:event')
+  @OnNet('bye:event')
   handleByeEvent(message: string): void {
     console.log('Server says:', message)
 
     this.nui.send('bye:show', { message })
   }
 
-  @Client.OnView('bye:confirm')
+  @OnView('bye:confirm')
   handleByeFromView(payload: ByeViewPayload): void {
     console.log('Bye confirmed:', payload.reason)
 
@@ -165,17 +185,17 @@ export class ByeController {
     this.events.emit('random-event', payload.reason)
   }
 
-  @Client.Key('f5', 'optional')
+  @Key('f5', 'optional')
   toggleByeView(): void {
     this.nui.toggle(true)
   }
 
-  @Client.OnGameEvent('CEventExplosionHeard')
+  @OnGameEvent('CEventExplosionHeard')
   handleExplosion(): void {
     console.log('Explosion heard')
   }
 
-  @Client.Interval(5000)
+  @Interval(5000)
   handleInterval(): void {
     // periodic logic
   }
