@@ -42,18 +42,17 @@ The framework *requests* a contract.
 You *provide* an implementation explicitly.
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-Server.setPersistenceProvider(MySqlPersistence)
+setPersistenceProvider(MySqlPersistence)
 ````
 
-This registration must happen **before** calling `Server.init()`.
+This registration must happen **before** calling `init()`.
 
 ---
 
-### About `@Server.Bind`
+### About `@Bind`
 
-The `@Server.Bind()` decorator **does not configure contracts**.
+The `@Bind()` decorator **does not configure contracts**.
 
 Its purpose is:
 
@@ -64,14 +63,14 @@ Its purpose is:
 Example:
 
 ```ts
-@Server.Bind()
+@Bind()
 export class MySqlPersistence extends PlayerPersistenceContract {
   // injectable class
 }
 ```
 
-Use `@Server.Bind` for **dependency injection**,
-use `Server.setX(...)` for **framework configuration**.
+Use `@Bind` for **dependency injection**,
+use `setX(...)` for **framework configuration**.
 
 ---
 
@@ -115,7 +114,7 @@ Contracts ensure OpenCore remains:
 ## Requirement rules
 
 * Some contracts are required **depending on runtime mode**.
-* Required contracts must be registered **before `Server.init()`**.
+* Required contracts must be registered **before `init()`**.
 * If a required contract is missing, the framework will:
 
   * Log a fatal error

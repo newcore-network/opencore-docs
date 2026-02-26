@@ -1,13 +1,13 @@
 ---
-title: Repo
+title: '@Repo'
 ---
 ## Description
-``@Server.Repo()`` is a class decorator used to mark a class as a repository within the framework.
+``@Repo()`` is a class decorator used to mark a class as a repository within the framework.
 
 A repository encapsulates persistence-related logic, such as database access, API calls, or hybrid storage mechanisms.
 It is registered in the dependency injection container in the same way as a service, but with a distinct semantic role.
 
-Like [``@Server.Service()``](./service.md), this decorator is internally backed by [Bind](./bind.md), but is intentionally separated to clearly distinguish persistence concerns from business logic.
+Like [``@Service()``](./service.md), this decorator is internally backed by [Bind](./bind.md), but is intentionally separated to clearly distinguish persistence concerns from business logic.
 
 ## Arguments
 ``options.scope`` - (optional) Defines the binding scope of the repository.
@@ -18,9 +18,8 @@ Possible values:
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Repo()
+@Repo()
 export class AccountRepository {
   async findById(id: string) {
     // persistence logic

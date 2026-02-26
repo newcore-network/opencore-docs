@@ -10,25 +10,26 @@ title: Installation
 
 OpenCore is distributed as an NPM package. You can add it to an existing resource or start a new project with our CLI!
 
-### With our CLI *(Recommended)*
-Install the CLI using npm
+### With our [CLI](../cli/introduction) *(Recommended)*
+
+first, install the CLI
 ```bash
 npm install -g @open-core/cli
 ```
-and create a new opencore project
+and now can you create a new OpenCore project
 ```bash
 opencore init
 ```
 ![alt text](../assets/image.png)
 
-that's create a monorepo with pnpm, with `core/`, `resources/*` and posible to add `standalones/*` repos
+that's create a monorepo with pnpm, with `core/`, `resources/*` and `standalones/*`
 ```ts
 core/ // here is where you code your core-resource
 resources/ // here are the others resources
-views/ // views from your core
+views/ // views folder, if you want to have separate
 opencore.config.ts // config file for the project
 package.json
-pnpm-workspace.yml
+pnpm-workspace.yml // example with pnpm
 tsconfig.json
 ```
 
@@ -41,10 +42,10 @@ and ready!
 
 ### from scratch:
 ```bash
-pnpm add @open-core/framework reflect-metadata tsyringe zod
+pnpm add @open-core/framework reflect-metadata tsyringe zod uuid
 ```
 
-### Required Peer Dependencies
+#### Required Peer Dependencies
 
 - `reflect-metadata`: For decorator support.
 - `tsyringe`: For Dependency Injection.
@@ -68,4 +69,4 @@ OpenCore relies heavily on decorators. You **must** enable specific compiler opt
 }
 ```
 
-### [First Server](../getting-started/first-server.md) 
+### [First Project](./first-project)

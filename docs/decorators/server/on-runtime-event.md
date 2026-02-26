@@ -1,9 +1,9 @@
 ---
-title: OnRuntimeEvent
+title: '@OnRuntimeEvent'
 ---
 
 ## Description
-`@Server.OnRuntimeEvent` is a method decorator used to register a method as a server-side listener for a native FiveM event.
+`@OnRuntimeEvent` is a method decorator used to register a method as a server-side listener for a native FiveM event.
 
 It allows controller methods to react to built-in FiveM server events such as player connection, disconnection, or other engine-level signals.
 The decorator itself does not bind the event immediately. It stores metadata that the framework later processes during the bootstrap phase to attach the method as an event handler.
@@ -16,11 +16,10 @@ This decorator is designed to manage runtimes like FiveM or RedM
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class JoinerController {
-  @Server.OnRuntimeEvent('playerJoining')
+  @OnRuntimeEvent('playerJoining')
   onPlayerJoining() {
     // Player is joining the server
   }

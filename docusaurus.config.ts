@@ -84,8 +84,8 @@ const config: Config = {
               to: '/docs/decorators/introduction',
             },
             {
-              label: 'Services',
-              to: '/docs/services/introduction',
+              label: 'Gameplay APIs',
+              to: '/docs/apis/vehicles',
             },
           ],
         },

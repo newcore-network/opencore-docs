@@ -375,13 +375,13 @@ export default function Home(): JSX.Element {
                 <section className={styles.stats}>
                     <div className={styles.sectionHeader}>
                         <h2>Performance</h2>
-                        <p>Based on internal benchmarks</p>
+                        <p>Internal benchmarks - 26/02/2026</p>
                     </div>
                     <div className={styles.statGrid}>
-                        <StatItem value="5.72M" label="Decorators ops/sec" sublabel="~0.17μs mean" />
-                        <StatItem value="2.01M" label="Events ops/sec" sublabel="~0.50μs mean" />
-                        <StatItem value="14M" label="Commands ops/sec" sublabel="validated, 500 players" />
-                        <StatItem value="1.18M" label="Concurrent NetEvents" sublabel="p95 0.40ms" />
+                        <StatItem value="17.78M" label="EventInterceptor ops/sec" sublabel="getStatistics, ~0.056 us mean" />
+                        <StatItem value="10.49M" label="RuntimeConfig ops/sec" sublabel="resolve CORE, ~0.095 us mean" />
+                        <StatItem value="80.14K" label="Commands throughput" sublabel="500 players (simple), p95 0.226 ms" />
+                        <StatItem value="251.10K" label="RPC throughput" sublabel="500 parallel RPCs, p95 1.83 ms" />
                     </div>
                 </section>
  

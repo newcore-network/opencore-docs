@@ -1,9 +1,9 @@
 ---
-title: Export
+title: '@Export'
 ---
 
 ## Description
-`@Server.Export()` is a method decorator used to expose a server method as a FiveM server export.
+`@Export()` is a method decorator used to expose a server method as a FiveM server export.
 
 An export allows other resources to call a method directly using FiveM’s exports system.
 This decorator does not register the export immediately. Instead, it stores metadata that the framework later reads during the bootstrap phase to properly register the export.
@@ -18,12 +18,11 @@ If not provided, the method name is used as the export name.
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class AccountController {
 
-  @Server.Export()
+  @Export()
   getAccountById(id: string) {
     return this.accountService.find(id)
   }

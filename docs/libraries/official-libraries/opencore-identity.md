@@ -40,12 +40,12 @@ Use constructor injection to consume Identity services.
 import { Server } from "@open-core/framework";
 import { AccountService } from "@open-core/identity";
 
-@Server.Controller()
+@Controller()
 export class AdminController {
   constructor(private readonly accounts: AccountService) {}
 
-  @Server.OnNet("admin:ban")
-  async ban(player: Server.Player, targetId: string) {
+  @OnNet("admin:ban")
+  async ban(player: Player, targetId: string) {
     await this.accounts.ban(targetId, { reason: "Policy violation" });
   }
 }

@@ -3,7 +3,7 @@ title: Player Directory
 ---
 
 ## Description
-The `PlayerDirectoryPort` is the authoritative way to query information about players currently connected to the server. It provides a consistent interface to find players by their FiveM Client ID (source), Account ID, or to retrieve all active sessions.
+The `Players` is the authoritative way to query information about players currently connected to the server. It provides a consistent interface to find players by their FiveM Client ID (source), Account ID, or to retrieve all active sessions.
 
 This port is **highly recommended for gameplay logic** when you need to interact with other players (e.g., finding nearby players, getting a player's job, etc.).
 
@@ -45,7 +45,7 @@ abstract setMeta(clientID: number, key: string, value: unknown): void
 ```ts
 @injectable()
 class SecurityService {
-  constructor(private directory: PlayerDirectoryPort) {}
+  constructor(private directory: Players) {}
 
   isPlayerOnline(source: number): boolean {
     // Useful for gameplay checks

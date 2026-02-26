@@ -1,8 +1,8 @@
 ---
-title: OnTick
+title: '@OnTick'
 ---
 ## Description
-``@Server.OnTick()`` is a method decorator used to register a method as a server tick handler.
+``@OnTick()`` is a method decorator used to register a method as a server tick handler.
 
 A tick handler is executed on every server tick, allowing the server to perform continuous or periodic logic such as synchronization, state checks, or lightweight updates.
 
@@ -13,12 +13,11 @@ This decorator does not accept any arguments.
 
 ## Example
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class SyncController {
 
-  @Server.OnTick()
+  @OnTick()
   updatePlayers() {
     this.service.syncPositions()
   }

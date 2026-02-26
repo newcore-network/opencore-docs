@@ -3,57 +3,73 @@ title: Player Entity
 ---
 
 ## Description
-The `Player` entity is the core of server-side interaction. It represents a connected client and encapsulates all session information, state, and communication capabilities.
+
+`Player` is the server-side runtime representation of a connected client.
+
+It extends `BaseEntity` and implements `Spatial` and `NativeHandle`, exposing session identity, communication helpers, movement/dimension controls, transient metadata/state flags, and combat utilities.
 
 ## Key Properties
 
-- `clientID`: The FiveM server ID (source).
-- `accountID`: The persistent account identifier (only available after authentication).
-- `name`: The player's FiveM display name.
+- `clientID` - platform client/source ID.
+- `accountID` - linked persistent account ID (if authenticated).
+- `name` - display name from player info adapter.
+- `dimension` - alias of routing bucket.
 
 ## Methods
 
 ### Communication
-- `emit(eventName: string, ...args: any[])`: Sends a net event directly to this specific player (client-side).
-- `send(message: string, type?: 'chat' | 'error' | 'success' | 'warning')`: Sends a formatted private message to the player's chat.
+
+- `emit(eventName: string, ...args: any[])` - send a net event directly to this player.
+- `send(message: string, type?: 'chat' | 'error' | 'success' | 'warning')` - convenience private chat output.
+
+### Position and Lifecycle
+
+- `getPosition()` / `setPosition(vector)`
+- `getHeading()` / `setHeading(heading)`
+- `teleport(vector)`
+- `spawn(vector, model?)`
+- `setRoutingBucket(bucket)` / `getRoutingBucket()`
+- `kick(reason?)`
 
 ### State & Metadata
-- `setMeta(key: string, value: unknown)`: Stores arbitrary transient metadata for this session (e.g., 'job', 'is_escorted').
-- `getMeta<T>(key: string)`: Retrieves metadata previously stored in the session.
-- `addState(state: string)` / `removeState(state: string)`: Manages binary flag identifiers (e.g., 'dead', 'cuffed').
-- `toggleState(state: string, force?: boolean)`: Toggles a state flag and returns the new status.
-- `hasState(state: string)`: Checks if the player currently possesses a specific state flag.
 
-### Physical & Lifecycle
-- `getPosition()`: Returns the current `Vector3` coordinates of the player.
-- `teleport(vector: Vector3)`: Requests the client to teleport via the spawner system.
-- `setPosition(vector: Vector3)`: Sets the player position using the platform-agnostic API. (Force)
-- `spawn(vector: Vector3, model?: string)`: Requests the client to spawn at a specific location with a optional model.
-- `setRoutingBucket(bucket: number)`: Sets the player's virtual world (dimension).
-- `getRoutingBucket`: Gets the current routing bucket (dimension).
-- `kick(reason?: string)`: Disconnects the player from the server.
+- `setMeta(key, value)` / `getMeta<T>(key)`
+- `addState(state)` / `removeState(state)`
+- `toggleState(state, force?)`
+- `hasState(state)`
+- `getStates()`
+
+### Identity and Linking
+
+- `getPlayerIdentifiers()`
+- `getIdentifier(identifierType)`
+- `getLicense()` (deprecated alias)
+- `linkAccount(accountID)` / `unlinkAccount()`
 
 ### Health & Combat
-- `getHealth()` / `setHealth(value: number)`: Manages player ped health (0-200, 0 is dead).
-- `getArmor()` / `setArmor(value: number)`: Manages player ped armor (0-100).
-- `kill()`: Instantly kills the player.
-- `isAlive()`: Checks if the player is currently alive.
+
+- `getHealth()` / `setHealth(value)`
+- `getArmor()` / `setArmor(value)`
+- `kill()`
+- `isAlive()`
+
+### Serialization
+
+- `serialize()` - returns transport-safe player snapshot data.
 
 ## Example Usage
 
 ```ts
-@Server.Command('heal')
-handleHeal(player: Server.Player) {
-  // Accessing entity properties
-  console.log(`Healing player: ${player.name}`);
-  
-  // Setting transient state
-  player.setMeta('last_heal', Date.now());
-  
-  // Communication
-  player.emit('opencore:client:heal');
+
+@Command('heal')
+handleHeal(player: Player) {
+  player.setHealth(200)
+  player.setArmor(100)
+  player.setMeta('last_heal', Date.now())
+  player.send('You were healed', 'success')
 }
 ```
 
 ## Security Integration
-The `Player` entity is internally linked with the `PrincipalPort` to resolve permissions and ranks, allowing it to be used directly in decorators like `@Server.Guard()`.
+
+`Player` is the first argument in server decorators such as `@Command()` and `@OnNet()`, making it the primary runtime object for authorization, validation, and gameplay actions.

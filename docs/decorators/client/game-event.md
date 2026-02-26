@@ -1,9 +1,9 @@
 ---
-title: OnGameEvent
+title: '@OnGameEvent'
 ---
 
 ## Description
-``@Client.OnGameEvent()`` is a method decorator used to listen to native GTA V game events on the client side.
+``@OnGameEvent()`` is a method decorator used to listen to native GTA V game events on the client side.
 
 These events originate from the RAGE engine itself and are exposed in FiveM through the gameEventTriggered mechanism.
 They represent low-level gameplay signals such as damage, vehicle interactions, weapon usage, or AI reactions.
@@ -20,19 +20,18 @@ Defaults to false, in which case the handler receives the raw argument array.
 
 ## Example
 ```ts
-import { Client } from '@open-core/framework/client'
 
-@Client.Controller()
+@Controller()
 export class CombatController {
 
   // Raw arguments (low-level access)
-  @Client.OnGameEvent('CEventNetworkEntityDamage')
+  @OnGameEvent('CEventNetworkEntityDamage')
   onDamage(args: number[]) {
     const [victim, attacker] = args
   }
 
   // Auto-parsed, strongly typed payload
-  @Client.OnGameEvent('CEventNetworkEntityDamage', { autoParse: true })
+  @OnGameEvent('CEventNetworkEntityDamage', { autoParse: true })
   onDamageParsed(data: EntityDamageEvent) {
     console.log(data.victim, data.attacker, data.victimDied)
   }

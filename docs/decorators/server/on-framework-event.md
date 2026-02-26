@@ -1,10 +1,10 @@
 ---
-title: OnFrameworkEvent
+title: '@OnFrameworkEvent'
 ---
 
 ## Description
 
-`@Server.OnFrameworkEvent()` is a method decorator used to register a method as a listener for an internal OpenCore framework event.
+`@OnFrameworkEvent()` is a method decorator used to register a method as a listener for an internal OpenCore framework event.
 
 Internal framework events represent lifecycle or system-level signals emitted by the framework itself, not by FiveM directly.
 This decorator allows controllers to react to those internal events in a structured and strongly typed way.
@@ -20,7 +20,7 @@ The event name is strongly typed and must be a valid key of InternalEventMap.
 The method signature should accept the payload type associated with the selected event.
 
 ## Events and Types
-Use this type from the Server namespace, e.g:  `Server.PlayerSessionCreatedPayload`
+Use this type from the Server namespace, e.g:  `PlayerSessionCreatedPayload`
 
 - `internal:playerSessionCreated`: emmited as soon as the player session is created.
 ```ts
@@ -52,12 +52,11 @@ interface PlayerSessionRecoveredPayload {
 
 ## Example
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class SystemController {
-  @Server.OnFrameworkEvent('internal:playerFullyConnected')
-  onPlayerConnected(payload: Server.PlayerFullyConnectedPayload) {
+  @OnFrameworkEvent('internal:playerFullyConnected')
+  onPlayerConnected(payload: PlayerFullyConnectedPayload) {
     console.log(`Player ${payload.player.id} connected`)
   }
 }

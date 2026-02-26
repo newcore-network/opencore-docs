@@ -5,194 +5,268 @@ const sidebars: SidebarsConfig = {
     'intro',
     'why-opencore',
     'features',
+
+    // ── Getting Started ───────────────────────────────────────────
     {
       type: 'category',
       label: 'Getting Started',
       items: [
         'getting-started/installation',
-        'getting-started/first-server',
-        'getting-started/setup',
+        'getting-started/first-project',
+        'getting-started/project-structure',
+        'getting-started/setups',
+        'getting-started/runtime-modes',
       ],
     },
+
+    // ── Core Concepts ─────────────────────────────────────────────
     {
       type: 'category',
-      label: 'Decorators',
+      label: 'Core Concepts',
       items: [
+        'core-concepts/runtime-lifecycle',
+        'core-concepts/dependency-injection',
+        'core-concepts/controllers',
+        'core-concepts/decorators-overview',
+        'core-concepts/contracts',
         'decorators/introduction',
+      ],
+    },
+
+    // ── Communication ─────────────────────────────────────────────
+    {
+      type: 'category',
+      label: 'Communication',
+      items: [
+        'communication/overview',
         {
           type: 'category',
-          label: 'Server',
+          label: 'Events',
           items: [
-            'decorators/server/controller',
-            'decorators/server/bind',
-            'decorators/server/service',
-            'decorators/server/repo',
-            'decorators/server/command',
+            'communication/events-api',
             'decorators/server/on-net',
-            'decorators/server/on-tick',
-            'decorators/server/on-framework-event',
-            'decorators/server/on-runtime-event',
-            'decorators/server/requires-state',
-            'decorators/server/throttle',
-            'decorators/server/export',
-            'decorators/server/guard',
-            'decorators/server/public',
-            'decorators/server/binary-service',
-            'decorators/server/binary-call'
-          ],
-        },
-        {
-          type: 'category',
-          label: 'Client',
-          items: [
-            'decorators/client/controller',
             'decorators/client/on-net',
+            'decorators/server/on-framework-event',
+            'decorators/server/on-library-event',
+            'decorators/client/on-library-event',
+            'decorators/server/on-runtime-event',
             'decorators/client/local-event',
             'decorators/client/game-event',
-            'decorators/client/on-tick',
-            'decorators/client/interval',
-            'decorators/client/key',
             'decorators/client/on-view',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'RPC',
+          items: [
+            'communication/rpc',
+            'communication/rpc-api',
+            'decorators/server/on-rpc',
+            'decorators/client/on-rpc',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Binary Protocol',
+          items: [
+            'communication/binary-protocol',
+            'decorators/server/binary-service',
+            'decorators/server/binary-call',
+            'decorators/server/binary-event',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Exports',
+          items: [
+            'decorators/server/export',
             'decorators/client/export',
-            'decorators/client/on-resource-start',
           ],
         },
       ],
     },
+
+    // ── Client Runtime ────────────────────────────────────────────
     {
       type: 'category',
-      label: 'Services',
+      label: 'Client Runtime',
       items: [
-        'services/introduction',
+        'client/overview',
+        'decorators/client/controller',
+        'decorators/client/key',
+        'decorators/client/on-tick',
+        'decorators/client/interval',
+        'decorators/client/on-resource-start',
+        'decorators/client/on-resource-stop',
+        'client/nui-bridge',
+      ],
+    },
+
+    // ── Gameplay ──────────────────────────────────────────────────
+    {
+      type: 'category',
+      label: 'Gameplay',
+      items: [
         {
           type: 'category',
-          label: 'Server',
+          label: 'Entities',
           items: [
-            'services/server/chat-service',
-            'services/server/vehicle-service',
-            'services/server/vehicle-modification-service',
-            'services/server/persistence-service',
-            'services/server/rate-limiter.service',
-            'services/server/parallel-service',
+            'entities/introduction',
+            'entities/base-entity',
+            'entities/player',
+            'entities/vehicle',
+            'entities/npc',
+            'entities/channel',
+          ],
+        },
+        'decorators/server/command',
+        'decorators/server/requires-state',
+        'decorators/server/on-tick',
+        {
+          type: 'category',
+          label: 'APIs',
+          items: [
+            'apis/chat',
+            'apis/vehicles',
+            'apis/npcs',
+            'apis/vehicle-modifications',
+            'apis/appearance',
+            'apis/parallel-compute',
+            'apis/channels',
           ],
         },
         {
           type: 'category',
-          label: 'Client',
+          label: 'Client APIs',
           items: [
-            'services/client/introduction',
-            'services/client/spawn-service',
-            'services/client/appearance-service',
-            'services/client/notification-service',
-            'services/client/blip-service',
-            'services/client/marker-service',
-            'services/client/ped-service',
-            'services/client/textui-service',
-            'services/client/streaming-service',
-            'services/client/progress-service',
-            'services/client/vehicle-client-service',
-            'services/client/vehicle-low-level-service',
+            'apis/client/spawn',
+            'apis/client/appearance',
+            'apis/client/camera',
+            'apis/client/cinematic',
+            'apis/client/notifications',
+            'apis/client/blips',
+            'apis/client/markers',
+            'apis/client/peds',
+            'apis/client/textui',
+            'apis/client/streaming',
+            'apis/client/progress',
+            'apis/client/vehicle',
           ],
         },
       ],
     },
+
+    // ── Security ──────────────────────────────────────────────────
     {
       type: 'category',
-      label: 'Contracts',
+      label: 'Security',
       items: [
-        'contracts/introduction',
-        'contracts/player-persistence',
-        'contracts/repository',
+        'security/overview',
+        'decorators/server/guard',
+        'decorators/server/throttle',
+        'decorators/server/public',
+        'security/input-validation',
+        'security/security-handler',
+        'security/net-event-observer',
+        'security/command-error-observer',
+      ],
+    },
+
+    {
+      type: 'category',
+      label: 'Ports & Contracts',
+      items: [
         {
           type: 'category',
-          label: 'Security',
+          label: 'Ports',
           items: [
-            'contracts/security/principal-provider',
+            'ports/introduction',
+            'ports/player-directory',
+            'ports/principal',
+            'ports/command-execution',
+            'ports/session-lifecycle',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Contracts',
+          items: [
+            'contracts/introduction',
+            'contracts/player-persistence',
+            'contracts/repository',
             'contracts/security/security-handler',
             'contracts/security/net-event-security-observer',
+            'contracts/security/principal-provider',
             'contracts/security/command-security-observer',
           ],
         },
       ],
     },
+
+    // ── Advanced Topics ───────────────────────────────────────────
     {
       type: 'category',
-      label: 'Controllers',
+      label: 'Advanced Topics',
       items: [
-        'controllers/introduction',
+        'advanced/performance',
+        'advanced/scaling-resources',
+        'advanced/session-recovery',
         {
           type: 'category',
-          label: 'Client',
+          label: 'Dev Mode',
           items: [
-            'controllers/client/spawner',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'Server',
-          items: [
-            'controllers/server/chat',
+            'dev-mode/about',
+            'dev-mode/event-interceptor',
+            'dev-mode/player-simulator',
+            'dev-mode/state-inspector',
           ],
         },
       ],
     },
-    {
-      type: 'category',
-      label: 'Entities',
-      items: [
-        'entities/introduction',
-        'entities/player',
-        'entities/vehicle',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Ports',
-      items: [
-        'ports/introduction',
-        'ports/player-directory',
-        'ports/principal',
-        'ports/command-execution',
-        'ports/session-lifecycle',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Dev Mode',
-      items: [
-        'dev-mode/about',
-      ],
-    },
+
+    // ── Tooling ───────────────────────────────────────────────────
     {
       type: 'category',
       label: 'Tooling',
       items: [
-        {
-          type: 'category',
-          label: 'CLI',
-          items: [
-            'cli/introduction',
-            'cli/commands',
-          ],
-        },
+        'cli/introduction',
+        'cli/commands',
         'compiler/about',
       ],
     },
+
+    // ── API Reference ─────────────────────────────────────────────
+    {
+      type: 'category',
+      label: 'API Reference',
+      items: [
+        'api-reference/server-decorators',
+        'api-reference/client-decorators',
+        'api-reference/runtime-apis',
+        'api-reference/configuration',
+      ],
+    },
+
+    // ── Ecosystem ─────────────────────────────────────────────────
     {
       type: 'category',
       label: 'Ecosystem',
       items: [
+        'libraries/about',
+        'libraries/library-api-usage',
+        'libraries/plugin-api-usage',
         {
           type: 'category',
           label: 'Official Libraries',
           items: [
-            'libraries/about',
             'libraries/official-libraries/opencore-identity',
+            'libraries/official-libraries/opencore-characters',
           ],
         },
         'templates/about',
       ],
     },
+
     'roadmap',
     'releases',
     'contributions',

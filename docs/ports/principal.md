@@ -1,11 +1,11 @@
 ---
-title: Principal
+title: Authorization Port
 ---
 
 ## Description
-The `PrincipalPort` is the gateway to the framework's security system. It allows you to query a player's **Principal** (their permissions and rank) and enforce access control.
+The `Authorization` port is the gateway to the framework's security system. It allows you to query a player's **Principal** (permissions and rank) and enforce access control.
 
-While you can use this port directly in your services, it is most commonly used through the **`@Server.Guard()`** decorator, which automatically invokes the port's `enforce()` method.
+While you can use this port directly, it is most commonly used through the **`@Guard()`** decorator, which automatically invokes `enforce()`.
 
 ## API Methods
 
@@ -30,7 +30,7 @@ abstract hasRank(player: Player, requiredRank: number): Promise<boolean>
 ### `enforce()`
 The primary method for security. It validates requirements and **throws an error** if the player is unauthorized. 
 
-**This method is what `@Server.Guard()` uses under the hood.**
+**This method is what `@Guard()` uses under the hood.**
 
 ```ts
 abstract enforce(player: Player, requirements: GuardOptions): Promise<void>
@@ -43,17 +43,17 @@ Retrieves the full `Principal` object, including all permissions, rank, and role
 
 ## Decorator Integration
 
-The `PrincipalPort` is tightly integrated with the framework's decorators:
+The `Authorization` port is tightly integrated with the framework's decorators:
 
-- **`@Server.Guard({ permission: '...' })`**: Automatically calls `principalPort.enforce()` before the method executes.
-- **`@Server.Command({ ... })`**: Commands use this port to verify if a player has the rights to execute them if combined with guards.
+- **`@Guard({ permission: '...' })`**: Automatically calls `authorization.enforce()` before the method executes.
+- **`@Command({ ... })`**: Commands use this port to verify if a player has the rights to execute them if combined with guards.
 
 ## Example
 
 ### Direct Usage
 ```ts
-@Server.Command('adminmenu')
-async openMenu(player: Server.Player) {
+@Command('adminmenu')
+async openMenu(player: Player) {
   // This will throw and stop execution if the player isn't rank 5 or higher
   await this.principalPort.enforce(player, { rank: 5 });
   
@@ -63,11 +63,11 @@ async openMenu(player: Server.Player) {
 
 ### Via Decorator (Recommended)
 ```ts
-@Server.Controller()
+@Controller()
 export class AdminController {
-  @Server.Command('ban')
-  @Server.Guard({ permission: 'admin.ban' }) // cleaner and more declarative
-  handleBan(player: Server.Player, targetId: number) {
+  @Command('ban')
+  @Guard({ permission: 'admin.ban' }) // cleaner and more declarative
+  handleBan(player: Player, targetId: number) {
     // Logic only runs if guard passes
   }
 }

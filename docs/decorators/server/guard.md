@@ -1,9 +1,9 @@
 ---
-title: Guard
+title: '@Guard'
 ---
 
 ## Description
-`@Server.Guard()` is a method decorator used to enforce access control on server controller methods.
+`@Guard()` is a method decorator used to enforce access control on server controller methods.
 
 It protects a method by validating whether the calling player meets specific authorization requirements, such as a minimum rank or a required permission, before the method logic is executed. It is usually used primarily by staff, or user permissions; rank usually refers to hierarchical rank/role level.
 
@@ -21,21 +21,20 @@ A specific permission the player must have to execute the method.
 
 ```ts
 import { Infer } from '@open-core/framework'
-import { Server } from '@open-core/framework/server'
 
 
-@Server.Controller()
+@Controller()
 export class AdminController {
 
-  @Server.Guard({ permission: 'factions.manage' })
-  @Server.Command('newfaction', schema)
-  async createFaction(player: Server.Player, dto: Infer<typeof schema>) {
+  @Guard({ permission: 'factions.manage' })
+  @Command('newfaction', schema)
+  async createFaction(player: Player, dto: Infer<typeof schema>) {
     return this.service.create(dto)
   }
 
-  @Server.Guard({ rank: 3 })
-  @Server.Command('ban')
-  async ban(player: Server.Player, targetID: string) {
+  @Guard({ rank: 3 })
+  @Command('ban')
+  async ban(player: Player, targetID: string) {
     return this.service.ban(player, memberID)
   }
 }
@@ -44,7 +43,7 @@ export class AdminController {
 In this example, ``createFaction`` can only be executed by players who have the factions.manage permission.
 The ban method requires the player to have at least rank 3.
 
-In both cases, the first argument must always be a Server.Player, as the guard uses it to determine the caller’s identity and privileges.
+In both cases, the first argument must always be a Player, as the guard uses it to determine the caller’s identity and privileges.
 
 ## Notes
 

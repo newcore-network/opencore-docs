@@ -35,7 +35,7 @@ Every implementation must provide a `PersistenceConfig` object:
 ```ts
 import { PlayerPersistenceContract, PersistenceConfig, Player } from '@open-core/framework/server'
 
-@Server.Bind(PlayerPersistenceContract)
+@Bind(PlayerPersistenceContract)
 export class MyDatabaseProvider extends PlayerPersistenceContract {
   readonly config: PersistenceConfig = {
     autoSaveEnabled: true,

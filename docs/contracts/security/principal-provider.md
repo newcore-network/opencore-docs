@@ -12,7 +12,7 @@ The `PrincipalProvider` is the **authoritative source for authorization**. It te
 The most important method. It must return a `Principal` object containing the player's rank and an array of permission strings.
 
 ```ts
-abstract getPrincipal(player: Server.Player): Promise<Principal | null>
+abstract getPrincipal(player: Player): Promise<Principal | null>
 ```
 
 ---
@@ -28,10 +28,10 @@ Forces the framework to re-fetch permissions from the provider. Use this after a
 ## Example Implementation
 
 ```ts
-@Server.Bind(PrincipalProviderContract)
+@Bind(PrincipalProviderContract)
 export class MySecurityProvider extends PrincipalProviderContract {
   
-  async getPrincipal(player: Server.Player) {
+  async getPrincipal(player: Player) {
     const user = await db.users.find(player.accountID);
     
     return {
@@ -41,7 +41,7 @@ export class MySecurityProvider extends PrincipalProviderContract {
     };
   }
 
-  async refreshPrincipal(player: Server.Player) {
+  async refreshPrincipal(player: Player) {
     // Logic to clear local cache if you have one
   }
 

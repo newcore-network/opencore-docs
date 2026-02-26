@@ -1,8 +1,8 @@
 ---
-title: Throttle
+title: '@Throttle'
 ---
 ## Description
-``@Server.Throttle()`` is a method decorator used to rate-limit how frequently a player can invoke a server-side handler.
+``@Throttle()`` is a method decorator used to rate-limit how frequently a player can invoke a server-side handler.
 
 It protects commands, network events, or other controller methods from being spammed by the same player within a defined time window.
 The decorator enforces limits per player and per method, ensuring fair usage and protecting server resources.
@@ -25,20 +25,19 @@ This decorator supports two overloads.
 ## Example
 
 ```ts
-import { Server } from '@open-core/framework/server'
 
-@Server.Controller()
+@Controller()
 export class MarketController {
 
   // Allow 5 calls every 2 seconds
-  @Server.Throttle(5, 2000)
-  async search(player: Server.Player, query: string) {
+  @Throttle(5, 2000)
+  async search(player: Player, query: string) {
     // ...
   }
 
   // Allow 1 call every 5 seconds with a custom message
-  @Server.Throttle({ limit: 1, windowMs: 5000, message: 'Too fast!' })
-  async placeOrder(player: Server.Player) {
+  @Throttle({ limit: 1, windowMs: 5000, message: 'Too fast!' })
+  async placeOrder(player: Player) {
     // ...
   }
 }
