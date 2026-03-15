@@ -156,6 +156,18 @@ const sidebars: SidebarsConfig = {
       ],
     },
 
+    // ── NPC Agents ────────────────────────────────────────────────
+    {
+      type: 'category',
+      label: 'NPC Agents',
+      items: [
+        'npc-agents/overview',
+        'npc-agents/getting-started',
+        'npc-agents/controllers-and-skills',
+        'npc-agents/connected-mode',
+      ],
+    },
+
     // ── Security ──────────────────────────────────────────────────
     {
       type: 'category',
@@ -261,6 +273,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'libraries/official-libraries/opencore-identity',
             'libraries/official-libraries/opencore-characters',
+            'libraries/official-libraries/opencore-npc-agents',
           ],
         },
         'templates/about',

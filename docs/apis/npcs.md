@@ -17,7 +17,7 @@ Use this API instead of raw natives when creating and managing peds in gameplay 
 ## Injection
 
 ```ts
-import { Npcs, Server } from '@open-core/framework/server'
+import { Service, Npcs } from '@open-core/framework/server'
 
 @Service()
 export class AiService {
@@ -79,7 +79,7 @@ Creates multiple NPCs sequentially (predictable load/side effects).
 ## Example
 
 ```ts
-import { Npcs, Server } from '@open-core/framework/server'
+import { Npcs, Controller, Command, Player } from '@open-core/framework/server'
 
 @Controller()
 export class NpcAdminController {

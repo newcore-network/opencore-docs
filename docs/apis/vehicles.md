@@ -21,8 +21,6 @@ The API maintains an internal map of managed vehicles indexed by **networkId**.
 ## Injection
 
 ```ts
-import { Server, Vehicles } from '@open-core/framework/server'
-
 @Service()
 export class FleetService {
   constructor(private readonly vehicles: Vehicles) {}
