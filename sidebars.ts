@@ -285,7 +285,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'libraries/official-libraries/opencore-identity',
             'libraries/official-libraries/opencore-characters',
-            'libraries/official-libraries/opencore-npc-agents',
+            //'libraries/official-libraries/opencore-npc-agents',
           ],
         },
         'templates/about',

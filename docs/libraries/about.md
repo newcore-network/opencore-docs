@@ -43,9 +43,6 @@ Character domain library for account-owned characters, active selection state, p
 - **Plugin-First Server Setup**: Install through OpenCore Plugin API (`init({ plugins })`).
 - **Minimal Client Surface**: Transport helpers only, no UI layer bundled.
 
-### [opencore-npc-agents](./official-libraries/opencore-npc-agents.md)
-Intelligent NPC behavior library with rule-based and AI planners.
-
 **Responsibilities:**
 - **Controller-Driven Behavior**: Define behavior scopes with `@NpcIntelligentController`.
 - **Skill System**: Use built-in skills or register custom class-based skills with `@NpcSkill()`.
