@@ -1,5 +1,5 @@
 ---
-title: NPC Agents Connected Mode
+title: Connected Mode
 ---
 
 Connected mode delegates selected skill execution from server to client.

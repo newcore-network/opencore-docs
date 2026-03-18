@@ -63,6 +63,11 @@ init({
 
 Server and client runtimes are initialized independently, but follow the **same lifecycle rules**.
 
+
+:::warning
+It still won't work if you don't define a valid adapter for the runtime you're targeting. Please read [Adapters](./adapters.md)
+:::
+
 ---
 
 ## 2. Creating Your First Controller
@@ -156,17 +161,16 @@ import {
   Controller,
   Interval,
   Key,
-  NuiBridge,
   OnGameEvent,
   OnNet,
   OnView,
+  WebView,
 } from '@open-core/framework/client'
 import { ByeViewPayload } from './bye.types'
 
 @Controller()
 export class ByeController {
   constructor(
-    private readonly nui: NuiBridge,
     private readonly events: EventsAPI<'client'>,
   ) {}
 
@@ -174,7 +178,7 @@ export class ByeController {
   handleByeEvent(message: string): void {
     console.log('Server says:', message)
 
-    this.nui.send('bye:show', { message })
+    WebView.send('bye:show', { message })
   }
 
   @OnView('bye:confirm')
@@ -187,7 +191,7 @@ export class ByeController {
 
   @Key('f5', 'optional')
   toggleByeView(): void {
-    this.nui.toggle(true)
+    WebView.toggle(true)
   }
 
   @OnGameEvent('CEventExplosionHeard')

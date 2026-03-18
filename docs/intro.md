@@ -2,13 +2,13 @@
 title: Introduction
 ---
 
-OpenCore is a **high-performance, event-driven TypeScript runtime** designed to bring enterprise-grade software engineering standards to the FiveM ecosystem.
+OpenCore is a **high-performance, event-driven TypeScript runtime** designed to bring enterprise-grade software engineering standards to multiplayer game servers (FiveM, RageMP, RedM).
 
 Unlike traditional "frameworks" that function primarily as game modes or script collections, OpenCore is a foundational **Engine**. It provides the architectural infrastructure necessary to build complex, scalable, and secure multiplayer systems without dictating gameplay logic.
 
 ## The Paradigm Shift
 
-FiveM development has historically relied on loose scripting, global variables, and implicit dependencies. OpenCore rejects this approach in favor of strict architectural patterns commonly found in professional backend development (such as NestJS, Spring Boot, or ASP.NET Core).
+Multiplayer server development has historically relied on loose scripting, global variables, and implicit dependencies. OpenCore rejects this approach in favor of strict architectural patterns commonly found in professional backend development (such as NestJS, Spring Boot, or ASP.NET Core).
 
 ### Core Principles
 

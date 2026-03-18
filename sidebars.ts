@@ -13,9 +13,22 @@ const sidebars: SidebarsConfig = {
       items: [
         'getting-started/installation',
         'getting-started/first-project',
+        'getting-started/adapters',
         'getting-started/project-structure',
         'getting-started/setups',
         'getting-started/runtime-modes',
+      ],
+    },
+
+    // ── Adapters ─────────────────────────────────────────────────
+    {
+      type: 'category',
+      label: 'Adapters',
+      items: [
+        'adapters/index',
+        'adapters/fivem',
+        'adapters/ragemp',
+        'adapters/redm',
       ],
     },
 
@@ -98,7 +111,7 @@ const sidebars: SidebarsConfig = {
         'decorators/client/interval',
         'decorators/client/on-resource-start',
         'decorators/client/on-resource-stop',
-        'client/nui-bridge',
+        'client/webview-bridge',
       ],
     },
 
@@ -157,16 +170,15 @@ const sidebars: SidebarsConfig = {
     },
 
     // ── NPC Agents ────────────────────────────────────────────────
-    {
-      type: 'category',
-      label: 'NPC Agents',
-      items: [
-        'npc-agents/overview',
-        'npc-agents/getting-started',
-        'npc-agents/controllers-and-skills',
-        'npc-agents/connected-mode',
-      ],
-    },
+    // {
+    //   type: 'category',
+    //   label: 'NPC Agents',
+    //   items: [
+    //     'npc-agents/getting-started',
+    //     'npc-agents/controllers-and-skills',
+    //     'npc-agents/connected-mode',
+    //   ],
+    // },
 
     // ── Security ──────────────────────────────────────────────────
     {

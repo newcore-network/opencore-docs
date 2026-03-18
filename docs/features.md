@@ -18,7 +18,7 @@ Here you can find the most important features of OpenCore, and a healthy compari
   - STANDALONE: self-contained runtime (no CORE dependency)
 - Decorator-based programming model (metadata + processors):
   - Server: ``Controllers``, ``Commands``, ``OnNet``, ``Exports``, ``Ticks``, ``Framework/Runtime`` ``Events``
-  - Client: ``Controllers``, ``OnNet``, ``Game Events``, ``Ticks/Intervals/Keys``, ``Local Events``, ``Resource Start/Stop``, ``Exports``, ``NUI``
+  - Client: ``Controllers``, ``OnNet``, ``Game Events``, ``Ticks/Intervals/Keys``, ``Local Events``, ``Resource Start/Stop``, ``Exports``, ``WebView``
 - Cross-resource discovery & coordination (CORE ↔ RESOURCE):
   - CORE signals readiness via engine events and net broadcast (`core:ready`)
   - RESOURCE waits for CORE using multiple mechanisms (event + export polling + request-ready)
@@ -31,7 +31,7 @@ Here you can find the most important features of OpenCore, and a healthy compari
   - guards / principals (pluggable PrincipalProvider)
   - throttling
   - state requirements
-- Type-safe NUI bridge (typed UI ↔ runtime messaging).
+- Type-safe WebView bridge (typed UI ↔ runtime messaging).
 - Binary Services (external native processes):
   - persistent process managed by OpenCore
   - JSON-RPC over stdin/stdout
@@ -59,7 +59,7 @@ OpenCore is **infrastructure-first** (a framework runtime), while ESX/ND/QBCore/
 | **“Batteries included” gameplay** | No (items, economy, factions are external libraries/resources) | Yes (jobs, money, banking, society systems, UI, addons) | Yes (core + official resources like police, inventory, phone, banking) | Partial (core API + large ecosystem of gameplay resources) | Yes (qbx_core ships multicharacter, multijob, queue, etc.) |
 | **Programming model** | TypeScript + DI + decorators (metadata → processors) | Lua + ESX API (events, callbacks, exports) | Lua + ND API + ox ecosystem | Lua + Core Object API | Lua + qbx_core exports + ox ecosystem |
 | **Architecture emphasis** | Explicit architecture (Ports & Adapters, runtime modes, providers) | Practical and resource-oriented | Pack-oriented with strong defaults | Ecosystem-driven modularity | QBCore-compatible, with focus on performance and security |
-| **Type safety** | Strong (TypeScript, contracts, typed NUI) | Tooling-dependent (Lua) | Tooling-dependent (Lua) | Tooling-dependent (Lua) | Tooling-dependent (Lua) |
+| **Type safety** | Strong (TypeScript, contracts, typed WebView) | Tooling-dependent (Lua) | Tooling-dependent (Lua) | Tooling-dependent (Lua) | Tooling-dependent (Lua) |
 | **Database expectations** | Database-agnostic (via adapters) | Typical RP stack (MySQL/MariaDB) | oxmysql + MariaDB by default | oxmysql commonly used | MariaDB required (installation stack) |
 | **Permissions & security** | Guards, principals, throttling, state requirements (opt-in) | Varies by resource | Groups + ACE / Discord role integration | Core-based permissions | Security-focused defaults |
 | **Migration / compatibility** | Clean break by design | Very large legacy ecosystem | Compatibility modes available | Very large script ecosystem | Backwards-compatible with most QBCore scripts |

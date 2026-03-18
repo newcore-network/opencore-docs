@@ -94,7 +94,7 @@ Builds all resources for production deployment.
 What happens internally:
 
 * Parallel compilation using all CPU cores
-* Runtime-aware bundling (server / client / NUI)
+* Runtime-aware bundling (server / client / Views)
 * Dependency linking to avoid duplicated `node_modules`
 * Detection of native Node.js packages incompatible with FiveM
 * Minification and cleanup of development metadata
@@ -128,7 +128,7 @@ Generates standardized boilerplate.
   Include a client-side entry point
 
 * `--with-nui`
-  Include NUI (web) scaffolding
+  Include Web/Views scaffolding
 
 ---
 

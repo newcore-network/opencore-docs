@@ -1,5 +1,5 @@
 ---
-title: NPC Agents Controllers and Skills
+title: Controllers and Skills
 ---
 
 Use controllers to define behavior boundaries and skills to execute behavior steps.

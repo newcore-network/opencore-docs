@@ -2,71 +2,61 @@
 title: '@OnView'
 ---
 ## Description
-``@OnView()`` registers a method as a NUI callback handler on the client.
 
-NUI callbacks are invoked when the browser UI (HTML/JS) sends a message to the client runtime using FiveM’s NUI messaging system.
-This decorator does not bind the callback immediately. It stores metadata that the framework processes during client bootstrap.
+`@OnView()` registers a method as a WebView callback handler on the client.
 
-During bootstrap, the NuiProcessor:
-
-- Registers the callback name with RegisterNuiCallbackType
-- Listens to the internal ``__cfx_nui:<eventName>`` event
-- Executes the handler safely
-- Sends a structured response back to the UI
-
-This provides a clean, typed bridge between UI code and client-side logic.
-
+WebView callbacks are invoked when your web UI sends a message to the client runtime. The framework processes the metadata during client bootstrap and sets up the message routing.
 
 ## Arguments
-``eventName`` - The NUI callback name used by the UI when sending messages.
 
-## Returnings
-optional return value
+`eventName` - The callback identifier used by your UI when sending messages.
+
+## Returns
+
+Optional return value that is sent back to the UI.
 
 ## Example
-```ts
 
+```ts
 @Controller()
 export class SettingsController {
 
   @OnView('settings:save')
-  saveSettings(payload: unknown) {
-    // process UI data
-    return data // data to return to NUI
+  saveSettings(data: { volume: number; music: boolean }) {
+    console.log(`Volume: ${data.volume}, Music: ${data.music}`)
+    return { saved: true }
+  }
+
+  @OnView('menu:open')
+  onMenuOpen() {
+    // Hide cursor when opening a game menu
+    WebView.blur()
   }
 }
 ```
 
-On the UI side, this callback can be invoked using fetch or postMessage:
+On the UI side, send messages using the WebView's message interface:
 
 ```ts
-const response = await fetch(
-  `https://${GetParentResourceName()}/settings:save`,
-  {
-    method: 'POST',
-    body: JSON.stringify({ volume: 80 })
-  }
-)
-const result = await response.json()
+// Access window.opener or postMessage
+window.parent.postMessage({
+  action: 'settings:save',
+  data: { volume: 80, music: true }
+}, '*')
 ```
 
-When the UI triggers the callback:
-- The payload is passed as the first argument to the handler
-- The handler result is sent back to the UI as ``{ ok: true, data }``
-- Errors are caught and returned as ``{ ok: false, error }``
+## Response Format
 
-## Response format
-The framework always responds using the FiveM callback (`cb`) with a standardized shape.
+The framework responds with a standardized structure:
 
 ### Success
 ```json
 {
   "ok": true,
-  "data": {
-    "saved": true
-  }
+  "data": { "saved": true }
 }
 ```
+
 ### Error
 ```json
 {
@@ -75,20 +65,20 @@ The framework always responds using the FiveM callback (`cb`) with a standardize
 }
 ```
 
-## Execution flow
-1. NUI sends a POST request via `fetch`
-2. FiveM emits `__cfx_nui:<eventName>` internally
-3. The framework intercepts the event
-4. The decorated method is executed
-5. The return value is sent back through `cb`
-6. The UI receives the JSON response
+## Execution Flow
+
+1. UI sends a message to the WebView
+2. The framework intercepts the message
+3. The decorated method is executed with the payload
+4. The return value is sent back to the UI
 
 ## Notes
-* This decorator binds directly to FiveM’s NUI callback mechanism (`__cfx_nui:*`)
+
+* `@OnView()` callbacks work with `WebViewBridge` for sending data to UI
 * The handler receives **only the UI payload**
 * All handlers are wrapped in `try/catch`
-* Errors are logged automatically via the NUI logger
+* Errors are logged automatically
 * Response structure is always consistent:
   * `{ ok: true, data }`
   * `{ ok: false, error }`
-* Intended exclusively for **client-side controllers that interact with NUI views**
+* Use `WebView` to send data back to the UI from other handlers

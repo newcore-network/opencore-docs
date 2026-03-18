@@ -1,5 +1,5 @@
 ---
-title: Runtime Modes (CORE / RESOURCE / STANDALONE)
+title: Runtime Modes
 ---
 
 ## Modes

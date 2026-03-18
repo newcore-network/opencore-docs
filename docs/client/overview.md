@@ -31,7 +31,7 @@ The client runtime handles several critical areas:
 - **Streaming** — Loading and unloading models, animations, and textures.
 - **Visuals** — Managing blips, markers, and native notifications.
 - **Life Cycle** — Handling the complex process of spawning and resurrecting the player.
-- **Interactions** — Displaying progress bars and managing NUI communication.
+- **Interactions** — Displaying progress bars and managing WebView communication.
 - **Input** — Binding keyboard keys and game events to controller methods.
 
 ## Available Client APIs
@@ -54,4 +54,4 @@ The client runtime handles several critical areas:
 - Client controllers are **event-driven**, not request-driven.
 - Prefer `@Interval()` over `@OnTick()` when possible to reduce CPU usage.
 - `@LocalEvent()` is the recommended way to communicate between client systems.
-- NUI communication is explicit and isolated through `@OnView()`.
+- WebView communication is explicit and isolated through `@OnView()`.

@@ -4,7 +4,7 @@ title: Why OpenCore?
 
 ## The Vision
 
-OpenCore is designed to solve the structural problems that have plagued FiveM development for years: **spaghetti code, lack of testability, and tight coupling between resources.**
+OpenCore is designed to solve the structural problems that have plagued multiplayer server development for years: **spaghetti code, lack of testability, and tight coupling between resources.**
 
 By bringing modern software engineering patterns (Inversion of Control, Hexagonal Architecture, and Type-Safety) to the world of GTA V modding, we enable developers to build complex, maintainable, and high-performance game servers.
 
@@ -25,4 +25,4 @@ In FiveM, resources usually talk to each other via raw strings and events. OpenC
 OpenCore is built for large-scale servers. From the built-in rate limiter to the optimized parallel processing service, the framework is designed to handle hundreds of players and complex interactions without breaking a sweat.
 
 ## Is it for me?
-If you are tired of debugging `nil` values in Lua, fighting with inconsistent exports, or maintaining thousands of lines of unorganized code, OpenCore is for you. It's not just a library; it's a foundation for the next generation of FiveM servers.
+If you are tired of debugging `nil` values in Lua, fighting with inconsistent exports, or maintaining thousands of lines of unorganized code, OpenCore is for you. It's not just a library; it's a foundation for the next generation of multiplayer game servers.

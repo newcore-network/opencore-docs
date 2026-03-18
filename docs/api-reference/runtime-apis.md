@@ -28,7 +28,7 @@ Key groups:
 
 - Bootstrap: `init`.
 - Decorators: `Controller`, `OnNet`, `OnRPC`, `OnView`, `OnTick`, `Interval`, `Key`, `OnResourceStart`, `OnResourceStop`, `OnGameEvent`, `LocalEvent`.
-- Services: `NuiBridge`, `SpawnService`, `NotificationService`, `VehicleClientService`, `VehicleService`, and other client runtime services.
+- Services: `WebViewBridge`, `SpawnService`, `NotificationService`, `VehicleClientService`, `VehicleService`, and other client runtime services.
 
 ## Import Style
 

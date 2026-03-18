@@ -1,5 +1,5 @@
 ---
-title: '@OnRPC'
+title: '@OnRPC (Client)'
 description: Registers a client-side RPC handler.
 ---
 

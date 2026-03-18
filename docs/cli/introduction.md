@@ -7,19 +7,19 @@ title: CLI Overview
 The **OpenCore CLI** is the official command-line tool used to **build, validate, and orchestrate OpenCore-based projects**.
 
 It is not a generic TypeScript compiler.  
-It understands **FiveM/RedM runtimes**, **OpenCore architecture**, and the constraints of each execution environment.
+It understands **FiveM, RageMP, RedM runtimes**, **OpenCore architecture**, and the constraints of each execution environment.
 
 Conceptually, it plays a role similar to:
 - NestJS CLI (project orchestration)
 - Vite (fast, opinionated builds)
 
-…but designed **specifically** for FiveM and RedM and OpenCore.
+…but designed **specifically** for FiveM, RageMP, RedM and OpenCore.
 
 ---
 
-## What problem does it solve? 🧠
+## What problem does it solve? 
 
-FiveM/RedM is not a single runtime.
+FiveM/RageMP/RedM is not a single runtime.
 
 You are dealing with:
 - Node.js (server)
@@ -76,7 +76,7 @@ The CLI supports them, but does not enforce framework rules.
 
 ---
 
-## High-level build flow 🔁
+## High-level build flow 
 
 ```
 
@@ -90,7 +90,7 @@ Adapter selection
 ↓
 Parallel compilation
 ↓
-FiveM-ready artifacts
+FiveM/RageMP/RedM-ready artifacts
 
 ````
 
@@ -99,7 +99,7 @@ The CLI infers it from structure and intent.
 
 ---
 
-## Why Go? ⚙️
+## Why Go? 
 
 The CLI and compiler are written in **Go (Golang)** by design.
 
@@ -114,7 +114,7 @@ This makes the CLI reliable in both development and CI environments.
 
 ---
 
-## CLI syntax basics 🧪
+## CLI syntax basics 
 
 Command arguments follow a simple convention:
 
@@ -130,7 +130,7 @@ This mirrors standard CLI conventions and avoids ambiguity.
 
 ---
 
-## Automatic discovery 🔍
+## Automatic discovery 
 
 The CLI performs **automatic project analysis**:
 
@@ -147,7 +147,7 @@ No explicit configuration is required.
 
 ---
 
-## Recommended environment 🧰
+## Recommended environment 
 
 ### Package manager: `pnpm` (recommended)
 
@@ -164,7 +164,7 @@ The CLI is designed around `pnpm`’s dependency model.
 
 ---
 
-## NUI / Views support 🖥️
+## NUI / Views support 
 
 The compiler automatically detects your UI framework and expects the correct adapters to be installed.
 
@@ -185,28 +185,67 @@ No guessing, no silent failures.
 
 ---
 
-## Runtime adapters 🧠
+## Runtime Adapters 
 
-The CLI adapts its behavior based on runtime context:
+An **Adapter** defines the target platform for your project. It controls the build pipeline, output structure, and platform-specific behavior.
 
-* **Server (Node.js)**
-  Full Node APIs allowed
+OpenCore supports multiple platforms through official adapters:
 
-* **Client (Neutral runtime)**
-  Node.js and Web APIs are stripped
+| Adapter | Status | Use Case |
+|---------|--------|----------|
+| **FiveM** | Stable | FiveM server builds |
+| **RageMP** | Stable | Rage Multiplayer builds |
+| **RedM** | Coming Soon | RedM specific optimizations |
+| **Node** | Default | Local development / testing |
 
-* **NUI (Browser)**
-  Standard web environment
+### Defining an Adapter
 
-This ensures:
+Configure your adapter in `opencore.config.ts`:
 
-* Correct bundling
-* No invalid imports
-* Predictable runtime behavior
+```typescript
+import { defineConfig } from '@open-core/cli'
+import { FiveMClientAdapter } from '@open-core/fivem-adapter/client'
+import { FiveMServerAdapter } from '@open-core/fivem-adapter/server'
+
+export default defineConfig({
+  name: 'my-server',
+  destination: '/path/to/server/resources',
+  adapter: {
+    server: FiveMServerAdapter(),
+    client: FiveMClientAdapter(),
+  },
+})
+```
+
+The adapter is the **central runtime switch**. It determines:
+- Build targets and output layout
+- Manifest generation
+- Platform-specific optimizations
+- Runtime behavior
+
+### Project Initialization
+
+When creating a new project, specify the adapter with `--adapter`:
+
+```bash
+# Interactive wizard
+opencore init my-server
+
+# Non-interactive with platform
+opencore init my-server --adapter=fivem
+opencore init my-server --adapter=ragemp
+
+# No adapter (uses framework default - Node)
+opencore init my-server --adapter=none
+```
+
+### Validation
+
+The CLI validates your adapter configuration automatically. Use `opencore doctor` to verify your setup is correct and all dependencies are properly installed.
 
 ---
 
-## Philosophy ✨
+## Philosophy 
 
 The OpenCore CLI is opinionated by design.
 

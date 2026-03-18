@@ -54,10 +54,10 @@ Developer experience is developed **in parallel** with core stabilization.
 Focus: **secure, portable runtime abstraction**.
 
 - Strengthen adapter layer
-- Isolate FiveM-specific assumptions
+- Multi-platform support (FiveM, RageMP, RedM)
 - Enable safe compatibility with:
-  - RedM
   - RageMP
+  - RedM
 - Unified command and event model across runtimes
 - Runtime capability detection and validation
 

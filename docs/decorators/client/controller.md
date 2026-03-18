@@ -4,7 +4,7 @@ title: '@Controller'
 ## Description
 ``@Controller()`` is a class decorator used to declare a class as a client-side controller.
 
-A client controller groups logic that runs on the client, such as UI handling, client-side events, NUI interactions, or client-only gameplay behavior.
+A client controller groups logic that runs on the client, such as UI handling, client-side events, WebView interactions, or client-only gameplay behavior.
 This decorator enables dependency injection, attaches controller metadata, and registers the class so the client runtime can automatically discover and initialize it.
 
 Client controllers are scoped per resource, allowing multiple resources to define their own isolated client logic.`

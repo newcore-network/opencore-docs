@@ -232,7 +232,7 @@ setPrincipalProvider(MyPrincipalProvider) // ❌ ignored
 
 During bootstrap, OpenCore:
 
-1. Registers platform adapters (FiveM / Node)
+1. Registers platform adapters (FiveM / RageMP / Node)
 2. Registers core services
 3. Loads framework controllers
 4. Registers system processors

@@ -40,6 +40,12 @@ pnpm install
 
 and ready!
 
+### Add your adapter
+
+After initialization, you need to configure your target platform. OpenCore supports multiple platforms (FiveM, RageMP, RedM, Node) through adapters.
+
+[Learn more about adapters](./adapters)
+
 ### from scratch:
 ```bash
 pnpm add @open-core/framework reflect-metadata tsyringe zod uuid

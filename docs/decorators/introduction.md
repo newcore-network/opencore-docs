@@ -132,7 +132,7 @@ If you remember only one rule:
 | [@OnTick()](./client/on-tick.md) | Executes the method on every client tick. Intended for lightweight, frame-based logic. Heavy computations should be avoided to prevent FPS drops. |
 | [@Interval()](./client/interval.md) | Executes the method at a fixed time interval (in milliseconds). Useful for periodic logic that does not need to run every tick (polling, checks, UI sync). |
 | [@Key()](./client/key.md) | Binds the method to a keyboard key press. Executes when the specified key is pressed by the player. Ideal for gameplay shortcuts or UI interactions. |
-| [@OnView()](./client/on-view.md) | Registers the method as a NUI callback handler. Executed when the UI (HTML/JS) sends a message to the client script. Acts as the bridge between UI and gameplay logic. |
+| [@OnView()](./client/on-view.md) | Registers the method as a WebView callback handler. Executed when the UI (HTML/JS) sends a message to the client script. Acts as the bridge between UI and gameplay logic. |
 | [@Export()](./client/export.md) | Exposes the method as a FiveM client export, allowing other resources to call it directly. Useful for inter-resource client APIs. |
 | [@ResourceLifecycle()](./client/on-resource-start.md) | Subscribes the method to resource lifecycle events (start, stop, restart). Useful for initialization and cleanup logic on the client side. |
 
@@ -142,5 +142,5 @@ If you remember only one rule:
 - Prefer Interval over OnTick when possible to reduce CPU usage.
 - LocalEvent is the recommended way to communicate between client systems.
 - GameEvent is powerful but low-level—use it only when FiveM-native events are insufficient.
-- NUI communication is explicit and isolated through @Nui().
+- WebView communication is explicit and isolated through @OnView().
 - This keeps the client runtime predictable, performant, and clean, even as UI and gameplay complexity grow.

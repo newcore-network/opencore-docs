@@ -23,7 +23,7 @@ Keep these priorities:
 ## Client Guidelines
 
 - Minimize native calls in every frame.
-- Batch UI updates and avoid chatty NUI messages.
+- Batch UI updates and avoid chatty WebView messages.
 - Use `StreamingService` and model preloading to avoid spikes.
 
 ## Parallel Compute

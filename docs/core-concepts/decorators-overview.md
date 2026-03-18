@@ -25,7 +25,7 @@ In this documentation, examples mostly use direct imports for brevity.
 
 ## Why decorators?
 
-Without decorators, most FiveM codebases drift into hidden globals, ad-hoc event registration, and duplicated validation. OpenCore decorators solve this by:
+Without decorators, most multiplayer server codebases drift into hidden globals, ad-hoc event registration, and duplicated validation. OpenCore decorators solve this by:
 
 - Making entry points **explicit** (controllers)
 - Centralizing binding into the **bootstrap phase**
@@ -103,7 +103,7 @@ Decorators provide a stable contract:
 | `@OnTick()` | Executes on every client tick. Avoid heavy computations to prevent FPS drops. |
 | `@Interval()` | Executes at a fixed time interval (ms). Prefer over `OnTick` when possible. |
 | `@Key()` | Binds the method to a keyboard key press. |
-| `@OnView()` | Registers a NUI callback handler (bridge between UI and gameplay logic). |
+| `@OnView()` | Registers a WebView callback handler (bridge between UI and gameplay logic). |
 | `@Export()` | Exposes the method as a FiveM client export. |
 | `@OnResourceStart()` | Runs when the resource starts. |
 | `@OnResourceStop()` | Runs when the resource stops. |
@@ -113,7 +113,7 @@ Decorators provide a stable contract:
 ## Design Notes
 
 - **Server**: Controllers are request-driven (commands, events).
-- **Client**: Controllers are event-driven (keys, ticks, NUI).
+- **Client**: Controllers are event-driven (keys, ticks, WebView).
 - Prefer `@Interval()` over `@OnTick()` when possible to reduce CPU usage.
 - `@LocalEvent()` is the recommended way to communicate between client systems.
 - `@OnGameEvent()` is powerful but low-level — use it only when FiveM-native events are insufficient.

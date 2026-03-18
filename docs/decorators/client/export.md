@@ -1,5 +1,5 @@
 ---
-title: '@Export'
+title: '@Export (Client)'
 ---
 ## Description
 ``@Export()`` is a method decorator used to expose a client-side method as a FiveM client export.

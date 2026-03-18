@@ -4,7 +4,7 @@ title: Libraries Overview
 
 ## Overview
 
-OpenCore provides a set of official libraries designed to solve common problems in FiveM development. These libraries integrate directly with the framework’s dependency injection system and follow the same architectural conventions as the core.
+OpenCore provides a set of official libraries designed to solve common problems in multiplayer game server development. These libraries integrate directly with the framework’s dependency injection system and follow the same architectural conventions as the core.
 
 If you are already working with library runtime wrappers and events, see [Library API Usage](./library-api-usage.md).
 If you are integrating install-time runtime extensions, see [Plugin API Usage](./plugin-api-usage.md).
