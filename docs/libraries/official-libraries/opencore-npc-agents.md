@@ -52,7 +52,6 @@ await Server.init({
 
 ## Guides
 
-- [NPC Agents Overview](/docs/npc-agents/overview)
 - [Getting Started](/docs/npc-agents/getting-started)
 - [Controllers and Skills](/docs/npc-agents/controllers-and-skills)
 - [Connected Mode](/docs/npc-agents/connected-mode)
