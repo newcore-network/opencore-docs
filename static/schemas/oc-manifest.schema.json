@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://opencorejs.dev/schemas/oc-manifest.schema.json",
-  "title": "OpenCore Resource Template Manifest",
+  "title": "OpenCore Template Manifest",
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion", "name", "kind"],
@@ -23,7 +23,7 @@
     },
     "kind": {
       "type": "string",
-      "enum": ["resource", "standalone"]
+      "enum": ["resource", "standalone", "core"]
     },
     "description": {
       "type": "string"
