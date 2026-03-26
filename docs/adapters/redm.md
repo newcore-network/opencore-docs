@@ -60,7 +60,7 @@ RedM requires specific manifest settings:
 fx_version 'cerulean'
 game 'rdr3'
 
-rdr3_warning 'I acknowledge that this is a proprietary RAGE:MP/RedM software and I am not authorized to modify or distribute it without explicit permission from the authors.'
+rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
 
 server_scripts {
   'server.js'
@@ -142,7 +142,7 @@ The following are planned for the standalone RedM adapter:
 
 - **Dedicated RedM Server Adapter** — Package with RDR3-specific platform context
 - **RDR3-Specific Natives** — Horse spawning, RDR2 weapon system
-- **RedM-Specific UI** — RDR-style notifications and menus
+- **RedM-Specific APIS** — RDR-style apis like horses
 - **Enhanced Appearance** — Full RDR3 character customization
 
 ---
