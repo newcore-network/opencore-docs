@@ -12,6 +12,8 @@ pnpm add @open-core/ragemp-adapter
 
 [NPM](https://www.npmjs.com/package/@open-core/ragemp-adapter) | [GitHub](https://github.com/newcore-network/opencore-ragemp-adapter)
 
+For adapter maintenance, run `opencore adapter check` inside the adapter repository to verify contract coverage against the framework baseline.
+
 ---
 
 ## Server Contracts

@@ -71,6 +71,36 @@ pnpm add @open-core/fivem-adapter
 pnpm add @open-core/ragemp-adapter
 ```
 
+## Validating Adapter Coverage
+
+If you maintain an adapter package, use the CLI helper command to verify that your adapter still covers the framework contracts expected by OpenCore:
+
+```bash
+# run inside the adapter repository
+opencore adapter check
+
+# fail on optional parity gaps too
+opencore adapter check --strict
+```
+
+The command compares your adapter's server and client bindings against the framework's default adapter baseline.
+
+It is useful when:
+
+- new contracts are added to the framework
+- you are upgrading `@open-core/framework`
+- you want a fast verification step in CI for adapter packages
+
+By default the report separates:
+
+- **required contracts** that must exist for the adapter to pass
+- **optional parity gaps** that are reported as warnings unless `--strict` is used
+
+Reference:
+
+- [CLI Commands](../cli/commands.md)
+- [Contracts Introduction](../contracts/introduction.md)
+
 ## Usage
 
 Import and pass the adapter during initialization:

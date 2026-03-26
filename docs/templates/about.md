@@ -19,6 +19,21 @@ A collection of official resource boilerplates and production-ready implementati
 ## Usage
 You can instantiate templates using the OpenCore CLI or by cloning the official template repositories.
 
+### Template metadata
+
+Official templates can publish an `oc.manifest.json` file that declares:
+
+- template kind (`resource`, `standalone`, or `core`)
+- runtime compatibility (`fivem`, `redm`, `ragemp`)
+- game profile compatibility (`common`, `gta5`, `rdr3`)
+- dependencies on other templates through `requires.templates`
+
+This metadata is used by the CLI to show compatibility in `opencore clone --list` and to validate `opencore clone <template>` against the current project runtime.
+
+Read the full format here:
+
+- [Template Manifests](./manifest)
+
 ---
 
 :::info Community Templates

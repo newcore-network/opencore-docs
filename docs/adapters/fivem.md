@@ -12,6 +12,8 @@ pnpm add @open-core/fivem-adapter
 
 [NPM](https://www.npmjs.com/package/@open-core/fivem-adapter) | [GitHub](https://github.com/newcore-network/opencore-fivem-adapter)
 
+For adapter maintenance, run `opencore adapter check` inside the adapter repository to verify contract coverage against the framework baseline.
+
 ---
 
 ## Server Contracts

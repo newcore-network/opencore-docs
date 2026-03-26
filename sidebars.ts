@@ -289,6 +289,7 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'templates/about',
+        'templates/manifest',
       ],
     },
 

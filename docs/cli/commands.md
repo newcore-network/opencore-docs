@@ -119,6 +119,9 @@ Generates standardized boilerplate.
 * `standalone [name]`
   Creates an independent script under `standalones/`
 
+* `manifest`
+  Creates an example `oc.manifest.json` for an existing `core/`, `resources/<name>/`, or `standalones/<name>/` directory
+
 #### Flags
 
 * `-r, --resource <name>`
@@ -129,6 +132,14 @@ Generates standardized boilerplate.
 
 * `--with-nui`
   Include Web/Views scaffolding
+
+#### Manifest examples
+
+```bash
+opencore create manifest --resource xchat
+opencore create manifest --standalone utils
+opencore create manifest --core
+```
 
 ---
 
@@ -141,6 +152,13 @@ Options:
 
 * `-l, --list` – List available templates
 * `--api` – Use GitHub API if `git` is unavailable
+* `--force` – Clone even if template manifest compatibility does not match the current project runtime
+
+If a template ships `oc.manifest.json`, the CLI uses it to:
+
+- show compatibility in `opencore clone --list`
+- validate runtime compatibility during `clone`
+- keep templates without manifests backward compatible as `unknown`
 
 Useful for:
 
@@ -165,6 +183,58 @@ Recommended to run when:
 
 * Setting up a new machine
 * Debugging unexpected behavior
+
+---
+
+### `opencore adapter check`
+
+Validates an external adapter package against the OpenCore framework adapter baseline.
+
+Designed for repositories such as:
+
+* `@open-core/fivem-adapter`
+* `@open-core/ragemp-adapter`
+* custom third-party adapter packages
+
+What it validates:
+
+* Server contract coverage against the framework server adapter baseline
+* Client contract coverage against the framework client adapter baseline
+* Transport bindings registered through helper methods such as `bindMessagingTransport(...)`
+* Optional parity gaps that should be reviewed by adapter maintainers
+
+Examples:
+
+```bash
+# inside an adapter repository
+opencore adapter check
+
+# fail on optional gaps too
+opencore adapter check --strict
+
+# JSON output for CI or scripts
+opencore adapter check --json
+```
+
+Flags:
+
+* `--strict`
+  Treat optional parity gaps as failures
+
+* `--json`
+  Print the report as JSON
+
+By default, the command distinguishes between:
+
+* **Required contracts** — missing bindings fail the command
+* **Optional parity gaps** — missing bindings show as warnings unless `--strict` is used
+
+This command is meant for adapter maintainers rather than normal OpenCore project setup.
+
+Reference:
+
+* [Adapters](../adapters/index.md)
+* [Contracts Introduction](../contracts/introduction.md)
 
 ---
 
