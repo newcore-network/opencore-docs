@@ -220,7 +220,8 @@ async spawnCar(player: Server.Player, data: { model: string }) {
 ];
 const PLATFORMS = [
     { name: 'FiveM', style: 'gradientText' },
-    { name: 'RedM', style: 'redMText' }
+    { name: 'RedM', style: 'redMText' },
+    { name: 'Rage Multiplayer', style: 'rageMPText' }
 ] as const;
 
 const RELEASE_URL = 'https://api.github.com/repos/newcore-network/opencore/releases/latest';

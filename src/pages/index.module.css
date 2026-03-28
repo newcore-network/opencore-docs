@@ -203,6 +203,15 @@
   display: inline-block;
 }
 
+.rageMPText {
+  background: linear-gradient(to right, #fff06b, #ee955ae0, #c9a42a);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  display: inline-block;
+}
+
 .fadeOut {
   opacity: 0 !important;
   transform: translateY(-10px) !important;
