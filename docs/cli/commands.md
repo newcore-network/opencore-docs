@@ -96,10 +96,14 @@ What happens internally:
 * Parallel compilation using all CPU cores
 * Runtime-aware bundling (server / client / Views)
 * Dependency linking to avoid duplicated `node_modules`
+* Views are resolved as `vite` or `vanilla`, depending on project config and detected Vite configs
 * Detection of native Node.js packages incompatible with FiveM
 * Minification and cleanup of development metadata
 
 This command produces **ready-to-run FiveM resources**.
+
+For modern UIs, keep a shared root `vite.config.*` and use `@open-core/cli/vite` as the base helper.
+Per-view scripts are optional and only useful for local development.
 
 ---
 

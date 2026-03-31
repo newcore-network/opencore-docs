@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import clsx from 'clsx';
 import styles from './index.module.css';
 import { HeroCode } from '../components/HeroCode';
- 
+
 const CODE_EXAMPLE = `@Server.Controller()
 export class BankController {
   @Server.Guard({ rank: 1 })
@@ -14,7 +14,7 @@ export class BankController {
     await this.bankService.move(player, amount, targetId)
   }
 }`;
- 
+
 const COMPARISON_TABS = [
     {
         id: 'opencore',
@@ -76,7 +76,7 @@ export class InventoryController {
 end, false)`
     }
 ];
- 
+
 const FEATURES_DATA = [
     {
         id: 'commands',
@@ -154,7 +154,7 @@ player.kick('AFK timeout')`,
   timeoutMs: 30000 
 })
 export class ImageService {
-  /** Processes image resize externally without blocking FiveM main thread */
+  /** Processes image resize externally without blocking FiveM/RageMP main thread */
   @Server.BinaryCall()
   async resize(path: string, width: number, height: number): Promise<{ success: boolean; url: string }> {
     return null as any; // The framework handles the return of values
@@ -262,12 +262,12 @@ export default function Home(): JSX.Element {
                         <div className={styles.heroContent}>
                             <div className={styles.badge}>
                                 <span className={styles.badgeDot}></span>
-                                {tag} Open Stable Beta
+                                {tag}
                             </div>
                             <h1 className={styles.heroTitle}>
                                 The Industrial <br />
                                 <span className={styles.gradientText}>Runtime for</span>{' '}
-                                <span 
+                                <span
                                     className={clsx(
                                         styles[PLATFORMS[platformIndex].style],
                                         isTransitioning && styles.fadeOut
@@ -307,7 +307,7 @@ export default function Home(): JSX.Element {
                         </div>
                     </div>
                 </section>
- 
+
                 {/* CODE COMPARISON WITH TABS */}
                 <section className={styles.comparison}>
                     <div className={styles.sectionHeader}>
@@ -337,7 +337,7 @@ export default function Home(): JSX.Element {
                         </div>
                     </div>
                 </section>
- 
+
                 {/* FEATURES GRID */}
                 <section className={styles.features}>
                     <div className={styles.sectionHeader}>
@@ -371,7 +371,7 @@ export default function Home(): JSX.Element {
                         </div>
                     </div>
                 </section>
- 
+
                 {/* STATS - BENCHMARKS */}
                 <section className={styles.stats}>
                     <div className={styles.sectionHeader}>
@@ -385,7 +385,7 @@ export default function Home(): JSX.Element {
                         <StatItem value="251.10K" label="RPC throughput" sublabel="500 parallel RPCs, p95 1.83 ms" />
                     </div>
                 </section>
- 
+
                 {/* CTA */}
                 <section className={styles.cta}>
                     <h2>Ready to build?</h2>
@@ -398,7 +398,7 @@ export default function Home(): JSX.Element {
         </Layout>
     );
 }
- 
+
 function StatItem({ value, label, sublabel }: { value: string; label: string; sublabel?: string }) {
     return (
         <div className={styles.statItem}>

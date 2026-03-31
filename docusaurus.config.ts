@@ -112,7 +112,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} OpenCore Framework. Built with passion for the Cfx ecosystem.`
+      copyright: `Copyright © ${new Date().getFullYear()} OpenCore Framework. Built with passion for the Game ecosystem.`
     },
     prism: {
       theme: prismThemes.github,          

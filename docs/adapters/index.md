@@ -135,6 +135,6 @@ OpenCore automatically detects the platform at runtime. The adapter you provide 
 
 ## Next Steps
 
-- [FiveM](./fivem) — FiveM/RedM (Cfx) specifics
+- [FiveM](./fivem) — FiveM specifics
 - [RageMP](./ragemp) — Rage Multiplayer specifics
 - [RedM](./redm) — Red Dead Redemption specifics

@@ -21,8 +21,9 @@ title: Releases
 - Added `oc.manifest.json` support for official templates, including runtime compatibility, game profiles, template dependencies, and schema validation.
 - Added `opencore create manifest` and `opencore adapter check` for easier template authoring and adapter package validation.
 - Improved `opencore clone` with compatibility checks, `--force`, manifest-aware listing, and safer RageMP cloning behavior.
-- Added configurable dev restart modes (`auto`, `process`, `txadmin`, `none`), better JSX/TSX and Vite views support, and release channel support for `stable` and `beta` updates.
+- Added configurable dev restart modes (`auto`, `process`, `txadmin`, `none`), better JSX/TSX and Vite views support, and release channel support for stable updates.
 
 ### Notes
 
 - Older release entries were removed to keep this page focused on the current framework and CLI release line.
+

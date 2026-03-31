@@ -7,19 +7,19 @@ title: CLI Overview
 The **OpenCore CLI** is the official command-line tool used to **build, validate, and orchestrate OpenCore-based projects**.
 
 It is not a generic TypeScript compiler.  
-It understands **FiveM, RageMP, RedM runtimes**, **OpenCore architecture**, and the constraints of each execution environment.
+It understands **FiveM, RageMP, and RedM runtimes**, **OpenCore architecture**, and the constraints of each execution environment.
 
 Conceptually, it plays a role similar to:
 - NestJS CLI (project orchestration)
 - Vite (fast, opinionated builds)
 
-…but designed **specifically** for FiveM, RageMP, RedM and OpenCore.
+…but designed **specifically** for FiveM, RageMP, RedM, and OpenCore.
 
 ---
 
 ## What problem does it solve? 
 
-FiveM/RageMP/RedM is not a single runtime.
+FiveM, RageMP, and RedM are not a single runtime.
 
 You are dealing with:
 - Node.js (server)
@@ -90,7 +90,7 @@ Adapter selection
 ↓
 Parallel compilation
 ↓
-FiveM/RageMP/RedM-ready artifacts
+runtime-ready artifacts
 
 ````
 
@@ -166,20 +166,20 @@ The CLI is designed around `pnpm`’s dependency model.
 
 ## NUI / Views support 
 
-The compiler automatically detects your UI framework and expects the correct adapters to be installed.
+OpenCore treats views as browser builds handled by Vite or a minimal vanilla fallback.
 
-Supported setups include:
+Supported modes:
 
-* **React** → `react`, `react-dom`
-* **Vue** → `vue`, `esbuild-plugin-vue3`
-* **Svelte** → `svelte`, `esbuild-svelte`
-* **SASS / SCSS** → `sass`, `esbuild-sass-plugin`
+* **Vite** → recommended for React, Vue, Svelte, Astro, Tailwind, PostCSS, Sass, and other modern UI stacks
+* **Vanilla** → simple HTML/CSS/JS/TS pages compiled directly by the CLI
 
-If required dependencies are missing:
+The CLI also exposes `createOpenCoreViteConfig` from `@open-core/cli/vite` so project-level Vite configs can stay small and consistent.
+
+If required dependencies are missing or a legacy framework mode is used:
 
 * The build fails
 * A clear error is shown
-* The exact `pnpm add` command is suggested
+* The migration path points you to `framework: 'vite'`
 
 No guessing, no silent failures.
 
@@ -195,7 +195,7 @@ OpenCore supports multiple platforms through official adapters:
 |---------|--------|----------|
 | **FiveM** | Stable | FiveM server builds |
 | **RageMP** | Stable | Rage Multiplayer builds |
-| **RedM** | Coming Soon | RedM specific optimizations |
+| **RedM** | Stable | RedM-specific builds and contracts |
 | **Node** | Default | Local development / testing |
 
 ### Defining an Adapter

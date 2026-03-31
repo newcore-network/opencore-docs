@@ -4,7 +4,7 @@ title: FiveM
 
 ## Overview
 
-The **FiveM adapter** connects OpenCore with CitizenFX (FiveM/RedM) runtimes. It implements all framework contracts using FiveM's native APIs.
+The **FiveM adapter** connects OpenCore with the FiveM runtime family. It implements all framework contracts using FiveM's native APIs.
 
 ```bash
 pnpm add @open-core/fivem-adapter

@@ -242,6 +242,7 @@ The recommended approach is using the OpenCore CLI, which provides:
 * Parallel builds
 * Runtime-aware bundling
 * ESBuild + SWC under the hood
+* Shared Vite helper support for UI projects through `@open-core/cli/vite`
 
 ```bash
 opencore build
@@ -251,6 +252,8 @@ You may also:
 
 * Use your own build scripts
 * Define a custom compiler per resource using `compilerCustom`
+
+For UI projects, keep a shared root `vite.config.*` and let the helper resolve PostCSS and the OpenCore view root automatically.
 
 See the CLI documentation for details:
 [Read more](../cli/commands.md)

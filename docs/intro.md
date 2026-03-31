@@ -28,5 +28,5 @@ OpenCore is built for developers and teams who:
 
 ## Project Status
 
-OpenCore is currently in **Open Stable Beta**.
-The Core APIs are considered stable ("frozen"), but the ecosystem is still evolving. We recommend this framework for new projects aiming for high stability or for teams looking to refactor legacy codebases into a modern architecture.
+OpenCore is currently on the **stable branch**.
+The Core APIs are considered stable ("frozen"), and the ecosystem is now tracked as a stable release line. We recommend this framework for new projects aiming for high stability or for teams looking to refactor legacy codebases into a modern architecture.
