@@ -583,7 +583,7 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 1.5rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 @media (max-width: 900px) {
@@ -648,12 +648,10 @@
 }
 
 .featPreview {
-  composes: codeBlock;
   position: sticky;
   top: 80px;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+  border-radius: var(--hc-radius);
+  overflow: hidden;
 }
 
 @media (max-width: 900px) {
@@ -663,7 +661,14 @@
 }
 
 .featPreviewBar {
-  composes: codeBar;
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  background: var(--hc-surface);
+  border: 1px solid var(--hc-border);
+  border-bottom: none;
+  border-radius: var(--hc-radius) var(--hc-radius) 0 0;
+  gap: 0.5rem;
 }
 
 .featPreviewTitle {
@@ -674,10 +679,20 @@
 }
 
 .featPreviewBody {
-  composes: codeBody;
-  flex: 1;
-  overflow-y: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 0;
+  border: 1px solid var(--hc-border);
+  border-top: none;
+  border-radius: 0 0 var(--hc-radius) var(--hc-radius);
+}
+
+.featPreviewBody :global(pre) {
+  margin: 0;
+  padding: 1rem 1.25rem;
 }
 
 .featDesc {
@@ -685,8 +700,9 @@
   font-size: 0.82rem;
   color: var(--hc-text-2);
   line-height: 1.5;
-  border-bottom: 1px solid var(--hc-border);
-  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--hc-border);
+  border-top: none;
+  background: var(--hc-surface);
 }
 
 .perfGrid {
