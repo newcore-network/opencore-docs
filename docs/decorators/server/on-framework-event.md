@@ -11,37 +11,45 @@ This decorator allows controllers to react to those internal events in a structu
 
 The decorator does not bind the event immediately. It stores metadata that the framework later reads during bootstrap to attach the method as an event listener.
 
-This only works within each resource context; that is, if it's in the core, it only listens for events that will be sent within the core. There is no communication between resources here!
+Unlike `@OnRuntimeEvent`, the handler receives a framework-defined payload. Built-in framework events now work both locally and across `CORE -> RESOURCE` through the internal framework bridge.
+
+Delivery behavior:
+
+- `STANDALONE`: local only
+- `CORE`: local only plus bridge dispatch to resources
+- `RESOURCE`: receives bridged events from `CORE` and local framework events from its own runtime
+
+When a built-in event crosses from `CORE` to `RESOURCE`, OpenCore serializes the transport payload and rehydrates framework objects like `Player` before invoking your listener.
 
 ## Arguments
 `event` - The name of the internal framework event.
 
-The event name is strongly typed and must be a valid key of InternalEventMap.
+The event name is strongly typed and must be a valid key of `FrameworkEventsMap`.
 The method signature should accept the payload type associated with the selected event.
 
 ## Events and Types
-Use this type from the Server namespace, e.g:  `PlayerSessionCreatedPayload`
+Use these types from the server package, for example `PlayerSessionCreatedPayload`.
 
-- `internal:playerSessionCreated`: emmited as soon as the player session is created.
+- `internal:playerSessionCreated`: emitted as soon as the player session is created.
 ```ts
 interface PlayerSessionCreatedPayload {
   clientId: number
   license: string | undefined
 }
 ```
-- `internal:playerSessionDestroyed`: emmited as soon as the player session is destroyed.
+- `internal:playerSessionDestroyed`: emitted as soon as the player session is destroyed.
 ```ts
 interface PlayerSessionDestroyedPayload {
   clientId: number
 }
 ```
-- `internal:playerFullyConnected`: It is emitted when the player is deemed safe to manage.
+- `internal:playerFullyConnected`: emitted when the player is deemed safe to manage.
 ```ts
 interface PlayerFullyConnectedPayload {
   player: Player
 }
 ```
-- `internal:playerSessionRecovered`: It is emitted when session has been recovered, this usually only happens when there is a core restart.
+- `internal:playerSessionRecovered`: emitted when a session has been recovered, usually after a core restart.
 ```ts
 interface PlayerSessionRecoveredPayload {
   clientId: number
@@ -57,7 +65,7 @@ interface PlayerSessionRecoveredPayload {
 export class SystemController {
   @OnFrameworkEvent('internal:playerFullyConnected')
   onPlayerConnected(payload: PlayerFullyConnectedPayload) {
-    console.log(`Player ${payload.player.id} connected`)
+    console.log(`Player ${payload.player.clientID} connected`)
   }
 }
 ```
@@ -67,5 +75,7 @@ When the framework emits this event, the method is invoked with a strongly typed
 ## Notes
 - This decorator only stores metadata; event binding occurs during server bootstrap.
 - Internal events are emitted by the OpenCore framework, not by FiveM.
-- The payload type is determined by the InternalEventMap definition.
+- The payload type is determined by `FrameworkEventsMap`.
+- Built-in framework events can be delivered from `CORE` to `RESOURCE`.
+- Bridged events keep the same public payload shape in listeners.
 - This decorator is intended for server-side controllers only.

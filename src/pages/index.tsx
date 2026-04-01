@@ -473,13 +473,20 @@ export default function Home(): JSX.Element {
                 <section className={styles.stats}>
                     <div className={styles.sectionHeader}>
                         <h2>Performance</h2>
-                        <p>Internal benchmarks - 26/02/2026</p>
+                        <p>Value-focused benchmark suite, latest validated local run</p>
                     </div>
                     <div className={styles.statGrid}>
-                        <StatItem value="17.78M" label="EventInterceptor ops/sec" sublabel="getStatistics, ~0.056 us mean" />
-                        <StatItem value="10.49M" label="RuntimeConfig ops/sec" sublabel="resolve CORE, ~0.095 us mean" />
-                        <StatItem value="80.14K" label="Commands throughput" sublabel="500 players (simple), p95 0.226 ms" />
-                        <StatItem value="251.10K" label="RPC throughput" sublabel="500 parallel RPCs, p95 1.83 ms" />
+                        <StatItem value="115.68K" label="Validated commands" sublabel="100 players, p95 0.012 ms" />
+                        <StatItem value="74.42K" label="Full net events" sublabel="small payload, p95 0.029 ms" />
+                        <StatItem value="93.12K" label="Real tick budget" sublabel="setTick with 50 handlers, p95 0.021 ms" />
+                        <StatItem value="350.12K" label="Binary round-trip" sublabel="50 calls, p95 0.0092 ms" />
+                        <StatItem value="200.55K" label="Player lifecycle" sublabel="full cycle at 500 players, p95 0.0096 ms" />
+                        <StatItem value="205.87" label="Bootstrap scale" sublabel="100 controllers, p95 6.37 ms" />
+                    </div>
+                    <div className={styles.heroActions}>
+                        <Link className={clsx('button button--lg', styles.secondaryBtn)} to="/docs/advanced/benchmarks">
+                            Full benchmark report
+                        </Link>
                     </div>
                 </section>
 
