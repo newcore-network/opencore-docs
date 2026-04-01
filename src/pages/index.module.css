@@ -693,6 +693,7 @@
 .featPreviewBody :global(pre) {
   margin: 0;
   padding: 1rem 1.25rem;
+  border-radius: 0 0 var(--hc-radius) var(--hc-radius) !important;
 }
 
 .featDesc {
