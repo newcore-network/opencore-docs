@@ -599,7 +599,7 @@ div[class*="codeBlockTitle"] {
 
 div[class*="buttonGroup"] {
   position: absolute;
-  top: 0.5rem;
+  top: 0.7rem;
   right: 0.55rem;
   display: flex;
   gap: 0.25rem;
