@@ -599,9 +599,8 @@ div[class*="codeBlockTitle"] {
 
 div[class*="buttonGroup"] {
   position: absolute;
-  top: 50%;
+  top: 0.5rem;
   right: 0.55rem;
-  transform: translateY(-50%);
   display: flex;
   gap: 0.25rem;
   opacity: 0;
@@ -689,7 +688,7 @@ div[class*="codeBlockTitle"] ~ div div[class*="buttonGroup"],
 div[class*="codeBlockTitle"]
   + div[class*="codeBlockContent"]
   div[class*="buttonGroup"] {
-  top: calc(50% + 1.05rem);
+  top: 0.5rem;
 }
 
 div[class*="codeBlockLines"] {
