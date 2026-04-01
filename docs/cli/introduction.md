@@ -195,7 +195,7 @@ OpenCore supports multiple platforms through official adapters:
 |---------|--------|----------|
 | **FiveM** | Stable | FiveM server builds |
 | **RageMP** | Stable | Rage Multiplayer builds |
-| **RedM** | Stable | RedM-specific builds and contracts |
+| **RedM** | Coming Soon | RedM-specific runtime path under the same adapter model |
 | **Node** | Default | Local development / testing |
 
 ### Defining an Adapter

@@ -126,7 +126,7 @@ opencore init my-server --adapter=ragemp
 
 ## Platform Detection
 
-OpenCore automatically detects the platform at runtime. The adapter you provide determines:
+OpenCore uses the adapter you provide at runtime to determine:
 
 - Which native APIs are available
 - How player identifiers are handled

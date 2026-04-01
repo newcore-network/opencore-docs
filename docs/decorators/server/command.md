@@ -94,7 +94,8 @@ Validation rules:
 ## Example
 
 ```ts
-import { z, Infer } from '@open-core/framework'
+import { Command, Controller, Player } from '@open-core/framework/server'
+import { z } from 'zod'
 
 const BanSchema = z.object({
   targetId: z.number().min(0).max(65565),
@@ -124,16 +125,17 @@ export class AdminController {
   @Command({
     command: 'ban',
     usage: '/ban <playerId:number> <reason:text>',
+    schema: BanSchema,
     description: 'Ban a player from the server',
-  }, BanSchema)
-  ban(player: Player, data: Infer<typeof BanSchema>) {
-    // data is strongly typed and validated by Zod
+  })
+  ban(player: Player, targetId: number, reason: string) {
+    // schema keys match parameter names and are expanded into positional arguments
   }
 
   // Short form with schema
   @Command('dosomething', BanSchema)
-  doSomething(player: Player, data: Infer<typeof BanSchema>) {
-    // concise, strongly typed command
+  doSomething(player: Player, targetId: number, reason: string) {
+    // concise, strongly typed command with named validation
   }
 
   // Command with spread parameters
@@ -153,6 +155,7 @@ In these examples:
 * Commands are discovered globally but executed in the defining resource.
 * Argument validation happens before execution.
 * Invalid usage or type errors automatically result in a player-facing error message.
+* `z.object(...)` schemas are mapped by handler parameter name, then passed as positional arguments.
 * Spread parameters allow flexible input without manual parsing.
 
 ---
@@ -164,7 +167,8 @@ In these examples:
 * The first parameter is always `Player`.
 * Primitive arguments have basic validation; complex data or strict rules require a schema.
 * Spread parameters are supported from `v0.3.x` onward.
-* `z` and `Infer` are framework-provided wrappers around Zod. You may use Zod directly, but the wrappers are recommended to ensure version compatibility.
+* For object schemas, the schema keys must match the method parameter names after `Player`.
+* You can use Zod directly from `zod` or the framework wrapper if your project standardizes on it.
 * Commands are authenticated by default and can be combined with `@Guard()`, `@Throttle()`, `@RequiresState()`, and `@Public()` for security and gameplay rules.
 
 ```

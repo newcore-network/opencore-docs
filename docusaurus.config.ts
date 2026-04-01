@@ -47,6 +47,22 @@ const config: Config = {
     ],
   ],
 
+  themes: [
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        indexDocs: true,
+        indexBlog: false,
+        indexPages: false,
+        docsRouteBasePath: '/docs',
+        language: ['en'],
+        hashed: true,
+        highlightSearchTermsOnTargetPage: true,
+        searchBarPosition: 'right',
+      },
+    ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
     colorMode: {

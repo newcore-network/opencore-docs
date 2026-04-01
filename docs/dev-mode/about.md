@@ -40,14 +40,12 @@ The framework always runs normally. Development Mode **observes and assists**, i
 Development Mode is enabled during server initialization:
 
 ```ts
-init({
+import { init } from '@open-core/framework/server'
+
+await init({
   mode: 'CORE',
   devMode: {
     enabled: true,
-    bridge: {
-      url: 'ws://localhost:8080',
-      autoConnect: true,
-    },
     interceptor: {
       enabled: true,
       recordHistory: true,
@@ -59,7 +57,24 @@ init({
     },
   },
 })
-````
+```
+
+If you also want CLI log streaming and restart orchestration, pair it with `opencore.config.ts`:
+
+```ts
+import { defineConfig } from '@open-core/cli'
+
+export default defineConfig({
+  dev: {
+    bridge: {
+      port: 3847,
+    },
+    restart: {
+      mode: 'auto',
+    },
+  },
+})
+```
 
 ---
 

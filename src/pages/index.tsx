@@ -5,13 +5,20 @@ import clsx from 'clsx';
 import styles from './index.module.css';
 import { HeroCode } from '../components/HeroCode';
 
-const CODE_EXAMPLE = `@Server.Controller()
+const CODE_EXAMPLE = `
+const TransferSchema = z.object({
+  targetId: z.coerce.number().int().positive(),
+  amount: z.coerce.number().positive(),
+})
+
+@Controller()
 export class BankController {
-  @Server.Guard({ rank: 1 })
-  @Server.Throttle(1, 2000)
-  @Server.Command('transfer')
-  async transfer(player: Server.Player, amount: number, targetId: number) {
-    await this.bankService.move(player, amount, targetId)
+  @Command({ command: 'transfer', usage: '/transfer <id> <amount>', schema: TransferSchema })
+  @Guard({ permission: 'bank.transfer' })
+  @Throttle(1, 2000)
+  async transfer(player: Player, targetId: number, amount: number) {
+    await this.bankService.move(player.clientID, targetId, amount)
+    player.send('Transfer completed', 'success')
   }
 }`;
 
@@ -20,14 +27,21 @@ const COMPARISON_TABS = [
         id: 'opencore',
         label: 'OpenCore',
         lang: 'InventoryController.ts',
-        code: `@Server.Controller()
+        code: `
+const GiveItemSchema = z.object({
+  targetId: z.coerce.number().int().positive(),
+  item: z.string().min(1),
+  amount: z.coerce.number().int().positive(),
+})
+
+@Controller()
 export class InventoryController {
-  constructor(private inventory: InventoryService) {}
+  constructor(private readonly inventory: InventoryService) {}
  
-  @Server.Guard({ permission: 'inventory.give' })
-  @Server.Throttle(5, 1000)
-  @Server.Command('giveitem')
-  async giveItem(player: Server.Player, targetId: number, item: string, amount: number) {
+  @Command({ command: 'giveitem', usage: '/giveitem <id> <item> <amount>', schema: GiveItemSchema })
+  @Guard({ permission: 'inventory.give' })
+  @Throttle(5, 1000)
+  async giveItem(player: Player, targetId: number, item: string, amount: number) {
     await this.inventory.addItem(targetId, item, amount)
     player.send('Item given!', 'success')
   }
@@ -82,9 +96,10 @@ const FEATURES_DATA = [
         id: 'commands',
         icon: '⌨️',
         title: 'Commands',
-        description: 'Declarative handlers with Zod validation and Player Entity by default',
-        code: `@Server.Command('heal', z.tuple([z.number()]))
-async heal(player: Server.Player, targetId: number) {
+        description: 'Declarative handlers with Zod validation and Player injection by default',
+        code: `
+@Command('heal', z.tuple([z.coerce.number().int().positive()]))
+async heal(player: Player, targetId: number) {
   const target = this.players.getById(targetId)
   target.setHealth(200)
   player.send('Healed ' + target.name, 'success')
@@ -92,19 +107,59 @@ async heal(player: Server.Player, targetId: number) {
         filename: 'HealthController.ts'
     },
     {
+        id: 'netevents',
+        icon: '📡',
+        title: 'Network Events',
+        description: 'Typed event handlers with Player context and payload validation',
+        code: `
+const BankActionSchema = z.object({
+  action: z.enum(['deposit', 'withdraw']),
+  amount: z.coerce.number().int().positive(),
+})
+
+@Controller()
+export class BankEventsController {
+  @OnNet('bank:action', BankActionSchema)
+  async onAction(player: Player, payload: z.infer<typeof BankActionSchema>) {
+    await this.bank.handle(player.clientID, payload)
+  }
+}`,
+        filename: 'BankEventsController.ts'
+    },
+    {
+        id: 'libraries',
+        icon: '🧩',
+        title: 'Library Events',
+        description: 'Emit domain events between modules without coupling resources together',
+        code: `
+const characters = Server.createServerLibrary('characters')
+
+@Controller()
+export class CharacterListeners {
+  @OnLibraryEvent('characters', 'session:created')
+  onSessionCreated(payload: { sessionId: string; playerId: number }) {
+    this.audit.log('character session ready', payload)
+  }
+}
+
+characters.emit('session:created', { sessionId: 's-42', playerId: 12 })`,
+        filename: 'CharacterListeners.ts'
+    },
+    {
         id: 'guards',
         icon: '🛡️',
         title: 'Guards & Permissions',
         description: 'Role-based access control via decorators',
-        code: `@Server.Guard({ rank: 3 })
-@Server.Command('ban')
-async ban(player: Server.Player, targetId: number, reason: string) {
+        code: `
+@Guard({ rank: 3 })
+@Command('ban')
+async ban(player: Player, targetId: number, reason: string) {
   await this.moderation.ban(targetId, reason)
 }
  
-@Server.Guard({ permission: 'admin.teleport' })
-@Server.Command('tp')
-async teleport(player: Server.Player, x: number, y: number, z: number) {
+@Guard({ permission: 'admin.teleport' })
+@Command('tp')
+async teleport(player: Player, x: number, y: number, z: number) {
   player.teleport({ x, y, z })
 }`,
         filename: 'AdminController.ts'
@@ -114,15 +169,16 @@ async teleport(player: Server.Player, x: number, y: number, z: number) {
         icon: '⏱️',
         title: 'Rate Limiting',
         description: 'Built-in throttling per player, per method',
-        code: `@Server.Throttle(5, 2000)
-@Server.Command('search')
-async search(player: Server.Player, query: string) {
+        code: `
+@Throttle(5, 2000)
+@Command('search')
+async search(player: Player, query: string) {
   return this.market.search(query)
 }
  
-@Server.Throttle({ limit: 1, windowMs: 5000, message: 'Too fast!' })
-@Server.Command('buy')
-async placeOrder(player: Server.Player, itemId: string) {
+@Throttle({ limit: 1, windowMs: 5000, message: 'Too fast!' })
+@Command('buy')
+async placeOrder(player: Player, itemId: string) {
   await this.market.purchase(player, itemId)
 }`,
         filename: 'MarketController.ts'
@@ -148,41 +204,63 @@ player.kick('AFK timeout')`,
         icon: '🔧',
         title: 'Binary Services',
         description: 'Use binaries easily from your favorite compiled languages',
-        code: `@Server.BinaryService({ 
+        code: `
+@BinaryService({ 
   name: 'image-processor', 
   binary: 'img_worker',
   timeoutMs: 30000 
 })
 export class ImageService {
-  /** Processes image resize externally without blocking FiveM/RageMP main thread */
-  @Server.BinaryCall()
+  @BinaryCall()
   async resize(path: string, width: number, height: number): Promise<{ success: boolean; url: string }> {
-    return null as any; // The framework handles the return of values
+    return null as any
   }
-  /** Applies watermark to target image */
-  @Server.BinaryCall({ action: 'watermark' })
+
+  @BinaryCall({ action: 'watermark' })
   async applyWatermark(path: string, text: string): Promise<{ success: boolean }> {
-    return null as any;
+    return null as any
   }
 }`,
         filename: 'BinaryService.ts'
     },
     {
+        id: 'adapters',
+        icon: '🔌',
+        title: 'Adapters',
+        description: 'Target FiveM and RageMP today, with RedM support on the way',
+        code: `
+export default defineConfig({
+  name: 'my-server',
+  adapter: {
+    server: FiveMServerAdapter(),
+    client: FiveMClientAdapter(),
+  },
+})
+
+// RageMP uses the same adapter-first model.
+// RedM is tracked in the same architecture and landing next.`,
+        filename: 'opencore.config.ts'
+    },
+    {
         id: 'devmode',
         icon: '🔍',
         title: 'Dev Mode',
-        description: 'Event interception, player simulation',
-        code: `// - CLI telemetry streaming
-// - Event history & interception
-// - Virtual player simulation
- 
-Server.init({
-    mode: 'CORE',
-    devMode: {
-        enabled: true,
-        interceptor: {}, // Event interceptor configuration for debugging. Captures and records incoming/outgoing network events and commands.
-        simulator: {}, // Player simulator configuration. Allows creating virtual players for testing logic without game clients.
-    }
+        description: 'Runtime inspection with event history and virtual players',
+        code: `
+await init({
+  mode: 'CORE',
+  devMode: {
+    enabled: true,
+    interceptor: {
+      enabled: true,
+      recordHistory: true,
+      maxHistorySize: 1000,
+    },
+    simulator: {
+      enabled: true,
+      autoConnectPlayers: 2,
+    },
+  },
 })`,
         filename: 'DevMode.ts'
     },
@@ -190,14 +268,19 @@ Server.init({
         id: 'cli',
         icon: '⚡',
         title: 'OpenCore CLI',
-        description: 'Monorepo compiler, watcher, scaffolding',
-        code: `$ opencore build    # Parallel builds (<1s)
-$ opencore dev      # Watch mode + hot reload
-$ opencore create resource inventory
-$ opencore check    # Type-check only
+        description: 'Monorepo build, watcher, scaffolding, restart and adapter tooling',
+        code: `$ opencore build    # Parallel production builds
+$ opencore dev      # Watch mode + restart flow
+$ opencore create resource inventory --with-client
+$ opencore doctor   # Validate project configuration
+$ opencore adapter check
+$ opencore clone starter-fivem
  
-# Go + SWC + esbuild = blazing fast
-# Environment isolation enforced`,
+# opencore.config.ts
+dev: {
+  bridge: { port: 3847 },
+  restart: { mode: 'auto' },
+}`,
         filename: 'terminal'
     },
     {
@@ -206,14 +289,16 @@ $ opencore check    # Type-check only
         title: 'Security by Default',
         description: 'Guards, throttles, validation out of the box',
         code: `
-@Server.Guard({ permission: 'admin.spawn' })
-@Server.Throttle(2, 10000)
-@Server.RequiresState('spawned')
-@Server.Command('spawncar', z.object({
-  model: z.string().min(1).max(32)
-})) // Explicit validation if you want, but it is also automatically validated with primitive types (number, string, bool...)
-async spawnCar(player: Server.Player, data: { model: string }) {
-  await this.vehicles.spawn(player, data.model)
+const SpawnCarSchema = z.object({
+  model: z.string().min(1).max(32),
+})
+
+@Guard({ permission: 'admin.spawn' })
+@Throttle(2, 10000)
+@RequiresState({ has: ['spawned'], missing: ['dead'] })
+@Command({ command: 'spawncar', schema: SpawnCarSchema })
+async spawnCar(player: Player, model: string) {
+  await this.vehicles.spawn(player, model)
 }`,
         filename: 'SecurityExample.ts'
     },
@@ -254,8 +339,20 @@ export default function Home(): JSX.Element {
     }, []);
 
     return (
-        <Layout title="OpenCore Framework" description="The TypeScript-first multiplayer runtime for FiveM">
+        <Layout title="OpenCore Framework" description="The TypeScript-first multiplayer runtime for adapter-driven servers">
             <main className={styles.homeContainer}>
+                <section className={styles.topNotice}>
+                    <div className={styles.topNoticeInner}>
+                        <span className={styles.topNoticeIcon}>★</span>
+                        <p className={styles.topNoticeText}>
+                            Enjoying OpenCore? Don&apos;t forget to leave us a star on GitHub.
+                        </p>
+                        <Link className={styles.topNoticeLink} href="https://github.com/newcore-network/opencore">
+                            Star the repo
+                        </Link>
+                    </div>
+                </section>
+
                 {/* HERO */}
                 <section className={styles.hero}>
                     <div className={styles.heroGrid}>
@@ -278,7 +375,7 @@ export default function Home(): JSX.Element {
                             </h1>
                             <p className={styles.heroSubtitle}>
                                 TypeScript-first framework with Dependency Injection, validation,
-                                and security primitives. Not a gamemode—an engine you can scale.
+                                and security primitives. Built for FiveM and RageMP today, with RedM following the same adapter-first path.
                             </p>
                             <div className={styles.heroActions}>
                                 <Link className={clsx('button button--lg', styles.primaryBtn)} to="/docs/intro">
@@ -312,7 +409,7 @@ export default function Home(): JSX.Element {
                 <section className={styles.comparison}>
                     <div className={styles.sectionHeader}>
                         <h2>Code Comparison</h2>
-                        <p>See the difference between approaches</p>
+                        <p>See the difference between raw runtime code and the framework approach</p>
                     </div>
                     <div className={styles.tabsRow}>
                         {COMPARISON_TABS.map((tab) => (
@@ -342,7 +439,7 @@ export default function Home(): JSX.Element {
                 <section className={styles.features}>
                     <div className={styles.sectionHeader}>
                         <h2>Everything You Need</h2>
-                        <p>Built-in primitives for secure, scalable server development</p>
+                        <p>Built-in primitives for secure, scalable, adapter-first server development</p>
                     </div>
                     <div className={styles.featuresGrid}>
                         {FEATURES_DATA.map((feature) => (
@@ -389,7 +486,7 @@ export default function Home(): JSX.Element {
                 {/* CTA */}
                 <section className={styles.cta}>
                     <h2>Ready to build?</h2>
-                    <p>OpenCore is free, open source, and ready for production.</p>
+                    <p>OpenCore is free, open source, and ready for serious multiplayer projects.</p>
                     <Link className={styles.primaryBtn} to="/docs/intro">
                         Read the docs
                     </Link>
