@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState, useCallback } from "react";
+import { JSX, useEffect, useState, useCallback, useRef } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import clsx from "clsx";
@@ -93,7 +93,7 @@ const FEATURES = [
     id: "commands",
     icon: "\u2328\uFE0F",
     title: "Commands",
-    desc: "Declarative handlers with Zod schemas and Player injection",
+    desc: "Declarative handlers with Zod validation and Player injection by default",
     file: "HealthController.ts",
     code: `@Command('heal', z.tuple([z.coerce.number().int().positive()]))
 async heal(player: Player, targetId: number) {
@@ -105,7 +105,7 @@ async heal(player: Player, targetId: number) {
   {
     id: "events",
     icon: "\uD83D\uDCE1",
-    title: "Net Events",
+    title: "Network Events",
     desc: "Typed event handlers with Player context and payload validation",
     file: "BankEventsController.ts",
     code: `const BankActionSchema = z.object({
@@ -124,8 +124,8 @@ export class BankEventsController {
   {
     id: "libraries",
     icon: "\uD83E\uDDE9",
-    title: "Libraries",
-    desc: "Emit domain events between modules without coupling",
+    title: "Library Events",
+    desc: "Emit domain events between modules without coupling resources together",
     file: "CharacterListeners.ts",
     code: `const characters = Server.createServerLibrary('characters')
 
@@ -142,7 +142,7 @@ characters.emit('session:created', { sessionId: 's-42', playerId: 12 })`,
   {
     id: "guards",
     icon: "\uD83D\uDEE1\uFE0F",
-    title: "Guards",
+    title: "Guards & Permissions",
     desc: "Role-based access control via decorators",
     file: "AdminController.ts",
     code: `@Guard({ rank: 3 })
@@ -160,8 +160,8 @@ async teleport(player: Player, x: number, y: number, z: number) {
   {
     id: "throttle",
     icon: "\u23F1\uFE0F",
-    title: "Throttle",
-    desc: "Built-in rate limiting per player, per method",
+    title: "Rate Limiting",
+    desc: "Built-in throttling per player, per method",
     file: "MarketController.ts",
     code: `@Throttle(5, 2000)
 @Command('search')
@@ -178,8 +178,8 @@ async placeOrder(player: Player, itemId: string) {
   {
     id: "player",
     icon: "\uD83D\uDC64",
-    title: "Player API",
-    desc: "Rich entity: state, comms, health, teleport",
+    title: "Player Entity",
+    desc: "Rich player API: state, communication, health",
     file: "PlayerEntity.ts",
     code: `player.emit('client:notify', { message: 'Hello!' })
 player.send('Private message', 'info')
@@ -194,8 +194,8 @@ player.kick('AFK timeout')`,
   {
     id: "binary",
     icon: "\uD83D\uDD27",
-    title: "Binary RPC",
-    desc: "Call compiled binaries from TypeScript",
+    title: "Binary Services",
+    desc: "Use binaries easily from your favorite compiled languages",
     file: "BinaryService.ts",
     code: `@BinaryService({
   name: 'image-processor',
@@ -213,7 +213,7 @@ export class ImageService {
     id: "adapters",
     icon: "\uD83D\uDD0C",
     title: "Adapters",
-    desc: "FiveM, RageMP today — RedM next",
+    desc: "Target FiveM and RageMP today, with RedM support on the way",
     file: "opencore.config.ts",
     code: `export default defineConfig({
   name: 'my-server',
@@ -227,7 +227,7 @@ export class ImageService {
     id: "devmode",
     icon: "\uD83D\uDD0D",
     title: "Dev Mode",
-    desc: "Event inspector, player simulator, hot reload",
+    desc: "Runtime inspection with event history and virtual players",
     file: "DevMode.ts",
     code: `await init({
   mode: 'CORE',
@@ -241,8 +241,8 @@ export class ImageService {
   {
     id: "cli",
     icon: "\u26A1",
-    title: "CLI",
-    desc: "Build, scaffold, watch, restart",
+    title: "OpenCore CLI",
+    desc: "Monorepo build, watcher, scaffolding, restart and adapter tooling",
     file: "terminal",
     code: `$ opencore build
 $ opencore dev
@@ -252,8 +252,8 @@ $ opencore doctor`,
   {
     id: "security",
     icon: "\uD83D\uDD12",
-    title: "Security",
-    desc: "Guards, throttles, validation by default",
+    title: "Security by Default",
+    desc: "Guards, throttles, validation out of the box",
     file: "SecurityExample.ts",
     code: `const SpawnCarSchema = z.object({
   model: z.string().min(1).max(32),
@@ -297,12 +297,159 @@ const BENCHMARKS = [
 const RELEASE_URL =
   "https://api.github.com/repos/newcore-network/opencore/releases/latest";
 
+function BentoCard({ feature }: { feature: (typeof FEATURES)[0] }) {
+  const [open, setOpen] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  const show = () => {
+    if (!cardRef.current) return;
+    const r = cardRef.current.getBoundingClientRect();
+    const popup = popupRef.current;
+    if (!popup) return;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const cardCx = r.left + r.width / 2;
+    const cardCy = r.top + r.height / 2;
+    popup.style.setProperty("--dx", `${cardCx - vw / 2}px`);
+    popup.style.setProperty("--dy", `${cardCy - vh / 2}px`);
+
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflowY = "scroll";
+
+    setOpen(true);
+  };
+
+  const hide = () => {
+    setOpen(false);
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.overflowY = "";
+    const top = popupRef.current?.style.getPropertyValue("--scroll") || "0";
+    window.scrollTo(0, parseInt(top) || 0);
+  };
+
+  useEffect(() => {
+    if (open) {
+      const scrollY = parseInt(document.body.style.top || "0") * -1;
+      popupRef.current?.style.setProperty("--scroll", `${scrollY}`);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") hide();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  useEffect(() => {
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+    };
+  }, []);
+
+  return (
+    <>
+      <div className={styles.bentoCard} ref={cardRef}>
+        <div className={styles.bentoCardHeader}>
+          <span className={styles.bentoIcon}>{feature.icon}</span>
+          <button
+            className={styles.bentoCodeToggle}
+            onClick={show}
+            type="button"
+            aria-label="View code"
+            title="View code"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </button>
+        </div>
+        <h3 className={styles.bentoTitle}>{feature.title}</h3>
+        <p className={styles.bentoDesc}>{feature.desc}</p>
+      </div>
+
+      <div
+        className={clsx(styles.popupBackdrop, open && styles.popupBackdropOpen)}
+        ref={backdropRef}
+        onClick={hide}
+      />
+      <div
+        className={clsx(styles.popupCard, open && styles.popupCardOpen)}
+        ref={popupRef}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={styles.expandCardBar}>
+          <div className={styles.expandCardInfo}>
+            <span className={styles.bentoIcon}>{feature.icon}</span>
+            <span className={styles.expandCardTitle}>{feature.title}</span>
+          </div>
+          <div className={styles.expandCardRight}>
+            <div className={styles.codeDots}>
+              <span className={clsx(styles.codeDot, styles.codeDotR)} />
+              <span className={clsx(styles.codeDot, styles.codeDotY)} />
+              <span className={clsx(styles.codeDot, styles.codeDotG)} />
+            </div>
+            <span className={styles.expandCardFile}>{feature.file}</span>
+            <button
+              className={styles.expandCardClose}
+              onClick={hide}
+              type="button"
+              aria-label="Close"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <HeroCode code={feature.code} className={styles.expandCardCode} />
+      </div>
+    </>
+  );
+}
+
 export default function Home(): JSX.Element {
   const [version, setVersion] = useState("latest");
   const [platform, setPlatform] = useState(0);
-  const [platformHidden, setPlatformHidden] = useState(false);
+  const [prevPlatform, setPrevPlatform] = useState<number | null>(null);
+  const [animating, setAnimating] = useState(false);
   const [comp, setComp] = useState(COMPARISONS[0]);
-  const [feat, setFeat] = useState(FEATURES[0]);
 
   useEffect(() => {
     fetch(RELEASE_URL, { headers: { Accept: "application/vnd.github+json" } })
@@ -315,20 +462,22 @@ export default function Home(): JSX.Element {
 
   useEffect(() => {
     const id = setInterval(() => {
-      setPlatformHidden(true);
-      setTimeout(() => {
-        setPlatform((p) => (p + 1) % PLATFORMS.length);
-        setPlatformHidden(false);
-      }, 280);
+      setPrevPlatform(platform);
+      setAnimating(true);
+      setPlatform((p) => (p + 1) % PLATFORMS.length);
+      const timeout = setTimeout(() => {
+        setAnimating(false);
+        setPrevPlatform(null);
+      }, 500);
+      return () => clearTimeout(timeout);
     }, 3200);
     return () => clearInterval(id);
-  }, []);
+  }, [platform]);
 
   const selectComp = useCallback(
     (c: (typeof COMPARISONS)[0]) => setComp(c),
     [],
   );
-  const selectFeat = useCallback((f: (typeof FEATURES)[0]) => setFeat(f), []);
 
   return (
     <Layout
@@ -398,14 +547,30 @@ export default function Home(): JSX.Element {
               {version}
             </div>
             <h1 className={styles.heroTitle}>
-              <span className={styles.heroTitleAccent}>The runtime</span> for{" "}
-              <span
-                className={clsx(
-                  styles[PLATFORMS[platform].style],
-                  platformHidden && styles.heroPlatformHidden,
-                )}
-              >
-                {PLATFORMS[platform].name}
+              <span className={styles.heroTitleAccent}>The runtime for</span>
+              <span className={styles.heroPlatformRow}>
+                <span className={styles.heroPlatformSlot}>
+                  {animating && prevPlatform !== null && (
+                    <span
+                      key={`out-${prevPlatform}`}
+                      className={clsx(
+                        styles[PLATFORMS[prevPlatform].style],
+                        styles.heroPlatformOut,
+                      )}
+                    >
+                      {PLATFORMS[prevPlatform].name}
+                    </span>
+                  )}
+                  <span
+                    key={`in-${platform}`}
+                    className={clsx(
+                      styles[PLATFORMS[platform].style],
+                      animating && styles.heroPlatformIn,
+                    )}
+                  >
+                    {PLATFORMS[platform].name}
+                  </span>
+                </span>
               </span>
             </h1>
             <p className={styles.heroDesc}>
@@ -500,33 +665,10 @@ export default function Home(): JSX.Element {
               servers.
             </p>
           </div>
-          <div className={styles.featGrid}>
-            <div className={styles.featList}>
-              {FEATURES.map((f) => (
-                <button
-                  key={f.id}
-                  className={
-                    feat.id === f.id ? styles.featItemActive : styles.featItem
-                  }
-                  onClick={() => selectFeat(f)}
-                >
-                  <span className={styles.featItemIcon}>{f.icon}</span>
-                  <span className={styles.featItemLabel}>{f.title}</span>
-                </button>
-              ))}
-            </div>
-            <div className={styles.featPreview}>
-              <div className={styles.featPreviewBar}>
-                <div className={styles.codeDots}>
-                  <span className={clsx(styles.codeDot, styles.codeDotR)} />
-                  <span className={clsx(styles.codeDot, styles.codeDotY)} />
-                  <span className={clsx(styles.codeDot, styles.codeDotG)} />
-                </div>
-                <span className={styles.featPreviewTitle}>{feat.file}</span>
-              </div>
-              <div className={styles.featDesc}>{feat.desc}</div>
-              <HeroCode code={feat.code} className={styles.featPreviewBody} />
-            </div>
+          <div className={styles.bentoGrid}>
+            {FEATURES.map((f) => (
+              <BentoCard key={f.id} feature={f} />
+            ))}
           </div>
         </section>
 
