@@ -205,6 +205,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Advanced Topics',
       items: [
+        'advanced/benchmarks',
         'advanced/performance',
         'advanced/scaling-resources',
         'advanced/session-recovery',
