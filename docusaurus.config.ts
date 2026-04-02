@@ -7,18 +7,15 @@ const config: Config = {
   tagline: "Framework",
   favicon: "img/favicon.ico",
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: true,
   },
 
   url: "https://opencorejs.dev",
   baseUrl: "/",
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: "newcore-network", // Usually your GitHub org/user name.
-  projectName: "opencore", // Usually your repo name.
+  organizationName: "newcore-network",
+  projectName: "opencore",
 
   onBrokenLinks: "throw",
 
@@ -50,21 +47,7 @@ const config: Config = {
     ],
   ],
 
-  themes: [
-    [
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      {
-        indexDocs: true,
-        indexBlog: false,
-        indexPages: false,
-        docsRouteBasePath: "/docs",
-        language: ["en"],
-        hashed: true,
-        highlightSearchTermsOnTargetPage: true,
-        searchBarPosition: "right",
-      },
-    ],
-  ],
+  plugins: [require.resolve("./src/plugins/search-index")],
 
   themeConfig: {
     colorMode: {
@@ -80,6 +63,7 @@ const config: Config = {
           sidebarId: "docs",
           position: "left",
           label: "Docs",
+          className: "navbar__link--docs",
         },
         {
           href: "https://discord.gg/hDG25CPwpM",
