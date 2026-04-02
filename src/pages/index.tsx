@@ -1,19 +1,20 @@
-import { JSX, useEffect, useState } from 'react';
-import Layout from '@theme/Layout';
-import Link from '@docusaurus/Link';
-import clsx from 'clsx';
-import styles from './index.module.css';
-import { HeroCode } from '../components/HeroCode';
+import { JSX, useEffect, useState, useCallback, useRef } from "react";
+import Layout from "@theme/Layout";
+import Link from "@docusaurus/Link";
+import clsx from "clsx";
+import styles from "./index.module.css";
+import { HeroCode } from "../components/HeroCode";
 
-const CODE_EXAMPLE = `
-const TransferSchema = z.object({
+const HERO_CODE = `const TransferSchema = z.object({
   targetId: z.coerce.number().int().positive(),
   amount: z.coerce.number().positive(),
 })
 
 @Controller()
 export class BankController {
-  @Command({ command: 'transfer', usage: '/transfer <id> <amount>', schema: TransferSchema })
+  constructor(private readonly bankService: BankService) {}
+
+  @Command({ command: 'transfer', schema: TransferSchema })
   @Guard({ permission: 'bank.transfer' })
   @Throttle(1, 2000)
   async transfer(player: Player, targetId: number, amount: number) {
@@ -22,13 +23,12 @@ export class BankController {
   }
 }`;
 
-const COMPARISON_TABS = [
-    {
-        id: 'opencore',
-        label: 'OpenCore',
-        lang: 'InventoryController.ts',
-        code: `
-const GiveItemSchema = z.object({
+const COMPARISONS = [
+  {
+    id: "opencore",
+    label: "OpenCore",
+    file: "InventoryController.ts",
+    code: `const GiveItemSchema = z.object({
   targetId: z.coerce.number().int().positive(),
   item: z.string().min(1),
   amount: z.coerce.number().int().positive(),
@@ -37,82 +37,78 @@ const GiveItemSchema = z.object({
 @Controller()
 export class InventoryController {
   constructor(private readonly inventory: InventoryService) {}
- 
-  @Command({ command: 'giveitem', usage: '/giveitem <id> <item> <amount>', schema: GiveItemSchema })
+
+  @Command({ command: 'giveitem', schema: GiveItemSchema })
   @Guard({ permission: 'inventory.give' })
   @Throttle(5, 1000)
   async giveItem(player: Player, targetId: number, item: string, amount: number) {
     await this.inventory.addItem(targetId, item, amount)
     player.send('Item given!', 'success')
   }
-}`
-    },
-    {
-        id: 'typescript',
-        label: 'TypeScript Only',
-        lang: 'inventory.ts',
-        code: `RegisterCommand('giveitem', async (source: number, args: string[]) => {
+}`,
+  },
+  {
+    id: "raw-ts",
+    label: "Raw TypeScript",
+    file: "inventory.ts",
+    code: `RegisterCommand('giveitem', async (source: number, args: string[]) => {
   const targetId = parseInt(args[0])
   const item = args[1]
   const amount = parseInt(args[2])
- 
+
   if (isNaN(targetId) || !item || isNaN(amount)) {
     emitNet('chat:addMessage', source, { args: ['Error', 'Invalid'] })
     return
   }
- 
+
   const hasPermission = await checkPermission(source, 'inventory.give')
   if (!hasPermission) return
- 
+
   await addItem(targetId, item, amount)
-}, false)`
-    },
-    {
-        id: 'lua',
-        label: 'Lua',
-        lang: 'inventory.lua',
-        code: `RegisterCommand('giveitem', function(source, args)
+}, false)`,
+  },
+  {
+    id: "lua",
+    label: "Lua",
+    file: "inventory.lua",
+    code: `RegisterCommand('giveitem', function(source, args)
   local targetId = tonumber(args[1])
   local item = args[2]
   local amount = tonumber(args[3])
- 
+
   if not targetId or not item or not amount then
     TriggerClientEvent('chat:addMessage', source, {
       args = { 'Error', 'Invalid usage' }
     })
     return
   end
- 
-  -- No type safety, no IDE support
-  -- Manual permission check needed
- 
+
   exports['inventory']:AddItem(targetId, item, amount)
-end, false)`
-    }
+end, false)`,
+  },
 ];
 
-const FEATURES_DATA = [
-    {
-        id: 'commands',
-        icon: '⌨️',
-        title: 'Commands',
-        description: 'Declarative handlers with Zod validation and Player injection by default',
-        code: `
-@Command('heal', z.tuple([z.coerce.number().int().positive()]))
+const FEATURES = [
+  {
+    id: "commands",
+    icon: "\u2328\uFE0F",
+    title: "Commands",
+    desc: "Declarative handlers with Zod validation and Player injection by default",
+    file: "HealthController.ts",
+    code: `@Command('heal', z.tuple([z.coerce.number().int().positive()]))
 async heal(player: Player, targetId: number) {
   const target = this.players.getById(targetId)
   target.setHealth(200)
   player.send('Healed ' + target.name, 'success')
 }`,
-        filename: 'HealthController.ts'
-    },
-    {
-        id: 'netevents',
-        icon: '📡',
-        title: 'Network Events',
-        description: 'Typed event handlers with Player context and payload validation',
-        code: `
-const BankActionSchema = z.object({
+  },
+  {
+    id: "events",
+    icon: "\uD83D\uDCE1",
+    title: "Network Events",
+    desc: "Typed event handlers with Player context and payload validation",
+    file: "BankEventsController.ts",
+    code: `const BankActionSchema = z.object({
   action: z.enum(['deposit', 'withdraw']),
   amount: z.coerce.number().int().positive(),
 })
@@ -124,15 +120,14 @@ export class BankEventsController {
     await this.bank.handle(player.clientID, payload)
   }
 }`,
-        filename: 'BankEventsController.ts'
-    },
-    {
-        id: 'libraries',
-        icon: '🧩',
-        title: 'Library Events',
-        description: 'Emit domain events between modules without coupling resources together',
-        code: `
-const characters = Server.createServerLibrary('characters')
+  },
+  {
+    id: "libraries",
+    icon: "\uD83E\uDDE9",
+    title: "Library Events",
+    desc: "Emit domain events between modules without coupling resources together",
+    file: "CharacterListeners.ts",
+    code: `const characters = Server.createServerLibrary('characters')
 
 @Controller()
 export class CharacterListeners {
@@ -143,153 +138,124 @@ export class CharacterListeners {
 }
 
 characters.emit('session:created', { sessionId: 's-42', playerId: 12 })`,
-        filename: 'CharacterListeners.ts'
-    },
-    {
-        id: 'guards',
-        icon: '🛡️',
-        title: 'Guards & Permissions',
-        description: 'Role-based access control via decorators',
-        code: `
-@Guard({ rank: 3 })
+  },
+  {
+    id: "guards",
+    icon: "\uD83D\uDEE1\uFE0F",
+    title: "Guards & Permissions",
+    desc: "Role-based access control via decorators",
+    file: "AdminController.ts",
+    code: `@Guard({ rank: 3 })
 @Command('ban')
 async ban(player: Player, targetId: number, reason: string) {
   await this.moderation.ban(targetId, reason)
 }
- 
+
 @Guard({ permission: 'admin.teleport' })
 @Command('tp')
 async teleport(player: Player, x: number, y: number, z: number) {
   player.teleport({ x, y, z })
 }`,
-        filename: 'AdminController.ts'
-    },
-    {
-        id: 'throttle',
-        icon: '⏱️',
-        title: 'Rate Limiting',
-        description: 'Built-in throttling per player, per method',
-        code: `
-@Throttle(5, 2000)
+  },
+  {
+    id: "throttle",
+    icon: "\u23F1\uFE0F",
+    title: "Rate Limiting",
+    desc: "Built-in throttling per player, per method",
+    file: "MarketController.ts",
+    code: `@Throttle(5, 2000)
 @Command('search')
 async search(player: Player, query: string) {
   return this.market.search(query)
 }
- 
+
 @Throttle({ limit: 1, windowMs: 5000, message: 'Too fast!' })
 @Command('buy')
 async placeOrder(player: Player, itemId: string) {
   await this.market.purchase(player, itemId)
 }`,
-        filename: 'MarketController.ts'
-    },
-    {
-        id: 'player',
-        icon: '👤',
-        title: 'Player Entity',
-        description: 'Rich player API: state, communication, health',
-        code: `player.emit('client:notify', { message: 'Hello!' })
+  },
+  {
+    id: "player",
+    icon: "\uD83D\uDC64",
+    title: "Player Entity",
+    desc: "Rich player API: state, communication, health",
+    file: "PlayerEntity.ts",
+    code: `player.emit('client:notify', { message: 'Hello!' })
 player.send('Private message', 'info')
- 
+
 player.setMeta('job', 'police')
 player.addState('on_duty')
- 
+
 player.teleport({ x: 100, y: 200, z: 30 })
 player.setHealth(150)
 player.kick('AFK timeout')`,
-        filename: 'PlayerEntity.ts'
-    },
-    {
-        id: 'binary',
-        icon: '🔧',
-        title: 'Binary Services',
-        description: 'Use binaries easily from your favorite compiled languages',
-        code: `
-@BinaryService({ 
-  name: 'image-processor', 
+  },
+  {
+    id: "binary",
+    icon: "\uD83D\uDD27",
+    title: "Binary Services",
+    desc: "Use binaries easily from your favorite compiled languages",
+    file: "BinaryService.ts",
+    code: `@BinaryService({
+  name: 'image-processor',
   binary: 'img_worker',
-  timeoutMs: 30000 
+  timeoutMs: 30000
 })
 export class ImageService {
   @BinaryCall()
-  async resize(path: string, width: number, height: number): Promise<{ success: boolean; url: string }> {
-    return null as any
-  }
-
-  @BinaryCall({ action: 'watermark' })
-  async applyWatermark(path: string, text: string): Promise<{ success: boolean }> {
+  async resize(path: string, w: number, h: number): Promise<{ url: string }> {
     return null as any
   }
 }`,
-        filename: 'BinaryService.ts'
-    },
-    {
-        id: 'adapters',
-        icon: '🔌',
-        title: 'Adapters',
-        description: 'Target FiveM and RageMP today, with RedM support on the way',
-        code: `
-export default defineConfig({
+  },
+  {
+    id: "adapters",
+    icon: "\uD83D\uDD0C",
+    title: "Adapters",
+    desc: "Target FiveM and RageMP today, with RedM support on the way",
+    file: "opencore.config.ts",
+    code: `export default defineConfig({
   name: 'my-server',
   adapter: {
     server: FiveMServerAdapter(),
     client: FiveMClientAdapter(),
   },
-})
-
-// RageMP uses the same adapter-first model.
-// RedM is tracked in the same architecture and landing next.`,
-        filename: 'opencore.config.ts'
-    },
-    {
-        id: 'devmode',
-        icon: '🔍',
-        title: 'Dev Mode',
-        description: 'Runtime inspection with event history and virtual players',
-        code: `
-await init({
+})`,
+  },
+  {
+    id: "devmode",
+    icon: "\uD83D\uDD0D",
+    title: "Dev Mode",
+    desc: "Runtime inspection with event history and virtual players",
+    file: "DevMode.ts",
+    code: `await init({
   mode: 'CORE',
   devMode: {
     enabled: true,
-    interceptor: {
-      enabled: true,
-      recordHistory: true,
-      maxHistorySize: 1000,
-    },
-    simulator: {
-      enabled: true,
-      autoConnectPlayers: 2,
-    },
+    interceptor: { enabled: true, recordHistory: true },
+    simulator: { enabled: true, autoConnectPlayers: 2 },
   },
 })`,
-        filename: 'DevMode.ts'
-    },
-    {
-        id: 'cli',
-        icon: '⚡',
-        title: 'OpenCore CLI',
-        description: 'Monorepo build, watcher, scaffolding, restart and adapter tooling',
-        code: `$ opencore build    # Parallel production builds
-$ opencore dev      # Watch mode + restart flow
+  },
+  {
+    id: "cli",
+    icon: "\u26A1",
+    title: "OpenCore CLI",
+    desc: "Monorepo build, watcher, scaffolding, restart and adapter tooling",
+    file: "terminal",
+    code: `$ opencore build
+$ opencore dev
 $ opencore create resource inventory --with-client
-$ opencore doctor   # Validate project configuration
-$ opencore adapter check
-$ opencore clone starter-fivem
- 
-# opencore.config.ts
-dev: {
-  bridge: { port: 3847 },
-  restart: { mode: 'auto' },
-}`,
-        filename: 'terminal'
-    },
-    {
-        id: 'protection',
-        icon: '🔒',
-        title: 'Security by Default',
-        description: 'Guards, throttles, validation out of the box',
-        code: `
-const SpawnCarSchema = z.object({
+$ opencore doctor`,
+  },
+  {
+    id: "security",
+    icon: "\uD83D\uDD12",
+    title: "Security by Default",
+    desc: "Guards, throttles, validation out of the box",
+    file: "SecurityExample.ts",
+    code: `const SpawnCarSchema = z.object({
   model: z.string().min(1).max(32),
 })
 
@@ -300,215 +266,443 @@ const SpawnCarSchema = z.object({
 async spawnCar(player: Player, model: string) {
   await this.vehicles.spawn(player, model)
 }`,
-        filename: 'SecurityExample.ts'
-    },
+  },
 ];
+
 const PLATFORMS = [
-    { name: 'FiveM', style: 'gradientText' },
-    { name: 'RedM', style: 'redMText' },
-    { name: 'Rage Multiplayer', style: 'rageMPText' }
-] as const;
+  { name: "FiveM", style: "heroPlatformFiveM" as const },
+  { name: "RedM", style: "heroPlatformRedM" as const },
+  { name: "RageMP", style: "heroPlatformRageMP" as const },
+];
 
-const RELEASE_URL = 'https://api.github.com/repos/newcore-network/opencore/releases/latest';
+const BENCHMARKS = [
+  {
+    value: "17.78M",
+    label: "EventInterceptor ops/s",
+    sub: "~0.056 \u00B5s mean",
+  },
+  { value: "10.49M", label: "RuntimeConfig ops/s", sub: "~0.095 \u00B5s mean" },
+  {
+    value: "80.14K",
+    label: "Command throughput",
+    sub: "500 players, p95 0.226 ms",
+  },
+  {
+    value: "251.10K",
+    label: "RPC throughput",
+    sub: "500 parallel, p95 1.83 ms",
+  },
+];
 
-type GitHubRelease = { tag_name: string };
+const RELEASE_URL =
+  "https://api.github.com/repos/newcore-network/opencore/releases/latest";
 
-export default function Home(): JSX.Element {
-    const [tag, setTag] = useState<string>('—');
-    const [selectedFeature, setSelectedFeature] = useState(FEATURES_DATA[0]);
-    const [comparisonTab, setComparisonTab] = useState(COMPARISON_TABS[0]);
-    const [platformIndex, setPlatformIndex] = useState(0);
-    const [isTransitioning, setIsTransitioning] = useState(false);
+function BentoCard({ feature }: { feature: (typeof FEATURES)[0] }) {
+  const [open, setOpen] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        fetch(RELEASE_URL, { headers: { Accept: 'application/vnd.github+json' } })
-            .then(res => res.json())
-            .then((data: GitHubRelease) => setTag(data.tag_name ?? '—'))
-            .catch(() => setTag('v0.3.x'));
-    }, []);
+  const show = () => {
+    if (!cardRef.current) return;
+    const r = cardRef.current.getBoundingClientRect();
+    const popup = popupRef.current;
+    if (!popup) return;
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setIsTransitioning(true);
-            setTimeout(() => {
-                setPlatformIndex(prev => (prev + 1) % PLATFORMS.length);
-                setIsTransitioning(false);
-            }, 300);
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const cardCx = r.left + r.width / 2;
+    const cardCy = r.top + r.height / 2;
+    popup.style.setProperty("--dx", `${cardCx - vw / 2}px`);
+    popup.style.setProperty("--dy", `${cardCy - vh / 2}px`);
 
-    return (
-        <Layout title="OpenCore Framework" description="The TypeScript-first multiplayer runtime for adapter-driven servers">
-            <main className={styles.homeContainer}>
-                <section className={styles.topNotice}>
-                    <div className={styles.topNoticeInner}>
-                        <span className={styles.topNoticeIcon}>★</span>
-                        <p className={styles.topNoticeText}>
-                            Enjoying OpenCore? Don&apos;t forget to leave us a star on GitHub.
-                        </p>
-                        <Link className={styles.topNoticeLink} href="https://github.com/newcore-network/opencore">
-                            Star the repo
-                        </Link>
-                    </div>
-                </section>
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflowY = "scroll";
 
-                {/* HERO */}
-                <section className={styles.hero}>
-                    <div className={styles.heroGrid}>
-                        <div className={styles.heroContent}>
-                            <div className={styles.badge}>
-                                <span className={styles.badgeDot}></span>
-                                {tag}
-                            </div>
-                            <h1 className={styles.heroTitle}>
-                                The Industrial <br />
-                                <span className={styles.gradientText}>Runtime for</span>{' '}
-                                <span
-                                    className={clsx(
-                                        styles[PLATFORMS[platformIndex].style],
-                                        isTransitioning && styles.fadeOut
-                                    )}
-                                >
-                                    {PLATFORMS[platformIndex].name}
-                                </span>
-                            </h1>
-                            <p className={styles.heroSubtitle}>
-                                TypeScript-first framework with Dependency Injection, validation,
-                                and security primitives. Built for FiveM and RageMP today, with RedM following the same adapter-first path.
-                            </p>
-                            <div className={styles.heroActions}>
-                                <Link className={clsx('button button--lg', styles.primaryBtn)} to="/docs/intro">
-                                    Get Started
-                                </Link>
-                                <Link className={clsx('button button--lg', styles.secondaryBtn)} href="https://github.com/newcore-network/opencore">
-                                    GitHub
-                                </Link>
-                                <Link className={clsx('button button--lg', styles.secondaryBtn)} href="https://discord.gg/hDG25CPwpM">
-                                    Discord
-                                </Link>
-                            </div>
-                        </div>
-                        <div className={styles.heroCode}>
-                            <div className={styles.codeWindow}>
-                                <div className={styles.codeHeader}>
-                                    <div className={styles.dots}>
-                                        <div className={styles.dotRed}></div>
-                                        <div className={styles.dotYellow}></div>
-                                        <div className={styles.dotGreen}></div>
-                                    </div>
-                                    <div className={styles.filename}>BankController.ts</div>
-                                </div>
-                                <HeroCode code={CODE_EXAMPLE} className={styles.heroCodeBlock} />
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    setOpen(true);
+  };
 
-                {/* CODE COMPARISON WITH TABS */}
-                <section className={styles.comparison}>
-                    <div className={styles.sectionHeader}>
-                        <h2>Code Comparison</h2>
-                        <p>See the difference between raw runtime code and the framework approach</p>
-                    </div>
-                    <div className={styles.tabsRow}>
-                        {COMPARISON_TABS.map((tab) => (
-                            <button
-                                key={tab.id}
-                                className={clsx(styles.tab, comparisonTab.id === tab.id && styles.active)}
-                                onClick={() => setComparisonTab(tab)}
-                            >
-                                {tab.label}
-                            </button>
-                        ))}
-                    </div>
-                    <div className={styles.comparisonSingle}>
-                        <div className={clsx(styles.comparisonPane, comparisonTab.id === 'opencore' && styles.after)}>
-                            <div className={styles.paneHeader}>
-                                <span className={clsx(styles.paneLabel, comparisonTab.id === 'opencore' && styles.accent)}>
-                                    {comparisonTab.label}
-                                </span>
-                                <span className={styles.paneLang}>{comparisonTab.lang}</span>
-                            </div>
-                            <HeroCode code={comparisonTab.code} className={styles.paneCode} />
-                        </div>
-                    </div>
-                </section>
+  const hide = () => {
+    setOpen(false);
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.overflowY = "";
+    const top = popupRef.current?.style.getPropertyValue("--scroll") || "0";
+    window.scrollTo(0, parseInt(top) || 0);
+  };
 
-                {/* FEATURES GRID */}
-                <section className={styles.features}>
-                    <div className={styles.sectionHeader}>
-                        <h2>Everything You Need</h2>
-                        <p>Built-in primitives for secure, scalable, adapter-first server development</p>
-                    </div>
-                    <div className={styles.featuresGrid}>
-                        {FEATURES_DATA.map((feature) => (
-                            <div
-                                key={feature.id}
-                                className={clsx(styles.featureItem, selectedFeature.id === feature.id && styles.active)}
-                                onClick={() => setSelectedFeature(feature)}
-                            >
-                                <div className={styles.featureIcon}>{feature.icon}</div>
-                                <h4>{feature.title}</h4>
-                                <p>{feature.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <div className={styles.featurePreview}>
-                        <div className={styles.previewWindow}>
-                            <div className={styles.previewHeader}>
-                                <div className={styles.dots}>
-                                    <div className={styles.dotRed}></div>
-                                    <div className={styles.dotYellow}></div>
-                                    <div className={styles.dotGreen}></div>
-                                </div>
-                                <span className={styles.previewTitle}>{selectedFeature.filename}</span>
-                            </div>
-                            <HeroCode code={selectedFeature.code} className={styles.previewCode} />
-                        </div>
-                    </div>
-                </section>
+  useEffect(() => {
+    if (open) {
+      const scrollY = parseInt(document.body.style.top || "0") * -1;
+      popupRef.current?.style.setProperty("--scroll", `${scrollY}`);
+    }
+  }, [open]);
 
-                {/* STATS - BENCHMARKS */}
-                <section className={styles.stats}>
-                    <div className={styles.sectionHeader}>
-                        <h2>Performance</h2>
-                        <p>Value-focused benchmark suite, latest validated local run</p>
-                    </div>
-                    <div className={styles.statGrid}>
-                        <StatItem value="115.68K" label="Validated commands" sublabel="100 players, p95 0.012 ms" />
-                        <StatItem value="74.42K" label="Full net events" sublabel="small payload, p95 0.029 ms" />
-                        <StatItem value="93.12K" label="Real tick budget" sublabel="setTick with 50 handlers, p95 0.021 ms" />
-                        <StatItem value="350.12K" label="Binary round-trip" sublabel="50 calls, p95 0.0092 ms" />
-                        <StatItem value="200.55K" label="Player lifecycle" sublabel="full cycle at 500 players, p95 0.0096 ms" />
-                        <StatItem value="205.87" label="Bootstrap scale" sublabel="100 controllers, p95 6.37 ms" />
-                    </div>
-                    <div className={styles.heroActions}>
-                        <Link className={clsx('button button--lg', styles.secondaryBtn)} to="/docs/advanced/benchmarks">
-                            Full benchmark report
-                        </Link>
-                    </div>
-                </section>
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") hide();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
-                {/* CTA */}
-                <section className={styles.cta}>
-                    <h2>Ready to build?</h2>
-                    <p>OpenCore is free, open source, and ready for serious multiplayer projects.</p>
-                    <Link className={styles.primaryBtn} to="/docs/intro">
-                        Read the docs
-                    </Link>
-                </section>
-            </main>
-        </Layout>
-    );
+  useEffect(() => {
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflowY = "";
+    };
+  }, []);
+
+  return (
+    <>
+      <div className={styles.bentoCard} ref={cardRef}>
+        <div className={styles.bentoCardHeader}>
+          <span className={styles.bentoIcon}>{feature.icon}</span>
+          <button
+            className={styles.bentoCodeToggle}
+            onClick={show}
+            type="button"
+            aria-label="View code"
+            title="View code"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </button>
+        </div>
+        <h3 className={styles.bentoTitle}>{feature.title}</h3>
+        <p className={styles.bentoDesc}>{feature.desc}</p>
+      </div>
+
+      <div
+        className={clsx(styles.popupBackdrop, open && styles.popupBackdropOpen)}
+        ref={backdropRef}
+        onClick={hide}
+      />
+      <div
+        className={clsx(styles.popupCard, open && styles.popupCardOpen)}
+        ref={popupRef}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={styles.expandCardBar}>
+          <div className={styles.expandCardInfo}>
+            <span className={styles.bentoIcon}>{feature.icon}</span>
+            <span className={styles.expandCardTitle}>{feature.title}</span>
+          </div>
+          <div className={styles.expandCardRight}>
+            <div className={styles.codeDots}>
+              <span className={clsx(styles.codeDot, styles.codeDotR)} />
+              <span className={clsx(styles.codeDot, styles.codeDotY)} />
+              <span className={clsx(styles.codeDot, styles.codeDotG)} />
+            </div>
+            <span className={styles.expandCardFile}>{feature.file}</span>
+            <button
+              className={styles.expandCardClose}
+              onClick={hide}
+              type="button"
+              aria-label="Close"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <HeroCode code={feature.code} className={styles.expandCardCode} />
+      </div>
+    </>
+  );
 }
 
-function StatItem({ value, label, sublabel }: { value: string; label: string; sublabel?: string }) {
-    return (
-        <div className={styles.statItem}>
-            <div className={styles.statValue}>{value}</div>
-            <div className={styles.statLabel}>{label}</div>
-            {sublabel && <div className={styles.statSublabel}>{sublabel}</div>}
+export default function Home(): JSX.Element {
+  const [version, setVersion] = useState("latest");
+  const [platform, setPlatform] = useState(0);
+  const [prevPlatform, setPrevPlatform] = useState<number | null>(null);
+  const [animating, setAnimating] = useState(false);
+  const [comp, setComp] = useState(COMPARISONS[0]);
+
+  useEffect(() => {
+    fetch(RELEASE_URL, { headers: { Accept: "application/vnd.github+json" } })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.tag_name) setVersion(d.tag_name);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setPrevPlatform(platform);
+      setAnimating(true);
+      setPlatform((p) => (p + 1) % PLATFORMS.length);
+      const timeout = setTimeout(() => {
+        setAnimating(false);
+        setPrevPlatform(null);
+      }, 500);
+      return () => clearTimeout(timeout);
+    }, 3200);
+    return () => clearInterval(id);
+  }, [platform]);
+
+  const selectComp = useCallback(
+    (c: (typeof COMPARISONS)[0]) => setComp(c),
+    [],
+  );
+
+  return (
+    <Layout
+      title="OpenCore"
+      description="TypeScript-first multiplayer runtime with DI, validation, and security primitives"
+    >
+      <main className={styles.homeContainer}>
+        <div className={styles.banner}>
+          <div className={styles.bannerInner}>
+            <span className={styles.bannerDot} />
+            Star us on GitHub if you find OpenCore useful
+            <Link
+              className={styles.bannerLink}
+              href="https://github.com/newcore-network/opencore"
+            >
+              &rarr; Star
+            </Link>
+          </div>
         </div>
-    );
+
+        <section className={styles.hero}>
+          <div className={styles.heroGlow} />
+
+          <div className={styles.floatingLeft}>
+            <div className={styles.floatingSnippet}>
+              <span className={styles.floatingLabel}>controller</span>
+              <code>@Controller()</code>
+            </div>
+            <div
+              className={clsx(styles.floatingSnippet, styles.floatingSnippet2)}
+            >
+              <span className={styles.floatingLabel}>guard</span>
+              <code>
+                @Guard({"{"} rank: 3 {"}"})
+              </code>
+            </div>
+            <div
+              className={clsx(styles.floatingSnippet, styles.floatingSnippet3)}
+            >
+              <span className={styles.floatingLabel}>schema</span>
+              <code>z.coerce.number()</code>
+            </div>
+          </div>
+
+          <div className={styles.floatingRight}>
+            <div className={styles.floatingSnippet}>
+              <span className={styles.floatingLabel}>throttle</span>
+              <code>@Throttle(5, 2000)</code>
+            </div>
+            <div
+              className={clsx(styles.floatingSnippet, styles.floatingSnippet2)}
+            >
+              <span className={styles.floatingLabel}>event</span>
+              <code>@OnNet('bank:action')</code>
+            </div>
+            <div
+              className={clsx(styles.floatingSnippet, styles.floatingSnippet3)}
+            >
+              <span className={styles.floatingLabel}>inject</span>
+              <code>constructor(svc: Svc)</code>
+            </div>
+          </div>
+
+          <div className={styles.heroInner}>
+            <div className={styles.heroVersion}>
+              <span className={styles.heroVersionDot} />
+              {version}
+            </div>
+            <h1 className={styles.heroTitle}>
+              <span className={styles.heroTitleAccent}>The runtime for</span>
+              <span className={styles.heroPlatformRow}>
+                <span className={styles.heroPlatformSlot}>
+                  {animating && prevPlatform !== null && (
+                    <span
+                      key={`out-${prevPlatform}`}
+                      className={clsx(
+                        styles[PLATFORMS[prevPlatform].style],
+                        styles.heroPlatformOut,
+                      )}
+                    >
+                      {PLATFORMS[prevPlatform].name}
+                    </span>
+                  )}
+                  <span
+                    key={`in-${platform}`}
+                    className={clsx(
+                      styles[PLATFORMS[platform].style],
+                      animating && styles.heroPlatformIn,
+                    )}
+                  >
+                    {PLATFORMS[platform].name}
+                  </span>
+                </span>
+              </span>
+            </h1>
+            <p className={styles.heroDesc}>
+              TypeScript-first framework with dependency injection, Zod
+              validation, and security primitives. Built for FiveM & RageMP —
+              RedM coming next.
+            </p>
+            <div className={styles.heroButtons}>
+              <Link className={styles.btnPrimary} to="/docs/intro">
+                Get Started
+              </Link>
+              <Link
+                className={styles.btnSecondary}
+                href="https://github.com/newcore-network/opencore"
+              >
+                GitHub
+              </Link>
+              <Link
+                className={styles.btnSecondary}
+                href="https://discord.gg/hDG25CPwpM"
+              >
+                Discord
+              </Link>
+            </div>
+          </div>
+
+          <div className={styles.heroCodeWrap}>
+            <div className={styles.codeBlock}>
+              <div className={styles.codeBar}>
+                <div className={styles.codeDots}>
+                  <span className={clsx(styles.codeDot, styles.codeDotR)} />
+                  <span className={clsx(styles.codeDot, styles.codeDotY)} />
+                  <span className={clsx(styles.codeDot, styles.codeDotG)} />
+                </div>
+                <span className={styles.codeFilename}>BankController.ts</span>
+              </div>
+              <HeroCode code={HERO_CODE} className={styles.codeBody} />
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.sectionBordered}>
+          <div className={styles.sectionHead}>
+            <span className={styles.sectionLabel}>Compare</span>
+            <h2 className={styles.sectionTitle}>Framework vs. Raw Code</h2>
+            <p className={styles.sectionDesc}>
+              See what changes when you adopt OpenCore instead of writing
+              everything by hand.
+            </p>
+          </div>
+          <div className={styles.compTabs}>
+            {COMPARISONS.map((c) => (
+              <button
+                key={c.id}
+                className={
+                  comp.id === c.id ? styles.compTabActive : styles.compTab
+                }
+                onClick={() => selectComp(c)}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+          <div
+            className={clsx(
+              styles.compPane,
+              comp.id === "opencore" && styles.compPaneActive,
+            )}
+          >
+            <div className={styles.compPaneBar}>
+              <span
+                className={
+                  comp.id === "opencore"
+                    ? styles.compPaneLabelAccent
+                    : styles.compPaneLabel
+                }
+              >
+                {comp.label}
+              </span>
+              <span className={styles.compPaneLang}>{comp.file}</span>
+            </div>
+            <HeroCode code={comp.code} className={styles.compPaneCode} />
+          </div>
+        </section>
+
+        <section className={styles.sectionBordered}>
+          <div className={styles.sectionHead}>
+            <span className={styles.sectionLabel}>Features</span>
+            <h2 className={styles.sectionTitle}>Everything Built-in</h2>
+            <p className={styles.sectionDesc}>
+              Primitives for secure, scalable, adapter-first multiplayer
+              servers.
+            </p>
+          </div>
+          <div className={styles.bentoGrid}>
+            {FEATURES.map((f) => (
+              <BentoCard key={f.id} feature={f} />
+            ))}
+          </div>
+        </section>
+
+        <section className={styles.sectionBordered}>
+          <div className={styles.sectionHead}>
+            <span className={styles.sectionLabel}>Benchmarks</span>
+            <h2 className={styles.sectionTitle}>Performance</h2>
+            <p className={styles.sectionDesc}>
+              Internal benchmarks — February 2026
+            </p>
+          </div>
+          <div className={styles.perfGrid}>
+            {BENCHMARKS.map((b) => (
+              <div key={b.label} className={styles.perfCard}>
+                <div className={styles.perfValue}>{b.value}</div>
+                <div className={styles.perfLabel}>{b.label}</div>
+                <div className={styles.perfSub}>{b.sub}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.cta}>
+            <h2 className={styles.ctaTitle}>Ready to build?</h2>
+            <p className={styles.ctaDesc}>
+              OpenCore is free, open-source, and production-ready.
+            </p>
+            <Link className={styles.btnPrimary} to="/docs/intro">
+              Read the docs
+            </Link>
+          </div>
+        </section>
+      </main>
+    </Layout>
+  );
 }

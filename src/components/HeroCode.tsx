@@ -1,48 +1,99 @@
-import React, { useEffect, useState } from 'react'
-import { createHighlighter } from 'shiki'
+import React, { useEffect, useState, memo, useRef } from "react";
+import { createHighlighter, type Highlighter } from "shiki";
 
 type HeroCodeProps = {
-  code: string
-  className?: string
+  code: string;
+  className?: string;
+};
+
+let highlighterInstance: Highlighter | null = null;
+let highlighterPromise: Promise<Highlighter> | null = null;
+
+function getHighlighter(): Promise<Highlighter> {
+  if (highlighterInstance) return Promise.resolve(highlighterInstance);
+  if (!highlighterPromise) {
+    highlighterPromise = createHighlighter({
+      themes: ["one-dark-pro", "github-light"],
+      langs: ["typescript", "lua", "bash"],
+    }).then((h) => {
+      highlighterInstance = h;
+      return h;
+    });
+  }
+  return highlighterPromise;
 }
 
-export function HeroCode({ code, className }: HeroCodeProps) {
-  const [html, setHtml] = useState<string>('')
+function getTheme(): string {
+  if (typeof document === "undefined") return "one-dark-pro";
+  return document.documentElement.getAttribute("data-theme") === "light"
+    ? "github-light"
+    : "one-dark-pro";
+}
+
+export const HeroCode = memo(function HeroCode({
+  code,
+  className,
+}: HeroCodeProps) {
+  const [html, setHtml] = useState<string>("");
+  const [theme, setTheme] = useState(getTheme);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
-    let mounted = true
+    if (typeof document === "undefined") return;
+    const observer = new MutationObserver(() => {
+      setTheme(getTheme());
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
-    async function highlight() {
-      const highlighter = await createHighlighter({
-        themes: ['dark-plus'],
-        langs: ['ts'],
-      })
+  useEffect(() => {
+    mountedRef.current = true;
 
+    getHighlighter().then((highlighter) => {
       const result = highlighter.codeToHtml(code.trim(), {
-        lang: 'ts',
-        theme: 'dark-plus'
-      })
-
-      if (mounted) setHtml(result)
-    }
-
-    highlight()
+        lang: "typescript",
+        theme,
+      });
+      if (mountedRef.current) setHtml(result);
+    });
 
     return () => {
-      mounted = false
-    }
-  }, [code])
+      mountedRef.current = false;
+    };
+  }, [code, theme]);
+
+  if (!html) {
+    return (
+      <div className={className} style={{ padding: "1.25rem", opacity: 0.3 }}>
+        <pre
+          style={{
+            margin: 0,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: "0.82rem",
+            lineHeight: 1.7,
+            color: "#52525b",
+          }}
+        >
+          {code.trim()}
+        </pre>
+      </div>
+    );
+  }
 
   return (
     <div
       className={className}
       dangerouslySetInnerHTML={{ __html: html }}
       style={{
-        fontFamily: 'Fira Code, monospace',
-        fontSize: '0.95rem',
-        lineHeight: 1.6,
-        textAlign: 'left'
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: "0.82rem",
+        lineHeight: 1.7,
+        textAlign: "left",
       }}
     />
-  )
-}
+  );
+});

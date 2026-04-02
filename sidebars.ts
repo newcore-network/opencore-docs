@@ -5,8 +5,6 @@ const sidebars: SidebarsConfig = {
     'intro',
     'why-opencore',
     'features',
-
-    // ── Getting Started ───────────────────────────────────────────
     {
       type: 'category',
       label: 'Getting Started',
@@ -19,8 +17,6 @@ const sidebars: SidebarsConfig = {
         'getting-started/runtime-modes',
       ],
     },
-
-    // ── Adapters ─────────────────────────────────────────────────
     {
       type: 'category',
       label: 'Adapters',
@@ -31,8 +27,6 @@ const sidebars: SidebarsConfig = {
         'adapters/redm',
       ],
     },
-
-    // ── Core Concepts ─────────────────────────────────────────────
     {
       type: 'category',
       label: 'Core Concepts',
@@ -45,8 +39,6 @@ const sidebars: SidebarsConfig = {
         'decorators/introduction',
       ],
     },
-
-    // ── Communication ─────────────────────────────────────────────
     {
       type: 'category',
       label: 'Communication',
@@ -98,8 +90,6 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
-
-    // ── Client Runtime ────────────────────────────────────────────
     {
       type: 'category',
       label: 'Client Runtime',
@@ -114,8 +104,6 @@ const sidebars: SidebarsConfig = {
         'client/webview-bridge',
       ],
     },
-
-    // ── Gameplay ──────────────────────────────────────────────────
     {
       type: 'category',
       label: 'Gameplay',
@@ -168,19 +156,6 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
-
-    // ── NPC Agents ────────────────────────────────────────────────
-    // {
-    //   type: 'category',
-    //   label: 'NPC Agents',
-    //   items: [
-    //     'npc-agents/getting-started',
-    //     'npc-agents/controllers-and-skills',
-    //     'npc-agents/connected-mode',
-    //   ],
-    // },
-
-    // ── Security ──────────────────────────────────────────────────
     {
       type: 'category',
       label: 'Security',
@@ -226,8 +201,6 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
-
-    // ── Advanced Topics ───────────────────────────────────────────
     {
       type: 'category',
       label: 'Advanced Topics',
@@ -248,8 +221,6 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
-
-    // ── Tooling ───────────────────────────────────────────────────
     {
       type: 'category',
       label: 'Tooling',
@@ -259,8 +230,6 @@ const sidebars: SidebarsConfig = {
         'compiler/about',
       ],
     },
-
-    // ── API Reference ─────────────────────────────────────────────
     {
       type: 'category',
       label: 'API Reference',
@@ -271,8 +240,6 @@ const sidebars: SidebarsConfig = {
         'api-reference/configuration',
       ],
     },
-
-    // ── Ecosystem ─────────────────────────────────────────────────
     {
       type: 'category',
       label: 'Ecosystem',
@@ -286,7 +253,6 @@ const sidebars: SidebarsConfig = {
           items: [
             'libraries/official-libraries/opencore-identity',
             'libraries/official-libraries/opencore-characters',
-            //'libraries/official-libraries/opencore-npc-agents',
           ],
         },
         'templates/about',
