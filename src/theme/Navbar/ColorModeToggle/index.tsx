@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
 export default function ColorModeToggle(): React.JSX.Element {
-  const { siteConfig } = useDocusaurusContext();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
