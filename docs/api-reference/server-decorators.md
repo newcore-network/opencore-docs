@@ -24,7 +24,7 @@ title: Server Decorators
 | `@OnRuntimeEvent()` | `eventName: string` | Subscribes to native FiveM events (`playerJoining`, `playerDropped`, etc.). | [Details](../decorators/server/on-runtime-event.md) |
 | `@RequiresState()` | `state: string` | Ensures the player has a specific state flag before execution. | [Details](../decorators/server/requires-state.md) |
 | `@Throttle()` | `limit, windowMs` | Rate-limits the method per player or context. | [Details](../decorators/server/throttle.md) |
-| `@Export()` | `exportName?: string` | Exposes the method as a FiveM export for inter-resource APIs. | [Details](../decorators/server/export.md) |
+| `@Export()` | `exportName?: string` | Exposes the method as a resource export for inter-resource APIs through the active adapter. | [Details](../decorators/server/export.md) |
 | `@Guard()` | `{ permission?, rank? }` | Applies access control before execution. | [Details](../decorators/server/guard.md) |
 | `@Public()` | — | Marks the method as explicitly public, bypassing guards. | [Details](../decorators/server/public.md) |
 | `@BinaryService()` | `serviceId: number` | Registers a binary protocol service handler. | [Details](../decorators/server/binary-service.md) |

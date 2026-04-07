@@ -224,16 +224,49 @@ The adapter automatically:
 
 ---
 
-## Exports Registry
+## Exports
 
-RageMP uses a centralized exports system:
+OpenCore keeps `@Export()` as the public programming model and the adapter provides two layers:
 
-```typescript
-import { exportsRegistry } from '@open-core/ragemp-adapter/shared'
+- Local registry access for synchronous framework internals such as `core.isCoreReady()`
+- An optional explicit remote export transport for server resource-to-resource calls
 
-// Access registered exports
-const myExport = exportsRegistry.get('myExportName')
-myExport(player, arg1, arg2)
+Use the framework contract instead of reaching into `exportsRegistry` directly:
+
+```ts
+import { IExports } from '@open-core/framework/contracts/server'
+
+interface DatabaseExports {
+  pingDatabase(): Promise<{ success: boolean }>
+}
+
+class ExampleService {
+  constructor(private readonly exportsService: IExports) {}
+
+  async pingDatabase() {
+    const database = await this.exportsService.waitForRemoteResource<DatabaseExports>('database', {
+      exportName: 'pingDatabase',
+    })
+
+    return database.pingDatabase()
+  }
+}
 ```
 
-This differs from FiveM's event-based exports and provides a more direct method invocation pattern.
+### API Summary
+
+- `getResource(resourceName)`
+  Use for local/synchronous resolution. This is what the framework uses internally for CORE bootstrap and provider lookups.
+- `getRemoteResource(resourceName)`
+  Returns an async proxy when you want explicit remote resource calls.
+- `callRemoteExport(resourceName, exportName, ...args)`
+  Calls one remote export explicitly.
+- `waitForRemoteResource(resourceName, options)`
+  Waits until a resource exposes a specific export before returning the async proxy.
+
+### Security Notes
+
+- Remote exports are server-side only.
+- The adapter executes only methods registered through `@Export()`.
+- Client-originated payload shapes are ignored by the remote export transport.
+- Treat remote export helper calls as async RPC, not as direct shared-memory calls.

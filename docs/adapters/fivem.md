@@ -104,6 +104,37 @@ Uses FiveM events for RPC and events:
 - `__oc:rpc:res:*` — RPC responses
 - `__oc:events:*` — Event broadcasting
 
+### Exports
+
+FiveM has native resource exports, so `getResource()` remains the normal path for direct resource access.
+
+OpenCore also exposes an optional explicit remote export helper layer for consistency with other adapters and for teams that prefer an async-only calling style:
+
+```ts
+import { IExports } from '@open-core/framework/contracts/server'
+
+interface DatabaseExports {
+  pingDatabase(): Promise<{ success: boolean }>
+}
+
+class ExampleService {
+  constructor(private readonly exportsService: IExports) {}
+
+  async pingDatabase() {
+    const database = await this.exportsService.waitForRemoteResource<DatabaseExports>('database', {
+      exportName: 'pingDatabase',
+    })
+
+    return database.pingDatabase()
+  }
+}
+```
+
+Use guidance:
+
+- `getResource()` for direct/local-style access
+- `getRemoteResource()` / `waitForRemoteResource()` when you want the optional async helper layer
+
 ---
 
 ## Configuration

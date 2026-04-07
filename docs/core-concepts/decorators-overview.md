@@ -79,7 +79,7 @@ Decorators provide a stable contract:
 | `@OnRuntimeEvent()` | Subscribes to native FiveM events (`playerJoining`, `playerDropped`, etc.). |
 | `@RequiresState()` | Ensures the player is in a specific state before execution. |
 | `@Throttle()` | Rate-limits the method per player or context. |
-| `@Export()` | Exposes the method as a FiveM export for inter-resource APIs. |
+| `@Export()` | Exposes the method as a resource export for inter-resource APIs through the active adapter. |
 | `@Guard()` | Applies access control (permissions, roles, ranks) before execution. |
 | `@Public()` | Marks the method as explicitly public, bypassing guards. |
 

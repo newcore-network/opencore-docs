@@ -122,7 +122,7 @@ If you remember only one rule:
 | [@OnRuntimeEvent()](./server/on-runtime-event.md) | Subscribes the method to a native FiveM event (e.g. playerJoining, playerDropped). Acts as a clean abstraction over on() for FiveM events. |
 | [@RequiresState()](./server/requires-state.md) | Ensures the player is in a specific state before executing the method. If the requirement is not met, the method is skipped or rejected. Commonly used for gameplay state validation (logged in, spawned, etc.). |
 | [@Throttle()](./server/throttle.md) | Applies rate limiting to the method. Prevents spam or abuse by limiting how frequently the method can be executed per player or context. |
-| [@Export()](./server/export.md) | Exposes the method as a FiveM export, making it callable from other resources. Useful for inter-resource APIs and modular architectures. |
+| [@Export()](./server/export.md) | Exposes the method as a resource export, making it callable from other resources through the active adapter. Useful for inter-resource APIs and modular architectures. |
 | [@Guard()](./server/guard.md) | Applies access control rules to the method. Can enforce permissions, roles, ranks, or custom authorization logic before execution. |
 | [@Public()](./server/public.md) | Marks the method as explicitly public and callable without restrictions. Useful for APIs that should bypass guards or internal access checks. |
 | [@OnNet()](./client/on-net.md) | Subscribes the method to a network event (onNet) on the client. Typically used for server → client communication and synchronized gameplay events. |
@@ -133,7 +133,7 @@ If you remember only one rule:
 | [@Interval()](./client/interval.md) | Executes the method at a fixed time interval (in milliseconds). Useful for periodic logic that does not need to run every tick (polling, checks, UI sync). |
 | [@Key()](./client/key.md) | Binds the method to a keyboard key press. Executes when the specified key is pressed by the player. Ideal for gameplay shortcuts or UI interactions. |
 | [@OnView()](./client/on-view.md) | Registers the method as a WebView callback handler. Executed when the UI (HTML/JS) sends a message to the client script. Acts as the bridge between UI and gameplay logic. |
-| [@Export()](./client/export.md) | Exposes the method as a FiveM client export, allowing other resources to call it directly. Useful for inter-resource client APIs. |
+| [@Export()](./client/export.md) | Exposes the method as a client resource export through the active adapter. Useful for inter-resource client APIs. |
 | [@ResourceLifecycle()](./client/on-resource-start.md) | Subscribes the method to resource lifecycle events (start, stop, restart). Useful for initialization and cleanup logic on the client side. |
 
 ## Design Notes (Client Side)
