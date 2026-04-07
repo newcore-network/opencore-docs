@@ -270,3 +270,61 @@ class ExampleService {
 - The adapter executes only methods registered through `@Export()`.
 - Client-originated payload shapes are ignored by the remote export transport.
 - Treat remote export helper calls as async RPC, not as direct shared-memory calls.
+
+---
+
+## Common Issues
+
+### Node 14 dependency compatibility
+
+RageMP server runtimes commonly run on Node 14. Some modern packages may declare compatible `engines` and still fail at runtime because their transitive dependencies use newer Node features such as `node:` specifiers.
+
+This affects packages like ORMs, database drivers, file globbers, and build-time tooling that may also execute during server bootstrap.
+
+Recommendations:
+
+- Prefer explicit versions for critical runtime dependencies such as `typeorm`, `pg`, and similar infrastructure packages.
+- Avoid loose ranges for server-critical packages in RageMP projects.
+- Externalize heavy runtime dependencies in your OpenCore build config when they are intended to be resolved from the project root at runtime.
+
+Example:
+
+```ts
+import { defineConfig } from '@open-core/cli'
+
+export default defineConfig({
+  build: {
+    server: {
+      target: 'node14',
+      external: ['typeorm', 'pg'],
+    },
+  },
+})
+```
+
+- Pin versions explicitly in `package.json` instead of relying on broad semver ranges.
+- If a transitive dependency upgrades beyond Node 14 compatibility, use package manager overrides/resolutions as a temporary compatibility measure.
+
+Example with `pnpm` overrides:
+
+```json
+{
+  "pnpm": {
+    "overrides": {
+      "glob": "7.2.3"
+    }
+  }
+}
+```
+
+### Misleading autoload errors
+
+If you see a message like:
+
+```txt
+[Bootstrap] No server controllers autoload file found, skipping.
+```
+
+it may actually be a nested dependency failure triggered while importing the autoload module.
+
+Check the full stack trace and verify the dependencies imported by your controllers before assuming the autoload file itself is missing.

@@ -97,6 +97,12 @@ And extra apis for this enviroment.
 - When you need RageMP-specific output structure
 - Node 14 compatibility requirements
 
+**Dependency guidance:**
+
+- Prefer exact versions for critical server runtime packages.
+- Externalize heavy runtime dependencies such as `typeorm` and `pg` when they should resolve from the project root at runtime.
+- Be careful with transitive dependencies that may silently drop Node 14 compatibility.
+
 ---
 
 ### RedM Adapter
