@@ -283,7 +283,10 @@ This affects packages like ORMs, database drivers, file globbers, and build-time
 
 Recommendations:
 
-- Prefer explicit versions for critical runtime dependencies such as `typeorm`, `pg`, and similar infrastructure packages.
+- Prefer explicit versions for critical runtime dependencies such as `typeorm`, `pg`, and similar infrastructure packages. Tested versions:
+  - typeorm: `0.3.19`
+  - pg: `8.16.0`
+  - glob: `7.2.3`
 - Avoid loose ranges for server-critical packages in RageMP projects.
 - Externalize heavy runtime dependencies in your OpenCore build config when they are intended to be resolved from the project root at runtime.
 
