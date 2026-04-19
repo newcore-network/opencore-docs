@@ -27,7 +27,7 @@ It extends `BaseEntity` and implements `Spatial` and `NativeHandle`, exposing se
 - `getPosition()` / `setPosition(vector)`
 - `getHeading()` / `setHeading(heading)`
 - `teleport(vector)`
-- `spawn(vector, model?)`
+- `spawn(vector, model?, options?)`
 - `setRoutingBucket(bucket)` / `getRoutingBucket()`
 - `kick(reason?)`
 
@@ -69,6 +69,14 @@ handleHeal(player: Player) {
   player.send('You were healed', 'success')
 }
 ```
+
+## Spawn Options
+
+`player.spawn(vector, model?, options?)` supports:
+
+- `skipLoadingScreenShutdown?: boolean`
+
+This option is primarily useful in FiveM when the client resource uses `loadscreen_manual_shutdown 'yes'` and needs to control exactly when the loading screen is dismissed.
 
 ## Security Integration
 

@@ -9,6 +9,11 @@ title: Releases
 - The framework continues the adapter-first runtime model with cleaner client/server ports, better command handling, improved worker execution, and broader automated coverage.
 - The CLI adds manifest-based templates, adapter validation tools, better dev restart options, improved RageMP support, and more reliable views/build flows.
 
+### Recent Additions
+
+- Added `skipLoadingScreenShutdown` to player spawn flows so FiveM resources using `loadscreen_manual_shutdown 'yes'` can control when the loading screen is dismissed.
+- Added client-side `@Service()` support from `@open-core/framework/client` so client architecture matches the documented server controller/service split.
+
 ### Framework
 
 - Added clearer client adapter ports for camera, ped, vehicle, progress, spawn, local player, runtime bridge, and WebView behavior.
@@ -26,4 +31,3 @@ title: Releases
 ### Notes
 
 - Older release entries were removed to keep this page focused on the current framework and CLI release line.
-

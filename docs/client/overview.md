@@ -8,16 +8,25 @@ The Client Runtime is the player-facing layer of OpenCore. It handles interactio
 
 ## Automatic Injection
 
-Just like on the server, OpenCore handles the lifecycle of client services automatically. Use `@Controller()` to define entry points, and inject services via the constructor.
+Just like on the server, OpenCore handles the lifecycle of client services automatically. Use `@Controller()` to define entry points and `@Service()` for reusable client business logic.
 
 ```ts
+@Service()
+export class NotificationFacade {
+  constructor(private readonly notification: NotificationService) {}
+
+  showReady() {
+    this.notification.show('You pressed E!')
+  }
+}
+
 @Controller()
 export class MyUIController {
-  constructor(private readonly notification: NotificationService) {}
+  constructor(private readonly notifications: NotificationFacade) {}
 
   @Key('E')
   onPressE() {
-    this.notification.show('You pressed E!')
+    this.notifications.showReady()
   }
 }
 ```

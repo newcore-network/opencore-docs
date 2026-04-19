@@ -4,6 +4,12 @@ title: 'Identity'
 
 # @open-core/identity
 
+:::warning Maintenance Status
+`@open-core/identity` is currently outdated and is not being actively maintained.
+
+The OpenCore team is currently focusing maintenance on the framework, adapters, and CLI only. Identity may lag behind the current framework API and is not recommended for new projects at this time.
+:::
+
 Enterprise-grade identity, authentication, and authorization plugin for the OpenCore Framework.
 
 Identity gives your server a unified way to:

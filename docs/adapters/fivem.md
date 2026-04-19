@@ -135,6 +135,39 @@ Use guidance:
 - `getResource()` for direct/local-style access
 - `getRemoteResource()` / `waitForRemoteResource()` when you want the optional async helper layer
 
+### Manual loading screen shutdown
+
+FiveM supports `loadscreen_manual_shutdown 'yes'` for flows where the world should remain hidden until the client has prepared its scene.
+
+OpenCore supports this in the spawn lifecycle through `skipLoadingScreenShutdown`.
+
+Server-side:
+
+```ts
+player.spawn(position, 'mp_m_freemode_01', {
+  skipLoadingScreenShutdown: true,
+})
+```
+
+Client-side:
+
+```ts
+await spawnService.spawn(position, 'mp_m_freemode_01', 0, {
+  skipLoadingScreenShutdown: true,
+})
+
+ShutdownLoadingScreenNui()
+```
+
+Use this when you need to:
+
+- spawn at a neutral staging position
+- load models or animation dictionaries
+- configure cinematic cameras
+- reveal the world only after the scene is ready
+
+When `skipLoadingScreenShutdown` is set, OpenCore does not call `ShutdownLoadingScreen()` or `ShutdownLoadingScreenNui()` for that spawn. Your resource owns the shutdown timing.
+
 ---
 
 ## Configuration

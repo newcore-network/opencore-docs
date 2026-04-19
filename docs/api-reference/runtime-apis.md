@@ -27,7 +27,7 @@ import * as ClientApi from '@open-core/framework/client'
 Key groups:
 
 - Bootstrap: `init`.
-- Decorators: `Controller`, `OnNet`, `OnRPC`, `OnView`, `OnTick`, `Interval`, `Key`, `OnResourceStart`, `OnResourceStop`, `OnGameEvent`, `LocalEvent`.
+- Decorators: `Controller`, `Service`, `OnNet`, `OnRPC`, `OnView`, `OnTick`, `Interval`, `Key`, `OnResourceStart`, `OnResourceStop`, `OnGameEvent`, `LocalEvent`.
 - Services: `WebViewBridge`, `SpawnService`, `NotificationService`, `VehicleClientService`, `VehicleService`, and other client runtime services.
 
 ## Import Style

@@ -10,6 +10,7 @@ const sidebars: SidebarsConfig = {
       label: 'Getting Started',
       items: [
         'getting-started/installation',
+        'getting-started/common-problems',
         'getting-started/first-project',
         'getting-started/adapters',
         'getting-started/project-structure',
@@ -96,6 +97,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'client/overview',
         'decorators/client/controller',
+        'decorators/client/service',
         'decorators/client/key',
         'decorators/client/on-tick',
         'decorators/client/interval',

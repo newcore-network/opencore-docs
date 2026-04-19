@@ -92,6 +92,7 @@ Decorators provide a stable contract:
 | Decorator | Description |
 | --- | --- |
 | `@Controller()` | Marks a class as a client-side controller for UI, input, and client events. |
+| `@Service()` | Marks a class as a reusable client-side service for shared business logic. |
 
 ### Method Decorators
 

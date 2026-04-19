@@ -63,6 +63,8 @@ This guarantees:
 * Access to player identity and state
 * Consistent security enforcement
 
+`Player` must be imported as a normal runtime value, not with `import type`, otherwise the emitted decorator metadata can break at runtime.
+
 ---
 
 ## Validation Behavior

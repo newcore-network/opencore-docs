@@ -165,6 +165,7 @@ In these examples:
 * Commands can be defined in any resource; metadata is collected in the core, execution stays local to the resource.
 * To use commands, you must run an OpenCore-compatible chat resource. `xchat` is the reference implementation and recommended starting point.
 * The first parameter is always `Player`.
+* Do **not** change `Player` to `import type { Player }` in command handlers. `Player` must remain a runtime import so decorator metadata is emitted correctly.
 * Primitive arguments have basic validation; complex data or strict rules require a schema.
 * Spread parameters are supported from `v0.3.x` onward.
 * For object schemas, the schema keys must match the method parameter names after `Player`.

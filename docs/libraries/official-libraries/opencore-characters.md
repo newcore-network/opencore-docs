@@ -4,6 +4,12 @@ title: 'Characters'
 
 # @open-core/characters
 
+:::warning Maintenance Status
+`@open-core/characters` is currently outdated and is not being actively maintained.
+
+The OpenCore team is currently focusing maintenance on the framework, adapters, and CLI only. Characters may lag behind the current framework API and is not recommended for new projects at this time.
+:::
+
 Official character domain library for OpenCore.
 
 It provides character lifecycle logic, policy-driven rules, active character state binding, and domain events, without shipping UI.

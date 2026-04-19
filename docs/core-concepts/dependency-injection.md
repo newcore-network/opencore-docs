@@ -38,6 +38,27 @@ class ShopController {
 }
 ```
 
+Client services use the same framework-level decorator:
+
+```ts
+import { Controller, Key, Service } from '@open-core/framework/client'
+
+@Service()
+class SelectionService {
+  focus() {}
+}
+
+@Controller()
+class CharacterController {
+  constructor(private readonly selection: SelectionService) {}
+
+  @Key('E')
+  select() {
+    this.selection.focus()
+  }
+}
+```
+
 ## Rules
 
 - Do not instantiate framework classes manually (`new MyService()`).

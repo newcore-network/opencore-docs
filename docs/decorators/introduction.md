@@ -110,6 +110,7 @@ If you remember only one rule:
 | [@Controller()](./client/controller.md) | Same concept as @Controller, but for the client-side. Used to handle UI interactions, player input, client events, and client-only logic. |
 | [@Bind()](./server/bind.md) | Registers a class as injectable in the dependency container. By default, it is treated as a singleton. Useful for shared utilities, managers, adapters, or low-level services that are not Controllers. |
 | [@Service()](./server/service.md) | Semantic alias for @Bind(). Indicates that the class contains domain or business logic. Improves readability and architectural clarity. |
+| [@Service()](./client/service.md) | Same concept as @Service, but for client-side business logic. Useful for reusable scene orchestration, UI coordination, and local gameplay services. |
 | [@Repo()](./server/repo.md) | Semantic alias for @Bind(). Intended for data access and persistence layers (repositories, stores, database adapters). Helps enforce a clean separation of concerns. |
 ### Method Decorators
 | Name | Description |

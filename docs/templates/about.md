@@ -16,6 +16,12 @@ A collection of official resource boilerplates and production-ready implementati
 - **Base Resource**: A lightweight, boilerplate-free starting point for any OpenCore resource, pre-configured with TypeScript, tsyringe, and the core runtime.
 - **Identity Implementation**: A template showing how to implement the `opencore-identity` library in a real project.
 
+:::warning Library Template Status
+Some templates reference external OpenCore libraries that are currently outdated.
+
+At the moment, only the framework, adapters, and CLI are actively maintained. Treat library-based templates as historical/reference material unless you are prepared to update them yourself.
+:::
+
 ## Usage
 You can instantiate templates using the OpenCore CLI or by cloning the official template repositories.
 

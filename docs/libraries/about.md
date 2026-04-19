@@ -6,6 +6,14 @@ title: Libraries Overview
 
 OpenCore provides a set of official libraries designed to solve common problems in multiplayer game server development. These libraries integrate directly with the framework’s dependency injection system and follow the same architectural conventions as the core.
 
+:::warning Current Maintenance Status
+At the moment, only the OpenCore framework, adapters, and CLI are actively maintained.
+
+External libraries are not being actively maintained right now due to limited time. This includes packages such as Identity, Characters, and other ecosystem libraries.
+
+They may be outdated relative to the current framework API, and they are **not recommended for new production work** until maintenance resumes.
+:::
+
 If you are already working with library runtime wrappers and events, see [Library API Usage](./library-api-usage.md).
 If you are integrating install-time runtime extensions, see [Plugin API Usage](./plugin-api-usage.md).
 
@@ -53,7 +61,7 @@ Character domain library for account-owned characters, active selection state, p
 ## Why use official libraries?
 - **Clear Scope**: Each library solves one problem well.
 - **Seamless Integration**: Built specifically for OpenCore’s architecture.
-- **Maintained**: Kept in sync with framework evolution.
+- **Version awareness required**: Check maintenance status and compatibility before adopting a library.
 - **Composable**: Designed to be combined with other libraries without tight coupling.
 
 ---

@@ -127,6 +127,12 @@ const data = await WebView.callProc('getPlayerInventory', playerId)
 WebView.markAsChat(viewId)
 ```
 
+### Shared spawn API note
+
+The shared spawn API accepts `skipLoadingScreenShutdown` for cross-adapter parity.
+
+This flag is mainly useful in FiveM flows that use manual loading screen shutdown. RageMP consumers can usually ignore it.
+
 ### Key Mapping
 
 Custom key binding system:

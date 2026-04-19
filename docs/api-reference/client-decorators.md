@@ -7,6 +7,7 @@ title: Client Decorators
 | Decorator | Description | Details |
 | --- | --- | --- |
 | `@Controller()` | Marks a class as a client-side controller for UI, input, and client events. | [Details](../decorators/client/controller.md) |
+| `@Service()` | Marks a class as a reusable client-side service. Singleton by default. | [Details](../decorators/client/service.md) |
 
 ## Method Decorators
 

@@ -21,6 +21,8 @@ Spawning in FiveM is complex. The `SpawnService` handles:
 
 The service automatically handles `DoScreenFadeOut` and `DoScreenFadeIn` during the spawn process, ensuring a smooth transition for the player.
 
+In FiveM, the spawn bridge also shuts down the loading screen by default as part of the initial spawn flow.
+
 ## API Methods
 
 ### `spawn()`
@@ -30,6 +32,11 @@ Performs the initial spawn. Typically called once when the player first joins or
 ```ts
 async spawn(position: Vector3, model: string, heading?: number, options?: SpawnOptions)
 ```
+
+`SpawnOptions` supports:
+
+- `appearance?: PlayerAppearance`
+- `skipLoadingScreenShutdown?: boolean`
 
 ### `respawn()`
 
@@ -63,7 +70,22 @@ export class SessionController {
 }
 ```
 
+### FiveM manual loading screen control
+
+If your FiveM resource uses `loadscreen_manual_shutdown 'yes'`, you can keep the loading screen visible until your scene is ready:
+
+```ts
+await this.spawnService.spawn(data.pos, data.model, data.heading, {
+  appearance: data.appearance,
+  skipLoadingScreenShutdown: true,
+})
+
+// Load assets, set up camera, prepare scene...
+ShutdownLoadingScreenNui()
+```
+
 ## Notes
 
 - **Timeouts**: Built-in timeouts for network, ped, and collision loading prevent the client from hanging indefinitely.
 - **Appearance**: If an appearance object is provided, it uses `AppearanceService` to apply clothing and facial features automatically during the spawn.
+- **FiveM**: `skipLoadingScreenShutdown` is primarily intended for FiveM cinematic intro and character selection flows. When set, your code becomes responsible for calling `ShutdownLoadingScreenNui()`.
