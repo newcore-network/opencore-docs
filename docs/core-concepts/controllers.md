@@ -25,6 +25,40 @@ export class PlayerController {
 - Controllers are **scoped to the current FiveM resource**.
 - The decorator only registers the class — instantiation is handled by the framework.
 
+### Default decorations
+
+`@Controller()` accepts an optional configuration object that declares **default decorations** for every method in the class. This is useful when all (or most) handlers in a controller share the same security, rate-limiting, or state requirements.
+
+Supported defaults:
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `guard` | `GuardOptions` | Applies `@Guard` to every method that does not define its own. |
+| `throttle` | `ThrottleOptions` \| `[limit, windowMs]` | Applies `@Throttle` to every method that does not define its own. |
+| `requiresState` | `StateRequirement` | Applies `@RequiresState` to every method that does not define its own. |
+| `public` | `boolean` | When `true`, applies `@Public` to every method not already marked as such. |
+
+**Override behavior:** if a method declares its own decorator explicitly, the method-level version wins. Defaults only fill the gaps.
+
+```ts
+@Controller({
+  guard: { permission: 'user.authenticated' },
+  throttle: { limit: 20, windowMs: 1000 },
+})
+export class ShopController {
+  @Command('buy')
+  buy(player: Player, item: string) {
+    // inherits guard + throttle from the controller
+  }
+
+  @Command('admin:restock')
+  @Guard({ rank: 5 }) // overrides the controller default guard
+  restock(player: Player) {
+    // uses rank 5 guard, but still inherits throttle
+  }
+}
+```
+
 ---
 
 ## Services (`@Service()`)
