@@ -229,6 +229,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'cli/introduction',
         'cli/commands',
+        'cli/environments',
         'compiler/about',
       ],
     },
