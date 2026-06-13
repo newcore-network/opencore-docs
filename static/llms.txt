@@ -1,0 +1,204 @@
+# OpenCore
+
+> OpenCore is a TypeScript framework for building multiplayer game servers (FiveM, RageMP, RedM). It brings dependency injection, decorators, controllers/services, typed communication (events, RPC, binary protocol), entity and gameplay APIs, and a security layer to the multiplayer ecosystem.
+
+This file is a router for LLMs and agents. Links are ordered to match the documentation sidebar. Every path points to a live page on https://opencorejs.dev.
+
+## Overview
+
+- [Introduction](https://opencorejs.dev/docs/intro): What OpenCore is and how the docs are organized.
+- [Why OpenCore?](https://opencorejs.dev/docs/why-opencore): The problems OpenCore solves and its design philosophy.
+- [Features & Comparative](https://opencorejs.dev/docs/features): Feature overview and comparison with other frameworks.
+
+## Getting Started
+
+- [Installation](https://opencorejs.dev/docs/getting-started/installation): Install the OpenCore CLI and set up your environment.
+- [Common Problems](https://opencorejs.dev/docs/getting-started/common-problems): Fixes for common setup and runtime issues.
+- [First Project](https://opencorejs.dev/docs/getting-started/first-project): Build your first OpenCore project end to end.
+- [Adapters](https://opencorejs.dev/docs/getting-started/adapters): Choose and configure a platform adapter during setup.
+- [Project Structure](https://opencorejs.dev/docs/getting-started/project-structure): How an OpenCore project is laid out.
+- [Setups](https://opencorejs.dev/docs/getting-started/setups): Supported project setups and configurations.
+- [Runtime Modes](https://opencorejs.dev/docs/getting-started/runtime-modes): Standalone vs. core/resource runtime modes.
+
+## Adapters
+
+- [Adapters Overview](https://opencorejs.dev/docs/adapters): How platform adapters abstract the underlying multiplayer runtime.
+- [FiveM](https://opencorejs.dev/docs/adapters/fivem): FiveM platform adapter.
+- [RageMP](https://opencorejs.dev/docs/adapters/ragemp): RageMP platform adapter.
+- [RedM](https://opencorejs.dev/docs/adapters/redm): RedM platform adapter.
+
+## Core Concepts
+
+- [Runtime Model & Lifecycle](https://opencorejs.dev/docs/core-concepts/runtime-lifecycle): Runtime model and lifecycle phases.
+- [Dependency Injection (tsyringe)](https://opencorejs.dev/docs/core-concepts/dependency-injection): How OpenCore wires services with tsyringe.
+- [Controllers & Services](https://opencorejs.dev/docs/core-concepts/controllers): Controllers and services and how they differ.
+- [Decorators & Metadata](https://opencorejs.dev/docs/core-concepts/decorators-overview): How decorators and metadata drive the runtime.
+- [Contracts](https://opencorejs.dev/docs/core-concepts/contracts): Contracts as the boundary between framework and implementation.
+- [Decorators Introduction](https://opencorejs.dev/docs/decorators/introduction): Entry point to the decorator reference.
+
+## Communication
+
+- [Communication Overview](https://opencorejs.dev/docs/communication/overview): Unified communication model in OpenCore.
+
+### Events
+
+- [Events API](https://opencorejs.dev/docs/communication/events-api): Core event bus used for all event-based communication.
+- [@OnNet (Server)](https://opencorejs.dev/docs/decorators/server/on-net): Registers a server-side network event handler.
+- [@OnNet (Client)](https://opencorejs.dev/docs/decorators/client/on-net): Registers a client-side network event handler.
+- [@OnFrameworkEvent](https://opencorejs.dev/docs/decorators/server/on-framework-event): Listens to framework lifecycle events on the server.
+- [@OnLibraryEvent (Server)](https://opencorejs.dev/docs/decorators/server/on-library-event): Listens to server-side library domain events emitted with library.emit(...).
+- [@OnLibraryEvent (Client)](https://opencorejs.dev/docs/decorators/client/on-library-event): Listens to client-side library domain events emitted with library.emit(...).
+- [@OnRuntimeEvent](https://opencorejs.dev/docs/decorators/server/on-runtime-event): Listens to OpenCore runtime events on the server.
+- [@OnLocalEvent](https://opencorejs.dev/docs/decorators/client/local-event): Handles client-local events.
+- [@OnGameEvent](https://opencorejs.dev/docs/decorators/client/game-event): Handles native game events on the client.
+- [@OnView](https://opencorejs.dev/docs/decorators/client/on-view): Handles messages from a WebView/NUI.
+
+### RPC
+
+- [RPC Overview](https://opencorejs.dev/docs/communication/rpc): Remote Procedure Calls between server and client.
+- [RPC API](https://opencorejs.dev/docs/communication/rpc-api): Core request–response communication API.
+- [@OnRPC (Server)](https://opencorejs.dev/docs/decorators/server/on-rpc): Registers a server-side RPC handler.
+- [@OnRPC (Client)](https://opencorejs.dev/docs/decorators/client/on-rpc): Registers a client-side RPC handler.
+
+### Binary Protocol
+
+- [Binary Protocol](https://opencorejs.dev/docs/communication/binary-protocol): Low-level protocol between OpenCore and external binary processes.
+- [@BinaryService](https://opencorejs.dev/docs/decorators/server/binary-service): Defines and manages external binary processes used by OpenCore.
+- [@BinaryCall](https://opencorejs.dev/docs/decorators/server/binary-call): Defines request-response calls from OpenCore to a Binary Service.
+- [@BinaryEvent](https://opencorejs.dev/docs/decorators/server/binary-event): Handles events emitted by a Binary Service.
+
+### Exports
+
+- [@Export (Server)](https://opencorejs.dev/docs/decorators/server/export): Exposes a server method as a native resource export.
+- [@Export (Client)](https://opencorejs.dev/docs/decorators/client/export): Exposes a client method as a native resource export.
+
+## Client Runtime
+
+- [Client Runtime Overview](https://opencorejs.dev/docs/client/overview): How the client-side runtime works.
+- [@Controller (Client)](https://opencorejs.dev/docs/decorators/client/controller): Declares a client-side controller.
+- [@Service (Client)](https://opencorejs.dev/docs/decorators/client/service): Declares a client-side injectable service.
+- [@Key](https://opencorejs.dev/docs/decorators/client/key): Binds a method to a keyboard/control key.
+- [@OnTick (Client)](https://opencorejs.dev/docs/decorators/client/on-tick): Runs a method every client tick.
+- [@Interval](https://opencorejs.dev/docs/decorators/client/interval): Runs a method on a fixed interval.
+- [@OnResourceStart](https://opencorejs.dev/docs/decorators/client/on-resource-start): Hooks into client resource start.
+- [@OnResourceStop](https://opencorejs.dev/docs/decorators/client/on-resource-stop): Hooks into client resource stop.
+- [WebView Bridge](https://opencorejs.dev/docs/client/webview-bridge): Bridge between the client runtime and NUI/WebView.
+
+## Gameplay
+
+### Entities
+
+- [Entities](https://opencorejs.dev/docs/entities/introduction): Entity model overview.
+- [Base Entity Contracts](https://opencorejs.dev/docs/entities/base-entity): Shared base entity contracts.
+- [Player Entity](https://opencorejs.dev/docs/entities/player): Player entity API.
+- [Vehicle Entity](https://opencorejs.dev/docs/entities/vehicle): Vehicle entity API.
+- [NPC Entity](https://opencorejs.dev/docs/entities/npc): NPC entity API.
+- [Channel](https://opencorejs.dev/docs/entities/channel): Channel entity for grouped communication.
+
+- [@Command](https://opencorejs.dev/docs/decorators/server/command): Registers a server chat/console command.
+- [@RequiresState](https://opencorejs.dev/docs/decorators/server/requires-state): Guards a handler behind required runtime state.
+- [@OnTick (Server)](https://opencorejs.dev/docs/decorators/server/on-tick): Runs a method every server tick.
+
+### Server APIs
+
+- [Chat](https://opencorejs.dev/docs/apis/chat): Server chat API.
+- [Vehicles](https://opencorejs.dev/docs/apis/vehicles): Server vehicle API.
+- [Npcs](https://opencorejs.dev/docs/apis/npcs): Server NPC API.
+- [Vehicle Modifications](https://opencorejs.dev/docs/apis/vehicle-modifications): Apply and manage vehicle modifications.
+- [Appearance](https://opencorejs.dev/docs/apis/appearance): Server-side appearance API.
+- [Parallel Compute](https://opencorejs.dev/docs/apis/parallel-compute): Offload work to parallel compute.
+- [Channels](https://opencorejs.dev/docs/apis/channels): Channel management API.
+
+### Client APIs
+
+- [Spawn](https://opencorejs.dev/docs/apis/client/spawn): Client spawn API.
+- [Appearance](https://opencorejs.dev/docs/apis/client/appearance): Client appearance API.
+- [Camera](https://opencorejs.dev/docs/apis/client/camera): Low-level scripted camera control for client-side gameplay and cinematic workflows.
+- [Cinematic](https://opencorejs.dev/docs/apis/client/cinematic): Timeline-based cinematic orchestration with shots, effects, and runtime controls.
+- [Notifications](https://opencorejs.dev/docs/apis/client/notifications): Client notification API.
+- [Blips](https://opencorejs.dev/docs/apis/client/blips): Map blip API.
+- [Markers](https://opencorejs.dev/docs/apis/client/markers): World marker API.
+- [Peds](https://opencorejs.dev/docs/apis/client/peds): Client ped API.
+- [TextUI](https://opencorejs.dev/docs/apis/client/textui): On-screen text UI helpers.
+- [Streaming](https://opencorejs.dev/docs/apis/client/streaming): Asset streaming API.
+- [Progress](https://opencorejs.dev/docs/apis/client/progress): Progress bar/action API.
+- [Vehicle](https://opencorejs.dev/docs/apis/client/vehicle): Client vehicle API.
+
+## Security
+
+- [Security Overview](https://opencorejs.dev/docs/security/overview): OpenCore's security model.
+- [@Guard](https://opencorejs.dev/docs/decorators/server/guard): Protects a handler with authorization guards.
+- [@Throttle](https://opencorejs.dev/docs/decorators/server/throttle): Rate-limits a handler.
+- [@Public](https://opencorejs.dev/docs/decorators/server/public): Marks a handler as publicly accessible.
+- [Input Validation (Zod Schemas)](https://opencorejs.dev/docs/security/input-validation): Validate inbound payloads with Zod schemas.
+- [Security Handler](https://opencorejs.dev/docs/security/security-handler): The central security handler.
+- [Net Event Security Observer](https://opencorejs.dev/docs/security/net-event-observer): Observe and screen network events.
+- [Command Error Observer](https://opencorejs.dev/docs/security/command-error-observer): Observe command execution errors.
+
+## Ports & Contracts
+
+### Ports
+
+- [Introduction to Ports](https://opencorejs.dev/docs/ports/introduction): What ports are and when to implement them.
+- [Player Directory](https://opencorejs.dev/docs/ports/player-directory): Player directory port.
+- [Authorization Port](https://opencorejs.dev/docs/ports/principal): Principal/authorization port.
+- [Command Execution](https://opencorejs.dev/docs/ports/command-execution): Command execution port.
+- [Player Session Lifecycle](https://opencorejs.dev/docs/ports/session-lifecycle): Player session lifecycle port.
+
+### Contracts
+
+- [Introduction to Contracts](https://opencorejs.dev/docs/contracts/introduction): What contracts are and how to implement them.
+- [Player Persistence](https://opencorejs.dev/docs/contracts/player-persistence): Player persistence contract.
+- [Repository](https://opencorejs.dev/docs/contracts/repository): Repository contract.
+- [Security Handler](https://opencorejs.dev/docs/contracts/security/security-handler): Security handler contract.
+- [Net Event Security Observer](https://opencorejs.dev/docs/contracts/security/net-event-security-observer): Net event security observer contract.
+- [Principal Provider](https://opencorejs.dev/docs/contracts/security/principal-provider): Principal provider contract.
+- [Command Security Observer](https://opencorejs.dev/docs/contracts/security/command-security-observer): Command security observer contract.
+
+## Advanced Topics
+
+- [Benchmark Strategy & Results](https://opencorejs.dev/docs/advanced/benchmarks): Benchmark methodology and results.
+- [Performance & Compute](https://opencorejs.dev/docs/advanced/performance): Performance and compute considerations.
+- [Scaling Resources (CORE ↔ RESOURCE)](https://opencorejs.dev/docs/advanced/scaling-resources): Scaling across core and resource processes.
+- [Session Recovery](https://opencorejs.dev/docs/advanced/session-recovery): Recovering player sessions after restarts.
+
+### Dev Mode
+
+- [Development Mode](https://opencorejs.dev/docs/dev-mode/about): What development mode provides.
+- [Event Interceptor](https://opencorejs.dev/docs/dev-mode/event-interceptor): Inspect and intercept events in dev mode.
+- [Player Simulator](https://opencorejs.dev/docs/dev-mode/player-simulator): Simulate players for testing.
+- [State Inspector](https://opencorejs.dev/docs/dev-mode/state-inspector): Inspect runtime state.
+
+## Tooling
+
+- [CLI Overview](https://opencorejs.dev/docs/cli/introduction): The OpenCore CLI.
+- [Commands](https://opencorejs.dev/docs/cli/commands): CLI command reference.
+- [Environment System](https://opencorejs.dev/docs/cli/environments): Managing environments and builds.
+- [The Compiler](https://opencorejs.dev/docs/compiler/about): How the OpenCore compiler works.
+
+## API Reference
+
+- [Server Decorators](https://opencorejs.dev/docs/api-reference/server-decorators): Full reference of server-side decorators.
+- [Client Decorators](https://opencorejs.dev/docs/api-reference/client-decorators): Full reference of client-side decorators.
+- [Runtime APIs](https://opencorejs.dev/docs/api-reference/runtime-apis): Runtime API reference.
+- [Configuration (ServerInitOptions, Features)](https://opencorejs.dev/docs/api-reference/configuration): Configuration options and feature flags.
+
+## Ecosystem
+
+- [Libraries Overview](https://opencorejs.dev/docs/libraries/about): What OpenCore libraries are.
+- [Library API Usage](https://opencorejs.dev/docs/libraries/library-api-usage): How to use OpenCore library runtime APIs and library events.
+- [Plugin API Usage](https://opencorejs.dev/docs/libraries/plugin-api-usage): Install-time runtime extension model for OpenCore server and client.
+
+### Official Libraries
+
+- [Identity](https://opencorejs.dev/docs/libraries/official-libraries/opencore-identity): @open-core/identity library.
+- [Characters](https://opencorejs.dev/docs/libraries/official-libraries/opencore-characters): @open-core/characters library.
+
+- [Official Templates](https://opencorejs.dev/docs/templates/about): Official starter templates.
+- [Template Manifests](https://opencorejs.dev/docs/templates/manifest): The oc.manifest.json template format.
+
+## More
+
+- [Roadmap](https://opencorejs.dev/docs/roadmap): Planned features and direction.
+- [Releases](https://opencorejs.dev/docs/releases): Release notes.
+- [Contributing](https://opencorejs.dev/docs/contributions): How to contribute to OpenCore.
