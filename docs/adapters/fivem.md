@@ -172,6 +172,28 @@ When `skipLoadingScreenShutdown` is set, OpenCore does not call `ShutdownLoading
 
 ## Configuration
 
+### Server Dependencies
+
+FXServer Node.js 22 runs server resources inside a filesystem sandbox. If a server dependency resolves outside the mounted resource folder, the runtime can fail with `ERR_ACCESS_DENIED` or `no device found`.
+
+For production FiveM resources that use `build.server.external`, prefer OpenCore's isolated dependency resolution mode:
+
+```ts
+export default defineConfig({
+  build: {
+    dependencyResolution: {
+      mode: 'isolated',
+      verifySandboxPaths: true,
+    },
+    server: {
+      external: ['typeorm', 'pg', '@prisma/adapter-pg'],
+    },
+  },
+})
+```
+
+See [Dependency Resolution](../cli/dependency-resolution.md) for all modes, including `isolated`, `shared-resource`, `bundle`, and legacy `symlink`.
+
 ### FiveM Manifest
 
 The CLI generates `fxmanifest.lua` with FiveM-specific data:

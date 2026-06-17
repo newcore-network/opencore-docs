@@ -88,6 +88,25 @@ export default defineConfig({
 
 ## Configuration
 
+### Server Dependencies
+
+RedM runs on the CitizenFX/FXServer runtime family and has the same Node.js 22 filesystem sandbox considerations as FiveM.
+
+For server resources that use runtime npm packages through `build.server.external`, use isolated dependency resolution for production:
+
+```ts
+export default defineConfig({
+  build: {
+    dependencyResolution: {
+      mode: 'isolated',
+      verifySandboxPaths: true,
+    },
+  },
+})
+```
+
+See [Dependency Resolution](../cli/dependency-resolution.md) for all modes and tradeoffs.
+
 ### Using RedM
 
 ```typescript
