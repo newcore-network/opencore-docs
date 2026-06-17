@@ -47,7 +47,10 @@ const config: Config = {
     ],
   ],
 
-  plugins: [require.resolve("./src/plugins/search-index")],
+  plugins: [
+    require.resolve("./src/plugins/search-index"),
+    require.resolve("./src/plugins/llms-txt"),
+  ],
 
   themeConfig: {
     colorMode: {
