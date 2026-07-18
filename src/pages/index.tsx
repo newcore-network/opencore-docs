@@ -213,7 +213,7 @@ export class ImageService {
     id: "adapters",
     icon: "\uD83D\uDD0C",
     title: "Adapters",
-    desc: "Target FiveM and RageMP today, with RedM support on the way",
+    desc: "Target FiveM today, with RedM support on the way",
     file: "opencore.config.ts",
     code: `export default defineConfig({
   name: 'my-server',
@@ -272,7 +272,6 @@ async spawnCar(player: Player, model: string) {
 const PLATFORMS = [
   { name: "FiveM", style: "heroPlatformFiveM" as const },
   { name: "RedM", style: "heroPlatformRedM" as const },
-  { name: "RageMP", style: "heroPlatformRageMP" as const },
 ];
 
 const BENCHMARKS = [
@@ -575,7 +574,7 @@ export default function Home(): JSX.Element {
             </h1>
             <p className={styles.heroDesc}>
               TypeScript-first framework with dependency injection, Zod
-              validation, and security primitives. Built for FiveM & RageMP —
+              validation, and security primitives. Built for FiveM —
               RedM coming next.
             </p>
             <div className={styles.heroButtons}>

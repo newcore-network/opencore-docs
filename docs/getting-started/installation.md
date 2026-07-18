@@ -42,7 +42,7 @@ and ready!
 
 ### Add your adapter
 
-After initialization, you need to configure your target platform. OpenCore supports multiple platforms (FiveM, RageMP, RedM, Node) through adapters.
+After initialization, you need to configure your target platform. OpenCore supports multiple platforms (FiveM, RedM, Node) through adapters.
 
 [Learn more about adapters](./adapters)
 
