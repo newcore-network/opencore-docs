@@ -16,7 +16,7 @@ Adapters abstract platform-specific details so your gameplay code remains portab
 
 The multiplayer server ecosystem has different runtimes with distinct requirements:
 
-| Aspect | FiveM | RageMP | RedM | Node (Default) |
+| Aspect | FiveM | RageMP (Deprecated) | RedM | Node (Default) |
 |--------|-------|--------|------|---------------|
 | **Manifest** | `fxmanifest.lua` | `package.json` | `fxmanifest.lua` | `fxmanifest.lua` |
 | **Server Runtime** | Node.js | Node.js 14 | Node.js | Node.js (any) |
@@ -64,7 +64,7 @@ And extra apis for this enviroment.
 
 ---
 
-### RageMP Adapter
+### RageMP Adapter (Deprecated)
 
 The **RageMP adapter** targets Rage Multiplayer.
 

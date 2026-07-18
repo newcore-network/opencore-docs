@@ -2,6 +2,8 @@
 title: RageMP
 ---
 
+> **Deprecated:** The RageMP adapter is deprecated following the shutdown of the RageMP project. We recommend using the FiveM adapter or another supported platform for new development.
+
 ## Overview
 
 The **RageMP adapter** connects OpenCore with Rage Multiplayer runtimes. It implements all framework contracts using RageMP's JavaScript API.

@@ -5,7 +5,7 @@ title: The Compiler
 ## Overview
 
 The **OpenCore Compiler** is the technical core of the OpenCore CLI.  
-It is not just a transpiler or a bundler: it is a **monorepo-aware build orchestrator** designed for FiveM, RageMP, RedM, and similar GTA runtimes.
+It is not just a transpiler or a bundler: it is a **monorepo-aware build orchestrator** designed for FiveM, RedM, and similar GTA runtimes.
 
 Its job is to:
 - Understand **what each environment can and cannot do**
@@ -72,7 +72,6 @@ The compiler enforces **hard boundaries** between them and adapts output to the 
 The **server** runs on the runtime provided by the selected adapter.
 
 - FiveM/RedM default to the standard resource layout used by those runtimes.
-- RageMP typically targets **Node 14** and uses a split layout with `packages/` and `client_packages/`.
 - Build targets are selected by adapter defaults and can be overridden in config.
 
 ### Intended responsibilities
@@ -155,7 +154,6 @@ This is one of the **main reasons a generic bundler is not enough**.
 Views run in an **embedded Chromium instance**.
 
 This is browser-like, but **not guaranteed to be modern Chrome**.
-RageMP CEF is especially old, so build targets and CSS processing matter more than in a normal web app.
 
 ### Intended responsibilities
 

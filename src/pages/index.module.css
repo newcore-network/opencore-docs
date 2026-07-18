@@ -292,14 +292,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-.heroPlatformRageMP {
-  composes: heroPlatform;
-  background: linear-gradient(135deg, #fde68a, #f59e0b);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .heroTitleLine2 {
   display: inline-flex;
   align-items: baseline;

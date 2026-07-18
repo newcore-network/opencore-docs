@@ -26,7 +26,7 @@ Adapters are packages that connect OpenCore with specific multiplayer platforms.
                           │
 ┌─────────────────────────▼───────────────────────────────┐
 │                      Adapters                           │
-│     FiveM Adapter  │  RageMP Adapter  │  RedM Adapter   │
+│          FiveM Adapter  │  RedM Adapter                 │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -35,7 +35,7 @@ Adapters are packages that connect OpenCore with specific multiplayer platforms.
 | Adapter | Package | Status | Game |
 |---------|---------|--------|------|
 | **[FiveM](./fivem)** | `@open-core/fivem-adapter` | Stable | GTA V |
-| **[RageMP](./ragemp)** | `@open-core/ragemp-adapter` | Stable | GTA V |
+| **[RageMP](./ragemp)** | `@open-core/ragemp-adapter` | Deprecated | GTA V |
 | **[RedM](./redm)** | Built-in | Coming Soon | RDR3 |
 
 ## Common Contracts
@@ -66,9 +66,6 @@ Each adapter has its own package. Install the ones you need:
 ```bash
 # FiveM
 pnpm add @open-core/fivem-adapter
-
-# RageMP
-pnpm add @open-core/ragemp-adapter
 ```
 
 ## Validating Adapter Coverage
@@ -121,7 +118,6 @@ Or use the CLI wizard which handles installation and configuration automatically
 
 ```bash
 opencore init my-server --adapter=fivem
-opencore init my-server --adapter=ragemp
 ```
 
 ## Platform Detection
@@ -136,5 +132,4 @@ OpenCore uses the adapter you provide at runtime to determine:
 ## Next Steps
 
 - [FiveM](./fivem) — FiveM specifics
-- [RageMP](./ragemp) — Rage Multiplayer specifics
 - [RedM](./redm) — Red Dead Redemption specifics

@@ -7,19 +7,19 @@ title: CLI Overview
 The **OpenCore CLI** is the official command-line tool used to **build, validate, and orchestrate OpenCore-based projects**.
 
 It is not a generic TypeScript compiler.  
-It understands **FiveM, RageMP, and RedM runtimes**, **OpenCore architecture**, and the constraints of each execution environment.
+It understands **FiveM and RedM runtimes**, **OpenCore architecture**, and the constraints of each execution environment.
 
 Conceptually, it plays a role similar to:
 - NestJS CLI (project orchestration)
 - Vite (fast, opinionated builds)
 
-…but designed **specifically** for FiveM, RageMP, RedM, and OpenCore.
+…but designed **specifically** for FiveM, RedM, and OpenCore.
 
 ---
 
 ## What problem does it solve? 
 
-FiveM, RageMP, and RedM are not a single runtime.
+FiveM and RedM are not a single runtime.
 
 You are dealing with:
 - Node.js (server)
@@ -194,7 +194,7 @@ OpenCore supports multiple platforms through official adapters:
 | Adapter | Status | Use Case |
 |---------|--------|----------|
 | **FiveM** | Stable | FiveM server builds |
-| **RageMP** | Stable | Rage Multiplayer builds |
+| **RageMP** | Deprecated | Rage Multiplayer builds |
 | **RedM** | Coming Soon | RedM-specific runtime path under the same adapter model |
 | **Node** | Default | Local development / testing |
 
@@ -233,7 +233,6 @@ opencore init my-server
 
 # Non-interactive with platform
 opencore init my-server --adapter=fivem
-opencore init my-server --adapter=ragemp
 
 # No adapter (uses framework default - Node)
 opencore init my-server --adapter=none

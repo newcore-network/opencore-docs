@@ -197,7 +197,6 @@ Validates an external adapter package against the OpenCore framework adapter bas
 Designed for repositories such as:
 
 * `@open-core/fivem-adapter`
-* `@open-core/ragemp-adapter`
 * custom third-party adapter packages
 
 What it validates:

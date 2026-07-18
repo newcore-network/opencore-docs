@@ -129,7 +129,7 @@ Allowed values:
 
 - `fivem`
 - `redm`
-- `ragemp`
+- `ragemp (Deprecated)`
 
 This is the primary compatibility signal used by the CLI.
 
