@@ -230,6 +230,7 @@ const sidebars: SidebarsConfig = {
         'cli/introduction',
         'cli/commands',
         'cli/environments',
+        'cli/typegen',
         'cli/dependency-resolution',
         'compiler/about',
       ],
